@@ -41,6 +41,7 @@ pzpr.classmgr.makeCommon({
 		/* Properties for solver answers */
 		qansBySolver: 0,
 		qsubBySolver: 0,
+		lineBySolver: 0,
 
 		/* 履歴保存しないプロパティ */
 		error: 0,
@@ -834,7 +835,7 @@ pzpr.classmgr.makeCommon({
 		// border.removeLineAndQsub()  removes line and qsub
 		//-----------------------------------------------------------------------
 		isLine: function() {
-			return this.line > 0;
+			return this.line > 0 || this.lineBySolver > 0;
 		},
 		setLine: function(id) {
 			this.setLineVal(1);

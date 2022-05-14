@@ -1234,7 +1234,10 @@ pzpr.classmgr.makeCommon({
 				} else if (isIrowake) {
 					return border.path.color;
 				} else {
-					return border.trial ? this.trialcolor : this.linecolor;
+					if (border.trial) {
+						return this.trialcolor;
+					}
+					return this.getColorSolverAware(border.line === 1, border.lineBySolver === 1);
 				}
 			}
 			return null;
@@ -1355,8 +1358,12 @@ pzpr.classmgr.makeCommon({
 			for (var i = 0; i < blist.length; i++) {
 				var border = blist[i];
 				g.vid = "b_peke_" + border.id;
-				if (border.qsub === 2) {
-					g.strokeStyle = !border.trial ? this.pekecolor : this.trialcolor;
+				if (border.qsub === 2 || border.qsubBySolver === 2) {
+					if (!border.trial) {
+						g.strokeStyle = this.getColorSolverAware(border.qsub === 2, border.qsubBySolver === 2);
+					} else {
+						g.strokeStyle = this.trialcolor;
+					}
 					g.strokeCross(border.bx * this.bw, border.by * this.bh, size - 1);
 				} else {
 					g.vhide();
