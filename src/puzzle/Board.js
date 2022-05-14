@@ -90,6 +90,93 @@ pzpr.classmgr.makeCommon({
 			return 1;
 		},
 
+		autoSolve: function(force) {
+			if (!this.is_autosolve && !force) {
+				// clear solver answers if necessary
+				var needUpdateField = false;
+				if (this.clearSolverAnswerForCells()) {
+					needUpdateField = true;
+				}
+				if (needUpdateField) {
+					this.puzzle.painter.paintAll();
+				}
+				return;
+			}
+			var url = ui.puzzle.getURL(pzpr.parser.URL_PZPRV3);
+			var result = window.solveProblem(url);
+			this.updateSolverAnswerForCells(result);
+
+			this.puzzle.painter.paintAll();
+		},
+
+		clearSolverAnswerForCells: function () {
+			var needUpdateField = false;
+
+			for (var i = 0; i < this.cell.length; ++i) {
+				var cell = this.cell[i];
+				if (cell.qansBySolver !== 0 || cell.qsubBySolver !== 0) {
+					cell.qansBySolver = 0;
+					cell.qsubBySolver = 0;
+					needUpdateField = true;
+				}
+			}
+			return needUpdateField;
+		},
+
+		updateSolverAnswerForCells: function (result) {
+			this.clearSolverAnswerForCells();
+			if (typeof result === "string") {
+				for (var i = 0; i < this.cell.length; ++i) {
+					var cell = this.cell[i];
+					var y = (cell.by - 1) / 2;
+					var x = (cell.bx - 1) / 2;
+					if (y % 2 === x % 2) {
+						cell.qansBySolver = 1;
+					}
+				}
+				return;
+			}
+			var dataByCell = [];
+			for (var y = 0; y < this.rows; ++y) {
+				var row = [];
+				for (var x = 0; x < this.cols; ++x) {
+					row.push([]);
+				}
+				dataByCell.push(row);
+			}
+			var dataRaw = result.data;
+			for (var i = 0; i < dataRaw.length; ++i) {
+				var elem = dataRaw[i];
+				if (elem.color !== "green") { // TODO
+					continue;
+				}
+				if (!(elem.x % 2 === 1 && elem.y % 2 === 1)) {
+					continue;
+				}
+				dataByCell[(elem.y - 1) / 2][(elem.x - 1) / 2].push(elem.item);
+			}
+			for (var i = 0; i < this.cell.length; ++i) {
+				var cell = this.cell[i];
+				var data = dataByCell[(cell.by - 1) / 2][(cell.bx - 1) / 2];
+
+				for (var j = 0; j < data.length; ++j) {
+					if (data[j] === "block" || data[j] === "fill") {
+						cell.qansBySolver = 1;
+					} else if (data[j] === "dot") {
+						cell.qsubBySolver = 1;
+					}
+				}
+			}
+		},
+
+		is_autosolve: false,
+		updateIsAutosolve: function(mode) {
+			if (this.is_autosolve !== mode) {
+				this.is_autosolve = mode;
+				this.autoSolve();
+			}
+		},
+
 		//---------------------------------------------------------------------------
 		// bd.initBoardSize() 指定されたサイズで盤面の初期化を行う
 		//---------------------------------------------------------------------------

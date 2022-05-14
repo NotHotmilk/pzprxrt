@@ -199,7 +199,7 @@
 			if (pzpr.env.node) {
 				url = "http://pzv.jp/p.html";
 			} else {
-				url = location.protocol + "//" + location.host + location.pathname;
+				url = "https://puzz.link/p";
 			}
 			switch (this.type) {
 				case URL_PZPRV3:

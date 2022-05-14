@@ -38,6 +38,15 @@ pzpr.classmgr.makeCommon({
 			return this.quescolor;
 		},
 
+		getColorSolverAware: function (manual, solver, defaultColor) {
+			if (manual && solver) {
+				return this.solverqanscolor;
+			} else if (solver) {
+				return this.solvercolor;
+			} else {
+				return defaultColor || this.qanscolor;
+			}
+		},
 		//---------------------------------------------------------------------------
 		// pc.drawShadedCells()    Cellの、境界線の上から描画される回答の黒マスをCanvasに書き込む
 		// pc.getShadedCellColor() 回答の黒マスの設定・描画判定する
@@ -47,7 +56,7 @@ pzpr.classmgr.makeCommon({
 			this.drawCells_common("c_fulls_", this.getShadedCellColor);
 		},
 		getShadedCellColor: function(cell) {
-			if (cell.qans !== 1) {
+			if (cell.qans !== 1 && cell.qansBySolver !== 1) {
 				return null;
 			}
 			var info = cell.error || cell.qinfo;
@@ -60,7 +69,8 @@ pzpr.classmgr.makeCommon({
 			} else if (this.puzzle.execConfig("irowakeblk")) {
 				return cell.sblk.color;
 			}
-			return this.shadecolor;
+
+			return this.getColorSolverAware(cell.qans === 1, cell.qansBySolver === 1, this.shadecolor);
 		},
 
 		//---------------------------------------------------------------------------
@@ -119,7 +129,7 @@ pzpr.classmgr.makeCommon({
 		getBGCellColor_qsub1: function(cell) {
 			if ((cell.error || cell.qinfo) === 1) {
 				return this.errbcolor1;
-			} else if (cell.qsub === 1) {
+			} else if (cell.qsub === 1 || cell.qsubBySolver === 1) {
 				return this.bcolor;
 			}
 			return null;
@@ -230,7 +240,11 @@ pzpr.classmgr.makeCommon({
 
 				g.vid = "c_dot_" + cell.id;
 				if (cell.isDot()) {
-					g.fillStyle = !cell.trial ? this.qanscolor : this.trialcolor;
+					if (!cell.trial) {
+						g.fillStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
+					} else {
+						g.fillStyle = this.trialcolor;
+					}
 					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, dsize);
 				} else {
 					g.vhide();

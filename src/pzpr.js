@@ -37,7 +37,9 @@ exports.files = [
 	"variety-common/FileData",
 	"variety-common/Operation",
 	"variety-common/Piece",
-	"common/outro"
+	"common/outro",
+	"solver/cspuz_solver_backend",
+	"solver/SolverBridge"
 ].map(function(mod) {
 	return "src/" + mod + ".js";
 });

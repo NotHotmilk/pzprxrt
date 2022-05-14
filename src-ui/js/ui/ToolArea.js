@@ -324,6 +324,9 @@ ui.toolarea = {
 	irowake: function() {
 		ui.puzzle.irowake();
 	},
+	run_autosolver: function () {
+		ui.puzzle.board.autoSolve(true);
+	},
 	encolorall: function() {
 		ui.puzzle.board.encolorall();
 	} /* 天体ショーのボタン */,
