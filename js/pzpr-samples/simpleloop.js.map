@@ -1,0 +1,1 @@
+{"version":3,"file":"simpleloop.js","sources":["simpleloop.js"],"names":["ui","debug","addRules","rules","history","addDebugData","url","failcheck"],"mappings":";;AAgBAA,GAAGC,MAAMC,SAAS,aAAc,CAAC,CAACC,MAAQ,kJAAkJC,QAAU,IAAI,CAACD,MAAQ,0CAA0CC,QAAU,MACvQJ,GAAGC,MAAMI,aAAa,aAAc,CACnCC,IAAK,YACLC,UAAW,CACV,CACC,WACA,0KAED,CACC,UACA,0KAED,CACC,YACA,0KAED,CACC,WACA,0KAED,CACC,KACA"}
