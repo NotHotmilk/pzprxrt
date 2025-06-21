@@ -129,7 +129,7 @@
 	Cell: {
 		// don't draw  dots under lines
 		isDot: function() {
-			return this.lcnt === 0 && this.qsub === 1;
+			return this.lcnt === 0 && (this.qsub === 1 || this.qsubBySolver === 1);
 		},
 
 		countShade: function(clist) {
@@ -569,13 +569,13 @@
 			var info = cell.error || cell.qinfo;
 			if (this.puzzle.getConfig("disptype_yajilin") === 2 && cell.qnum !== -1) {
 				return "rgb(224,224,224)";
-			} else if (cell.qans === 1) {
+			} else if (cell.qans === 1 || cell.qansBySolver === 1) {
 				if (info === 1) {
 					return this.errcolor1;
 				} else if (cell.trial) {
 					return this.trialcolor;
 				}
-				return this.shadecolor;
+				return this.getColorSolverAware(cell.qans === 1, cell.qansBySolver === 1, this.shadecolor);
 			} else if (info === 1) {
 				return this.errbcolor1;
 			}

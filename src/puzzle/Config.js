@@ -169,6 +169,9 @@
 			this.add("discolor", false); /* tentaisho: 色分け無効化 */
 			/* その他の特殊項目(保存なし) */
 			this.add("uramashu", false, { volatile: true }); /* 裏ましゅにする */
+
+			this.add("autosolver", false, { volatile: true });
+			this.add("run_autosolver", false, { volatile: true });
 		},
 		add: function(name, defvalue, extoption) {
 			if (!extoption) {
@@ -469,6 +472,10 @@
 				case "country_empty":
 					exec = pid === "country";
 					break;
+				case "autosolver":
+				case "run_autosolver":
+					exec = pid === "nurimisaki" || pid === "nurikabe" || pid === "lits" || pid === "heyawake" || pid === "slither" || pid === "mashu" || pid === "yajilin";
+					break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
 					break;
@@ -593,6 +600,14 @@
 				case "uramashu":
 					puzzle.board.revCircleConfig(newval);
 					puzzle.redraw();
+					break;
+
+				case "autosolver":
+					puzzle.board.updateIsAutosolve(newval);
+					break;
+
+				case "run_autosolver":
+					puzzle.board.autoSolve(true);
 					break;
 			}
 		}

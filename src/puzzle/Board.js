@@ -96,6 +96,161 @@ pzpr.classmgr.makeCommon({
 			return 1;
 		},
 
+		autoSolve: function(force) {
+			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" || this.pid === "lits" || this.pid === "heyawake" || this.pid === "yajilin";
+			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin";
+			if (!this.is_autosolve && !force) {
+				// clear solver answers if necessary
+				var needUpdateField = false;
+				if (updateCells && this.clearSolverAnswerForCells()) {
+					needUpdateField = true;
+				}
+				if (updateBorders && this.clearSolverAnswerForBorders()) {
+					needUpdateField = true;
+				}
+				if (needUpdateField) {
+					this.puzzle.painter.paintAll();
+				}
+				return;
+			}
+			var url = ui.puzzle.getURL(pzpr.parser.URL_PZPRV3);
+			var result = window.solveProblem(url);
+
+			if (updateCells) {
+				this.updateSolverAnswerForCells(result);
+			}
+			if (updateBorders) {
+				this.updateSolverAnswerForBorders(result);
+			}
+
+			this.puzzle.painter.paintAll();
+		},
+
+		clearSolverAnswerForCells: function () {
+			var needUpdateField = false;
+
+			for (var i = 0; i < this.cell.length; ++i) {
+				var cell = this.cell[i];
+				if (cell.qansBySolver !== 0 || cell.qsubBySolver !== 0) {
+					cell.qansBySolver = 0;
+					cell.qsubBySolver = 0;
+					needUpdateField = true;
+				}
+			}
+			return needUpdateField;
+		},
+
+		updateSolverAnswerForCells: function (result) {
+			this.clearSolverAnswerForCells();
+			if (typeof result === "string") {
+				for (var i = 0; i < this.cell.length; ++i) {
+					var cell = this.cell[i];
+					var y = (cell.by - 1) / 2;
+					var x = (cell.bx - 1) / 2;
+					if (y % 2 === x % 2) {
+						cell.qansBySolver = 1;
+					}
+				}
+				return;
+			}
+			var dataByCell = [];
+			for (var y = 0; y < this.rows; ++y) {
+				var row = [];
+				for (var x = 0; x < this.cols; ++x) {
+					row.push([]);
+				}
+				dataByCell.push(row);
+			}
+			var dataRaw = result.data;
+			for (var i = 0; i < dataRaw.length; ++i) {
+				var elem = dataRaw[i];
+				if (elem.color !== "green") { // TODO
+					continue;
+				}
+				if (!(elem.x % 2 === 1 && elem.y % 2 === 1)) {
+					continue;
+				}
+				dataByCell[(elem.y - 1) / 2][(elem.x - 1) / 2].push(elem.item);
+			}
+			for (var i = 0; i < this.cell.length; ++i) {
+				var cell = this.cell[i];
+				var data = dataByCell[(cell.by - 1) / 2][(cell.bx - 1) / 2];
+
+				for (var j = 0; j < data.length; ++j) {
+					if (data[j] === "block" || data[j] === "fill") {
+						cell.qansBySolver = 1;
+					} else if (data[j] === "dot") {
+						cell.qsubBySolver = 1;
+					}
+				}
+			}
+		},
+
+		clearSolverAnswerForBorders: function () {
+			var needUpdateField = false;
+
+			for (var i = 0; i < this.border.length; ++i) {
+				var border = this.border[i];
+				if (border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+					border.lineBySolver = 0;
+					border.qsubBySolver = 0;
+					needUpdateField = true;
+				}
+			}
+			return needUpdateField;
+		},
+
+		updateSolverAnswerForBorders: function (result) {
+			this.clearSolverAnswerForBorders();
+			if (typeof result === "string") {
+				for (var i = 0; i < this.border.length; ++i) {
+					var border = this.border[i];
+					border.qsubBySolver = 2;
+				}
+				return;
+			}
+
+			var dataByBorder = [];
+			for (var y = 0; y < this.rows * 2 + 1; ++y) {
+				var row = [];
+				for (var x = 0; x < this.cols * 2 + 1; ++x) {
+					row.push([]);
+				}
+				dataByBorder.push(row);
+			}
+			var dataRaw = result.data;
+			for (var i = 0; i < dataRaw.length; ++i) {
+				var elem = dataRaw[i];
+				if (elem.color !== "green") { // TODO
+					continue;
+				}
+				if (elem.x % 2 === elem.y % 2) {
+					continue;
+				}
+				dataByBorder[elem.y][elem.x].push(elem.item);
+			}
+			for (var i = 0; i < this.border.length; ++i) {
+				var border = this.border[i];
+				var data = dataByBorder[border.by][border.bx];
+
+				for (var j = 0; j < data.length; ++j) {
+					if (data[j] === "line" || data[j] === "wall") {
+						border.lineBySolver = 1;
+					} else if (data[j] === "cross") {
+						border.qsubBySolver = 2;
+					}
+				}
+			}
+		},
+
+		is_autosolve: false,
+		updateIsAutosolve: function(mode) {
+			if (this.is_autosolve !== mode) {
+				this.is_autosolve = mode;
+				this.autoSolve();
+			}
+		},
+
 		//---------------------------------------------------------------------------
 		// bd.initBoardSize() 指定されたサイズで盤面の初期化を行う
 		//---------------------------------------------------------------------------

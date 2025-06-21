@@ -26,6 +26,7 @@
     "no-useless-escape": "off",         // Allow unnessesary escape charactors
     "no-extra-boolean-cast": "off",     // Allow to use boolean cast for boolean value
     "dot-notation": "off",              // Allow object access via obj["name"]
-    "no-loop-func": "off"               // Allow function definition in loop
+    "no-loop-func": "off",              // Allow function definition in loop
+    "no-console": "off"                 // Allow using `console` for debugging purpose
   }
 }

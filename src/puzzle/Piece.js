@@ -39,6 +39,11 @@ pzpr.classmgr.makeCommon({
 		qcmp: 0, // cell  :(1:cmpマス 1-2:○×)
 		snum: -1, // cell  :補助数字を保持する
 
+		/* Properties for solver answers */
+		qansBySolver: 0,
+		qsubBySolver: 0,
+		lineBySolver: 0,
+
 		/* 履歴保存しないプロパティ */
 		error: 0,
 		qinfo: 0,
@@ -184,6 +189,10 @@ pzpr.classmgr.makeCommon({
 			var trialstage = this.board.trialstage;
 			if (trialstage > 0) {
 				this.trial = trialstage;
+			}
+
+			if (this.puzzle.editmode) {
+				this.board.autoSolve();
 			}
 
 			this.board.modifyInfo(this, this.group + "." + prop);
@@ -588,7 +597,7 @@ pzpr.classmgr.makeCommon({
 		},
 
 		isDot: function() {
-			return this.qsub === 1;
+			return this.qsub === 1 || this.qsubBySolver === 1;
 		},
 
 		//---------------------------------------------------------------------------
@@ -914,7 +923,7 @@ pzpr.classmgr.makeCommon({
 		// border.removeLineAndQsub()  removes line and qsub
 		//-----------------------------------------------------------------------
 		isLine: function() {
-			return this.line > 0;
+			return this.line > 0 || this.lineBySolver > 0;
 		},
 		setLine: function(id) {
 			this.setLineVal(1);
