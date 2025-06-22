@@ -22,6 +22,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script src="./js/cspuz_solver_backend.js"></script>
 <script type="text/javascript" src="./js/pzpr.js?<%= git.hash %>"></script>
 <script type="text/javascript" src="./js/pzpr-ui.js?<%= git.hash %>"></script>
 <title>puzz.link player</title>
@@ -367,11 +368,11 @@ if ('serviceWorker' in navigator) {
       <span class="config" data-config="autosolver">
         <label>
           <input type="checkbox">
-          <span>__リアルタイムソルバーを有効にする__Enable the real time solver__</span>
+          <span>リアルタイムソルバーを有効にする</span>
         </label>
       </span>
       <span class="config" data-config="run_autosolver">
-        <button class="btn" data-button-exec="run_autosolver">__自動解答__Run solver__</button>
+        <button class="btn" data-button-exec="run_autosolver">自動解答</button>
       </span>
     </div>
   </div>

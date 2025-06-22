@@ -188,6 +188,60 @@
 				next = action;
 			} while (action.length > 0);
 			this.puzzle.redraw();
+		},
+
+		updateSolverAnswerForCells: function (result) {
+			this.clearSolverAnswerForCells();
+			if (typeof result === "string") {
+				for (var i = 0; i < this.cell.length; ++i) {
+					var cell = this.cell[i];
+					var y = (cell.by - 1) / 2;
+					var x = (cell.bx - 1) / 2;
+					if (y % 2 === x % 2) {
+						cell.qansBySolver = 1;
+					}
+				}
+				return;
+			}
+			var dataByCell = [];
+			for (var y = 0; y < this.rows; ++y) {
+				var row = [];
+				for (var x = 0; x < this.cols; ++x) {
+					row.push([]);
+				}
+				dataByCell.push(row);
+			}
+			var dataRaw = result.data;
+			for (var i = 0; i < dataRaw.length; ++i) {
+				var elem = dataRaw[i];
+				if (elem.color !== "green") { // TODO
+					continue;
+				}
+				if (!(elem.x % 2 === 1 && elem.y % 2 === 1)) {
+					continue;
+				}
+				dataByCell[(elem.y - 1) / 2][(elem.x - 1) / 2].push(elem.item);
+			}
+
+			// --- guidearrow専用のロジック ---
+			for (var i = 0; i < this.cell.length; ++i) {
+				var cell = this.cell[i];
+				var data = dataByCell[(cell.by - 1) / 2][(cell.bx - 1) / 2];
+
+				// ソルバーが明確に「黒マス」と指定した場合
+				if (data.includes("block") || data.includes("fill")) {
+					cell.qansBySolver = 1;
+				}
+				// ソルバーが明確に「白マス(ドット)」と指定した場合
+				else if (data.includes("dot")) {
+					cell.qsubBySolver = 1;
+				}
+					// 上記以外で、かつセルに記号(問題)が含まれる場合
+				// そのマスを「白マス(ドット)」と判断する
+				else if (cell.qnum !== -1) {
+					cell.qsubBySolver = 1;
+				}
+			}
 		}
 	},
 	Cell: {
@@ -241,7 +295,6 @@
 
 		shadecolor: "#222222",
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
 
 		paint: function() {
 			this.drawBGCells();
@@ -251,6 +304,8 @@
 			this.drawGoalStar();
 			this.drawCellArrows(true);
 			this.drawHatenas();
+			
+			this.drawDotCells();
 
 			this.drawChassis();
 			this.drawPekes();

@@ -97,7 +97,7 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" || this.pid === "lits" || this.pid === "heyawake" || this.pid === "yajilin";
+			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" || this.pid === "lits" || this.pid === "heyawake" || this.pid === "yajilin" || this.pid === "anymino" || this.pid === "guidearrow";
 			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin";
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
