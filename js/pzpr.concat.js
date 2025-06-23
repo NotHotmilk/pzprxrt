@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-06-21
+ * Date: 2025-06-23
  */
 // intro.js
 
@@ -3237,7 +3237,13 @@ pzpr.MetaData.prototype = {
 					break;
 				case "autosolver":
 				case "run_autosolver":
-					exec = pid === "nurimisaki" || pid === "nurikabe" || pid === "lits" || pid === "heyawake" || pid === "slither" || pid === "mashu" || pid === "yajilin" || pid === "anymino" || pid === "guidearrow";
+					exec = pid === "nurimisaki" || 
+						pid === "nurikabe" || pid === "lits" || 
+						pid === "heyawake" || pid === "slither" || 
+						pid === "mashu" || pid === "yajilin" ||
+						pid === "anymino" || pid === "guidearrow" || 
+						pid === "shakashaka" || pid === "lightup" ||
+						pid === "shugaku";
 					break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
@@ -4251,7 +4257,10 @@ pzpr.classmgr.makeCommon({
 		},
 
 		isDot: function() {
-			return this.qsub === 1 || this.qsubBySolver === 1;
+			return this.qsub === 1;
+		},
+		isDotBySolver: function (){
+			return this.qsubBySolver === 1;
 		},
 
 		//---------------------------------------------------------------------------
@@ -4577,7 +4586,10 @@ pzpr.classmgr.makeCommon({
 		// border.removeLineAndQsub()  removes line and qsub
 		//-----------------------------------------------------------------------
 		isLine: function() {
-			return this.line > 0 || this.lineBySolver > 0;
+			return this.line > 0;
+		},
+		isLineBySolver: function() {
+			return this.lineBySolver > 0;
 		},
 		setLine: function(id) {
 			this.setLineVal(1);
@@ -4607,6 +4619,9 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		isBorder: function() {
 			return this.ques > 0 || this.qans > 0;
+		},
+		isBorderBySolver: function() {
+			return this.ques > 0 || this.qansBySolver > 0;
 		},
 		setBorder: function() {
 			if (this.puzzle.editmode) {
@@ -5235,7 +5250,11 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" || this.pid === "lits" || this.pid === "heyawake" || this.pid === "yajilin" || this.pid === "anymino" || this.pid === "guidearrow";
+			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" ||
+				this.pid === "lits" || this.pid === "heyawake" || 
+				this.pid === "yajilin" || this.pid === "anymino" || 
+				this.pid === "guidearrow" || this.pid === "shakashaka" ||
+				this.pid === "lightup" || this.pid === "shugaku";
 			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin";
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5278,52 +5297,132 @@ pzpr.classmgr.makeCommon({
 			return needUpdateField;
 		},
 
-		updateSolverAnswerForCells: function (result) {
+		updateSolverAnswerForCells: function(result) {
+			// 既存のソルバーによる解答を一旦クリアする
 			this.clearSolverAnswerForCells();
-			if (typeof result === "string") {
-				for (var i = 0; i < this.cell.length; ++i) {
-					var cell = this.cell[i];
-					var y = (cell.by - 1) / 2;
-					var x = (cell.bx - 1) / 2;
-					if (y % 2 === x % 2) {
-						cell.qansBySolver = 1;
+
+			// resultがオブジェクトの場合、詳細な解答データを処理する
+			if (typeof result !== "string") {
+				// 各セルに対応するアイテムを格納するための2次元配列を初期化
+				const cellItems = [];
+				for (let rowIndex = 0; rowIndex < this.rows; ++rowIndex) {
+					const row = [];
+					for (let colIndex = 0; colIndex < this.cols; ++colIndex) {
+						row.push([]);
+					}
+					cellItems.push(row);
+				}
+
+				// 解答データをループし、対応するセルにアイテムを振り分ける
+				const solverData = result.data;
+				for (let i = 0; i < solverData.length; ++i) {
+					const itemData = solverData[i];
+
+					// アイテムの色が'green'で、座標がセルの中心を示す場合 (x, yが共に奇数)
+					if (itemData.color === "green" && itemData.x % 2 === 1 && itemData.y % 2 === 1) {
+						// パズルの内部座標からセルのインデックスに変換
+						const cellY = (itemData.y - 1) / 2;
+						const cellX = (itemData.x - 1) / 2;
+						cellItems[cellY][cellX].push(itemData.item);
 					}
 				}
-				return;
-			}
-			var dataByCell = [];
-			for (var y = 0; y < this.rows; ++y) {
-				var row = [];
-				for (var x = 0; x < this.cols; ++x) {
-					row.push([]);
-				}
-				dataByCell.push(row);
-			}
-			var dataRaw = result.data;
-			for (var i = 0; i < dataRaw.length; ++i) {
-				var elem = dataRaw[i];
-				if (elem.color !== "green") { // TODO
-					continue;
-				}
-				if (!(elem.x % 2 === 1 && elem.y % 2 === 1)) {
-					continue;
-				}
-				dataByCell[(elem.y - 1) / 2][(elem.x - 1) / 2].push(elem.item);
-			}
-			for (var i = 0; i < this.cell.length; ++i) {
-				var cell = this.cell[i];
-				var data = dataByCell[(cell.by - 1) / 2][(cell.bx - 1) / 2];
 
-				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "block" || data[j] === "fill") {
-						cell.qansBySolver = 1;
-					} else if (data[j] === "dot") {
-						cell.qsubBySolver = 1;
+				// 盤面の全セルをループして、ソルバーの解答をセットする
+				for (let i = 0; i < this.cell.length; ++i) {
+					const cell = this.cell[i];
+
+					// セルの内部座標 (bx, by) からセルのインデックスに変換
+					const cellY = (cell.by - 1) / 2;
+					const cellX = (cell.bx - 1) / 2;
+					const itemsInCell = cellItems[cellY][cellX];
+
+					// セルに割り当てられたアイテムの種類に応じて、セルの状態を更新
+					for (let k = 0; k < itemsInCell.length; ++k) {
+						const item = itemsInCell[k];
+
+						// アイテムがオブジェクトでない場合（単純な文字列）
+						if (typeof item === 'string') {
+							switch (item) {
+								case "block":
+								case "fill":
+								case "circle":
+									cell.qansBySolver = 1;
+									break;
+								case "dot":
+									cell.qsubBySolver = 1;
+									break;
+								case "aboloUpperLeft":
+									cell.qansBySolver = 5;
+									break;
+								case "aboloUpperRight":
+									cell.qansBySolver = 4;
+									break;
+								case "aboloLowerLeft":
+									cell.qansBySolver = 2;
+									break;
+								case "aboloLowerRight":
+									cell.qansBySolver = 3;
+									break;
+								case "shugakuPillow":
+									cell.qansBySolver = 40;
+									break;
+								case "shugakuFuton":
+									cell.qansBySolver = 50;
+									break;
+								case "shugakuWest":
+									cell.qsubBySolver = 1;
+									break;
+								case "shugakuEast":
+									cell.qsubBySolver = 2;
+									break;
+								case "shugakuSouth":
+									cell.qsubBySolver = 3;
+									break;
+										
+							}
+						}
+						// アイテムが 'kind' プロパティを持つオブジェクトの場合
+						else if (item && item.kind) {
+							switch (item.kind) {
+								case "text":
+									cell.qansBySolver = parseInt(item.data, 10);
+									break;
+								case "sudokuCandidateSet": // 数独の候補数字など
+									cell.qcandBySolver = [];
+									for (let n = 0; n < this.rows; ++n) {
+										cell.qcandBySolver.push(false);
+									}
+									for (let n = 0; n < item.values.length; ++n) {
+										const value = item.values[n];
+										if (value >= 1 && value <= this.rows) {
+											cell.qcandBySolver[value - 1] = true;
+										}
+									}
+									break;
+							}
+						}
+					}
+				}
+			}
+			// resultが文字列の場合、特定のパターンで盤面を塗りつぶす
+			else {
+				// パズルの種類 (pid) によってデフォルト値を変える
+				// "shakashaka" なら 2、それ以外なら 1
+				const defaultValue = (this.pid === "shakashaka") ? 2 : 1;
+
+				for (let i = 0; i < this.cell.length; ++i) {
+					const cell = this.cell[i];
+					const cellY = (cell.by - 1) / 2;
+					const cellX = (cell.bx - 1) / 2;
+
+					// セルのX座標とY座標の偶奇が一致する場合 (市松模様)
+					if (cellY % 2 === cellX % 2) {
+						cell.qansBySolver = defaultValue;
 					}
 				}
 			}
 		},
-
+		
 		clearSolverAnswerForBorders: function () {
 			var needUpdateField = false;
 
@@ -5338,49 +5437,130 @@ pzpr.classmgr.makeCommon({
 			return needUpdateField;
 		},
 
-		updateSolverAnswerForBorders: function (result) {
+		updateSolverAnswerForBorders: function(result) {
+			// 最初に、既存のソルバーによる境界線の回答をすべてクリアする
 			this.clearSolverAnswerForBorders();
-			if (typeof result === "string") {
-				for (var i = 0; i < this.border.length; ++i) {
-					var border = this.border[i];
-					border.qsubBySolver = 2;
-				}
-				return;
-			}
 
-			var dataByBorder = [];
-			for (var y = 0; y < this.rows * 2 + 1; ++y) {
-				var row = [];
-				for (var x = 0; x < this.cols * 2 + 1; ++x) {
-					row.push([]);
-				}
-				dataByBorder.push(row);
-			}
-			var dataRaw = result.data;
-			for (var i = 0; i < dataRaw.length; ++i) {
-				var elem = dataRaw[i];
-				if (elem.color !== "green") { // TODO
-					continue;
-				}
-				if (elem.x % 2 === elem.y % 2) {
-					continue;
-				}
-				dataByBorder[elem.y][elem.x].push(elem.item);
-			}
-			for (var i = 0; i < this.border.length; ++i) {
-				var border = this.border[i];
-				var data = dataByBorder[border.by][border.bx];
+			// resultがオブジェクトの場合、詳細な回答データを処理する
+			if (typeof result !== "string") {
 
-				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "line" || data[j] === "wall") {
-						border.lineBySolver = 1;
-					} else if (data[j] === "cross") {
-						border.qsubBySolver = 2;
+				// 内部グリッド（セルと境界線を含む）を表現する2次元配列を初期化
+				const gridItems = Array.from({ length: 2 * this.rows + 1 }, () =>
+					Array.from({ length: 2 * this.cols + 1 }, () => [])
+				);
+
+				// ソルバーのデータを処理し、アイテムをグリッドに振り分ける
+				for (const entry of result.data) {
+					// アイテムの色が'green'で、かつ境界線の位置にある場合
+					// (座標のxとyの偶奇が異なる)
+					if (entry.color === "green" && (entry.x % 2 !== entry.y % 2)) {
+						gridItems[entry.y][entry.x].push(entry.item);
 					}
+				}
+
+				// 盤面の全境界線をループして、ソルバーの回答を設定する
+				for (const border of this.border) {
+					// 境界線の内部座標(bx, by)に対応するアイテムリストを取得
+					const itemsOnBorder = gridItems[border.by][border.bx];
+
+					// 境界線上のアイテムの種類に応じて、状態を更新
+					for (const item of itemsOnBorder) {
+						if (item === "line" || item === "wall") {
+							border.lineBySolver = 1; // 線を引く
+						} else if (item === "cross") {
+							border.qsubBySolver = 2; // 線を引かない印 (×) を付ける
+						}
+					}
+				}
+
+			}
+			// resultが文字列の場合、すべての境界線にデフォルトの回答を設定する
+			else {
+				for (const border of this.border) {
+					// すべての境界線に補助的な回答 '2' (おそらく'×印') を設定
+					border.qsubBySolver = 2;
 				}
 			}
 		},
 
+		showAnswer: function() {
+			// 表示すべき解答データ (this.answers) がなければ何もしない
+			if (!this.answers) {
+				return;
+			}
+
+			let answerData;
+			let totalAnswers;
+			const currentIndex = this.answerIndex;
+
+			// this.answers の型に応じて、表示するデータと総解答数を設定する
+			if (typeof this.answers === 'string') {
+				// 解答が単一の文字列の場合 (例: "terminated")
+				answerData = this.answers;
+				totalAnswers = 0; // 総数は意味を持たない
+			} else {
+				// 解答が複数あるオブジェクトの場合
+				answerData = this.answers.answers[currentIndex];
+				totalAnswers = this.answers.answers.length;
+			}
+
+			// UI上の「n/m」カウンター表示を更新する
+			const locatorElement = ui.popupmgr.popups.auxeditor.pop.querySelector(".solver-answer-locator");
+			if (answerData === "terminated") {
+				locatorElement.innerText = "Terminated";
+			} else if (totalAnswers > 0) {
+				locatorElement.innerText = `${currentIndex + 1}/${totalAnswers}`;
+			}
+
+			// 特定のパズル("numlin-aux")の場合、境界線の状態も更新する
+			if (this.pid === "numlin-aux") {
+				// 以前に解析した関数を呼び出す
+				this.updateSolverAnswerForBorders(answerData);
+			}
+
+			// 盤面全体を再描画して、変更を画面に反映させる
+			this.puzzle.painter.paintAll();
+		},
+
+		locateAnswer: function(direction) {
+			// 解答データがなければ何もしない
+			if (this.answers === null) {
+				return;
+			}
+
+			// 解答の総数を取得
+			const totalAnswers = (typeof this.answers === 'string') ? 0 : this.answers.answers.length;
+
+			// 移動方向に応じて、表示する解答のインデックスを変更する
+			switch (direction) {
+				case -2: // 「最初へ」
+					this.answerIndex = 0;
+					break;
+
+				case -1: // 「前へ」
+					this.answerIndex--;
+					if (this.answerIndex < 0) {
+						this.answerIndex = 0; // 0より小さくはならない
+					}
+					break;
+
+				case 1: // 「次へ」
+					this.answerIndex++;
+					if (this.answerIndex >= totalAnswers) {
+						// 総数を超えないように、最後のインデックスに留める
+						this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
+					}
+					break;
+
+				default: // 「最後へ」 (directionが上記以外の値の場合)
+					this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
+					break;
+			}
+
+			// 新しいインデックスに基づいて解答の表示を更新する
+			this.showAnswer();
+		},
+		
 		is_autosolve: false,
 		updateIsAutosolve: function(mode) {
 			if (this.is_autosolve !== mode) {
@@ -5464,6 +5644,15 @@ pzpr.classmgr.makeCommon({
 				groups2.allclear(false);
 			}
 			groups.length = len;
+			
+			for (let i = 0; i < group.length; i++) {
+				const element = group[i];
+				element.qansBySolver = 0;
+				element.qsubBySolver = 0;
+				element.lineBySolver = 0;
+				element.qcandBySolver = null;
+			}
+			
 			return len - clen;
 		},
 		getGroup: function(group) {
@@ -12987,7 +13176,7 @@ pzpr.classmgr.makeCommon({
 				var cell = clist[i];
 
 				g.vid = "c_dot_" + cell.id;
-				if (cell.isDot()) {
+				if (cell.isDot()|| cell.isDotBySolver()) {
 					if (!cell.trial) {
 						g.fillStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
 					} else {
@@ -13279,6 +13468,27 @@ pzpr.classmgr.makeCommon({
 				{}
 			);
 		},
+		drawSolverAnsNumbers: function() {
+
+			// 1. ソルバーの答えを描画するためのグラフィックスコンテキスト（レイヤー）を準備する。
+			// この呼び出しは、描画の土台を整える役割を持つ。
+			this.vinc("cell_solver_ans_number", "auto");
+
+			// 2. 共通の数字描画関数を呼び出す。
+			this.drawNumbers_com(
+				// 第1引数: 描画するテキスト（数字）を取得するための関数
+				this.getSolverAnsNumberText,
+
+				// 第2引数: テキストの色を取得するための関数
+				this.getSolverAnsNumberColor,
+
+				// 第3引数: 描画する各テキスト要素に設定するIDの接頭辞
+				"cell_solver_ans_text_",
+
+				// 第4引数: 描画オプション（今回は空なのでデフォルト設定が使われる）
+				{}
+			);
+		},
 		drawHatenas: function() {
 			function getQuesHatenaText(cell) {
 				return cell.ques === -2 || cell.qnum === -2 ? "?" : "";
@@ -13321,6 +13531,19 @@ pzpr.classmgr.makeCommon({
 		},
 		getAnsNumberText: function(cell) {
 			return this.getNumberText(cell, cell.anum);
+		},
+		getSolverAnsNumberText: function(cell) {
+
+			// ソルバーによる答え(qansBySolver)が 0 かどうかをチェックする。
+			// 0 は「数字なし」を意味する。
+			if (cell.qansBySolver === 0) {
+				// 描画すべき数字がないため、空の文字列を返す。
+				return "";
+			} else {
+				// 描画すべき数字がある場合、
+				// 共通のテキスト整形関数を呼び出して、最終的な表示文字列を取得する。
+				return this.getNumberText(cell, cell.qansBySolver);
+			}
 		},
 		getNumberText: function(cell, num) {
 			if (!cell.numberAsLetter) {
@@ -13388,7 +13611,10 @@ pzpr.classmgr.makeCommon({
 			}
 			return !cell.trial ? this.qanscolor : this.trialcolor;
 		},
-
+		getSolverAnsNumberColor: function(cell) {
+			return this.solvercolor;
+		},
+		
 		//---------------------------------------------------------------------------
 		// pc.drawNumbersExCell()  ExCellの数字をCanvasに書き込む
 		//---------------------------------------------------------------------------
@@ -13440,6 +13666,64 @@ pzpr.classmgr.makeCommon({
 						});
 					} else {
 						g.vhide();
+					}
+				}
+			}
+		},
+
+		drawCandidateNumbers: function(numCandidates) {
+			// 1. 描画の準備
+			const candidateContext = this.vinc("cell_candnumber", "auto");
+
+			// セル内に作るミニグリッドの辺の長さ (例: 9個の候補なら3x3なので、gridSizeは3)
+			const gridSize = Math.round(Math.sqrt(numCandidates));
+
+			const cellsInRange = this.range.cells;
+
+			// 2. 各セルを順番に処理
+			for (const cell of cellsInRange) {
+				// 現在のセルの候補数字リストを取得 (例: [true, false, true, ...])
+				const candidates = cell.qcandBySolver;
+
+				// 3. 各候補数字 (例: 1から9まで) を順番に処理
+				for (let candidateIndex = 0; candidateIndex < numCandidates; candidateIndex++) {
+
+					// 描画する各候補数字に、ユニークなIDを割り当てる
+					candidateContext.vid = `cell_candtext_${cell.id}_${candidateIndex}`;
+
+					// 候補数字リストが存在し、かつ現在の候補が表示すべきものとしてマークされているかチェック
+					if (candidates && candidates[candidateIndex]) {
+
+						// 4. 描画処理を実行
+						candidateContext.fillStyle = this.solvercolor; // 描画色を設定
+
+						// --- セル内のミニグリッド上での位置を計算 ---
+						const miniGridCol = candidateIndex % gridSize;      // ミニグリッドの列 (0, 1, 2, ...)
+						const miniGridRow = Math.floor(candidateIndex / gridSize); // ミニグリッドの行 (0, 1, 2, ...)
+
+						// セルの中心を(0,0)としたときの相対的なオフセット(-1〜+1)を計算
+						const offsetX = (miniGridCol + 0.5) / gridSize * 2 - 1;
+						const offsetY = (miniGridRow + 0.5) / gridSize * 2 - 1;
+
+						// 盤面全体での最終的な描画座標を計算
+						const finalX = (cell.bx + offsetX) * this.bw;
+						const finalY = (cell.by + offsetY) * this.bh;
+
+						// 描画オプション (文字サイズなど) を設定
+						const displayOptions = {
+							ratio: (1 / gridSize) * 0.9, // 文字サイズをセルの大きさの1/gridSizeより少し小さくする
+							hoffset: 0
+						};
+
+						// 実際に描画する数字 (インデックスは0からなので+1する)
+						const numberToDraw = candidateIndex + 1;
+
+						// 共通のテキスト描画関数を呼び出す
+						this.disptext(String(numberToDraw), finalX, finalY, displayOptions);
+
+					} else {
+						// 5. 候補が存在しない場合は、対応する描画要素を隠す
+						candidateContext.vhide();
 					}
 				}
 			}
@@ -14036,7 +14320,7 @@ pzpr.classmgr.makeCommon({
 		},
 		getLineColor: function(border) {
 			this.addlw = 0;
-			if (border.isLine()) {
+			if (border.isLine() || border.isLineBySolver()) {
 				var info = border.error || border.qinfo,
 					puzzle = this.puzzle;
 				var isIrowake =
@@ -14222,19 +14506,36 @@ pzpr.classmgr.makeCommon({
 		// pc.drawTriangle1()  三角形をCanvasに書き込む(1マスのみ)
 		//---------------------------------------------------------------------------
 		drawTriangle: function() {
-			var g = this.vinc("cell_triangle", "crispEdges");
+			const triangleContext = this.vinc("cell_triangle", "crispEdges");
+			const cellsInRange = this.range.cells;
 
-			var clist = this.range.cells;
-			for (var i = 0; i < clist.length; i++) {
-				var cell = clist[i],
-					num = cell.ques !== 0 ? cell.ques : cell.qans;
+			// --- ループ1: ソルバーによる三角形の描画（下層レイヤー） ---
+			for (let i = 0; i < cellsInRange.length; i++) {
+				const cell = cellsInRange[i];
 
-				g.vid = "c_tri_" + cell.id;
-				if (num >= 2 && num <= 5) {
-					g.fillStyle = this.getTriangleColor(cell);
-					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, num);
+				const solverAns = cell.qansBySolver;
+				triangleContext.vid = `c_tri_solver_${cell.id}`;
+
+				if (solverAns >= 2 && solverAns <= 5) {
+					triangleContext.fillStyle = this.solvercolor;
+					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, solverAns);
 				} else {
-					g.vhide();
+					triangleContext.vhide();
+				}
+			}
+
+			// --- ループ2: 問題およびユーザー回答による三角形の描画（上層レイヤー） ---
+			for (let i = 0; i < cellsInRange.length; i++) {
+				const cell = cellsInRange[i];
+
+				const displayAns = (cell.ques !== 0) ? cell.ques : cell.qans;
+				triangleContext.vid = `c_tri_${cell.id}`;
+
+				if (displayAns >= 2 && displayAns <= 5) {
+					triangleContext.fillStyle = this.getTriangleColor(cell);
+					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, displayAns);
+				} else {
+					triangleContext.vhide();
 				}
 			}
 		},
