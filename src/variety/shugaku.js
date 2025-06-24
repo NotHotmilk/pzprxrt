@@ -260,8 +260,15 @@
 		minnum: 0,
 
 		isPillow: function() {
-			return this.qans >= 41 && this.qans <= 45;
-		}
+			return 41 <= this.qans && this.qans <= 45;
+		},
+		isPillowBySolver: function() {
+			return this.qansBySolver === 40;
+		},
+		isDotBySolver: function (){
+			return this.qansBySolver === 50;
+		},
+		
 	},
 	Border: {
 		// 41～45:まくらありふとんマス 46～50:まくらなしふとんマス
@@ -274,6 +281,33 @@
 		isBorder: function() {
 			var qa1 = this.sidecell[0].qans;
 			var qa2 = this.sidecell[1].qans;
+			if (this.isVert()) {
+				return !!this.isbdv_cc1[qa1] || !!this.isbdv_cc2[qa2];
+			} else {
+				return !!this.isbdh_cc1[qa1] || !!this.isbdh_cc2[qa2];
+			}
+		},
+		isBorderBySolver: function() {
+			var qa1_qansBySolver = this.sidecell[0].qansBySolver;
+			var qa1_qsubBySolver = this.sidecell[0].qsubBySolver;
+			var qa2_qansBySolver = this.sidecell[1].qansBySolver;
+			var qa2_qsubBySolver = this.sidecell[1].qsubBySolver;
+			
+			// sub -> 1: West, 2: East, 3: South
+			// ans -> 40: Pillow, 50: Futon
+			let getAnsFromAnsSub = function(ans, sub) {
+					if (ans === 40) {
+						return { 1: 45, 2: 44, 3: 42 }[sub] || 0;
+					} 
+					if (ans === 50) {
+						return { 1: 49, 2: 50, 3: 48 }[sub] || 0;
+					}
+					return 0; // TODO: 確定するborderを全て表示する
+				};
+			
+			var qa1 = getAnsFromAnsSub(qa1_qansBySolver, qa1_qsubBySolver);
+			var qa2 = getAnsFromAnsSub(qa2_qansBySolver, qa2_qsubBySolver);
+			
 			if (this.isVert()) {
 				return !!this.isbdv_cc1[qa1] || !!this.isbdv_cc2[qa2];
 			} else {
@@ -351,6 +385,9 @@
 		undefcolor: "silver" /* 未確定マスの色 */,
 		trialcolor: "rgb(80, 0, 80)",
 
+		solvercolor: "rgb(136,136,228)",
+		solverqanscolor: "rgb(6,119,142)",
+
 		circleratio: [0.47, 0.42],
 
 		numbercolor_func: "qnum",
@@ -411,6 +448,23 @@
 						color = this.targetbgcolor;
 					}
 				}
+				
+				//					isdraw = cell.isFuton() || cell.isFutonBySolver();
+				// 				//var color = cell.error === 1 ? this.errbcolor1 : "white";
+				// 				
+				// 				var color = null;
+				// 				if (cell.error === 1) {
+				// 					color = this.errbcolor1;
+				// 				} else {
+				// 					// getColorSolverAware()を一部変更
+				// 					if (cell.isFuton() && cell.isFutonBySolver()) {
+				// 						color = "rgb(182,182,220)";
+				// 					} else if (cell.isFutonBySolver()) {
+				// 						color = "rgb(83,169,182)";
+				// 					} else {
+				// 						color = "white";
+				// 					}
+				// 				}
 
 				g.vid = "c_futon_" + cell.id;
 				if (isdraw) {
@@ -444,7 +498,7 @@
 				rh = this.bh * 0.7 - 1;
 			for (var i = 0; i < clist.length; i++) {
 				var cell = clist[i],
-					isdraw = cell.qans >= 41 && cell.qans <= 45;
+					isdraw = cell.isPillow() || cell.isPillowBySolver();
 				if (inputting) {
 					if (!isdraw && tc === cell) {
 						isdraw = true;
@@ -462,7 +516,11 @@
 					} else if (cell.error === 1) {
 						g.fillStyle = this.errbcolor1;
 					} else {
-						g.fillStyle = "white";
+						g.fillStyle = this.getColorSolverAware(
+							cell.isPillow(),
+							cell.isPillowBySolver(),
+							"white"
+						)
 					}
 					g.shapeRectCenter(cell.bx * this.bw, cell.by * this.bh, rw, rh);
 				} else {
@@ -472,7 +530,7 @@
 		},
 
 		getBorderColor: function(border) {
-			var isdraw = border.isBorder(),
+			var isdraw = border.isBorder() || border.isBorderBySolver(),
 				mv = this.puzzle.mouse,
 				trial = false;
 			var cell1 = border.sidecell[0],
@@ -496,12 +554,49 @@
 				}
 			} else {
 				trial =
-					(cell1.trial || cell1.qans === 0) &&
-					(cell2.trial || cell2.qans === 0);
+					(cell1.trial || (cell1.qans === 0 && cell1.qansBySolver === 0)) &&
+					(cell2.trial || (cell2.qans === 0 && cell2.qansBySolver === 0));
 			}
 
-			return isdraw ? (!trial ? this.shadecolor : this.trialcolor) : null;
-		}
+			if (isdraw) {
+				if (!trial) {
+					if (border.isBorder() && border.isBorderBySolver()) {
+						return "rgb(3,82,97)";
+					} else if (border.isBorderBySolver()) {
+						return "rgb(90,90,175)";
+					} else {
+						return this.shadecolor || this.qanscolor;
+					}
+				} else {
+					return this.trialcolor;
+				}
+			} else {
+				return null;
+			}
+		},
+
+		drawDotCells: function() {
+			var g = this.vinc("cell_dot", "auto", true);
+
+			var dsize = Math.max(this.cw * 0.06, 2);
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+
+				g.vid = "c_dot_" + cell.id;
+				if (cell.isDot()|| cell.isDotBySolver()) {
+					if (!cell.trial) {
+						g.fillStyle = this.getColorSolverAware(cell.isDot(), cell.isDotBySolver());
+					} else {
+						g.fillStyle = this.trialcolor;
+					}
+					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, dsize);
+				} else {
+					g.vhide();
+				}
+			}
+		},
+
 	},
 
 	//---------------------------------------------------------

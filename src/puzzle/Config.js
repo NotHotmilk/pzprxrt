@@ -474,7 +474,13 @@
 					break;
 				case "autosolver":
 				case "run_autosolver":
-					exec = pid === "nurimisaki" || pid === "nurikabe" || pid === "lits" || pid === "heyawake" || pid === "slither" || pid === "mashu" || pid === "yajilin" || pid === "anymino" || pid === "guidearrow";
+					exec = pid === "nurimisaki" || 
+						pid === "nurikabe" || pid === "lits" || 
+						pid === "heyawake" || pid === "slither" || 
+						pid === "mashu" || pid === "yajilin" ||
+						pid === "anymino" || pid === "guidearrow" || 
+						pid === "shakashaka" || pid === "lightup" ||
+						pid === "shugaku";
 					break;
 				case "voxas_tatami":
 					exec = pid === "voxas";

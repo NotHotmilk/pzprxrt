@@ -77,6 +77,10 @@
 			return this.qans === 1;
 		},
 
+		isAkariBySolver: function() {
+			return this.qansBySolver === 1;
+		},
+
 		setAkariInfo: function(num) {
 			var val = 0,
 				old = this.akariinfo;
@@ -283,13 +287,19 @@
 			for (var i = 0; i < clist.length; i++) {
 				var cell = clist[i];
 				g.vid = "c_AK_" + cell.id;
-				if (cell.isAkari()) {
-					g.fillStyle =
-						cell.error === 4
-							? this.errcolor1
-							: !cell.trial
-							? lampcolor
-							: this.trialcolor;
+				
+				if (cell.isAkari() || cell.isAkariBySolver()) {
+					if (cell.error === 4) {
+						g.fillStyle = this.errcolor1;
+					} else if (cell.trial) {
+						g.fillStyle = this.trialcolor;
+					} else {
+						g.fillStyle = this.getColorSolverAware(
+							cell.qans === 1,
+							cell.qansBySolver === 1,
+							"rgb(0, 127, 96)" 
+						);
+					}
 					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, rsize);
 				} else {
 					g.vhide();

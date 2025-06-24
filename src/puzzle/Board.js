@@ -97,7 +97,11 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" || this.pid === "lits" || this.pid === "heyawake" || this.pid === "yajilin" || this.pid === "anymino" || this.pid === "guidearrow";
+			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" ||
+				this.pid === "lits" || this.pid === "heyawake" || 
+				this.pid === "yajilin" || this.pid === "anymino" || 
+				this.pid === "guidearrow" || this.pid === "shakashaka" ||
+				this.pid === "lightup" || this.pid === "shugaku";
 			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin";
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -140,52 +144,132 @@ pzpr.classmgr.makeCommon({
 			return needUpdateField;
 		},
 
-		updateSolverAnswerForCells: function (result) {
+		updateSolverAnswerForCells: function(result) {
+			// 既存のソルバーによる解答を一旦クリアする
 			this.clearSolverAnswerForCells();
-			if (typeof result === "string") {
-				for (var i = 0; i < this.cell.length; ++i) {
-					var cell = this.cell[i];
-					var y = (cell.by - 1) / 2;
-					var x = (cell.bx - 1) / 2;
-					if (y % 2 === x % 2) {
-						cell.qansBySolver = 1;
+
+			// resultがオブジェクトの場合、詳細な解答データを処理する
+			if (typeof result !== "string") {
+				// 各セルに対応するアイテムを格納するための2次元配列を初期化
+				const cellItems = [];
+				for (let rowIndex = 0; rowIndex < this.rows; ++rowIndex) {
+					const row = [];
+					for (let colIndex = 0; colIndex < this.cols; ++colIndex) {
+						row.push([]);
+					}
+					cellItems.push(row);
+				}
+
+				// 解答データをループし、対応するセルにアイテムを振り分ける
+				const solverData = result.data;
+				for (let i = 0; i < solverData.length; ++i) {
+					const itemData = solverData[i];
+
+					// アイテムの色が'green'で、座標がセルの中心を示す場合 (x, yが共に奇数)
+					if (itemData.color === "green" && itemData.x % 2 === 1 && itemData.y % 2 === 1) {
+						// パズルの内部座標からセルのインデックスに変換
+						const cellY = (itemData.y - 1) / 2;
+						const cellX = (itemData.x - 1) / 2;
+						cellItems[cellY][cellX].push(itemData.item);
 					}
 				}
-				return;
-			}
-			var dataByCell = [];
-			for (var y = 0; y < this.rows; ++y) {
-				var row = [];
-				for (var x = 0; x < this.cols; ++x) {
-					row.push([]);
-				}
-				dataByCell.push(row);
-			}
-			var dataRaw = result.data;
-			for (var i = 0; i < dataRaw.length; ++i) {
-				var elem = dataRaw[i];
-				if (elem.color !== "green") { // TODO
-					continue;
-				}
-				if (!(elem.x % 2 === 1 && elem.y % 2 === 1)) {
-					continue;
-				}
-				dataByCell[(elem.y - 1) / 2][(elem.x - 1) / 2].push(elem.item);
-			}
-			for (var i = 0; i < this.cell.length; ++i) {
-				var cell = this.cell[i];
-				var data = dataByCell[(cell.by - 1) / 2][(cell.bx - 1) / 2];
 
-				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "block" || data[j] === "fill") {
-						cell.qansBySolver = 1;
-					} else if (data[j] === "dot") {
-						cell.qsubBySolver = 1;
+				// 盤面の全セルをループして、ソルバーの解答をセットする
+				for (let i = 0; i < this.cell.length; ++i) {
+					const cell = this.cell[i];
+
+					// セルの内部座標 (bx, by) からセルのインデックスに変換
+					const cellY = (cell.by - 1) / 2;
+					const cellX = (cell.bx - 1) / 2;
+					const itemsInCell = cellItems[cellY][cellX];
+
+					// セルに割り当てられたアイテムの種類に応じて、セルの状態を更新
+					for (let k = 0; k < itemsInCell.length; ++k) {
+						const item = itemsInCell[k];
+
+						// アイテムがオブジェクトでない場合（単純な文字列）
+						if (typeof item === 'string') {
+							switch (item) {
+								case "block":
+								case "fill":
+								case "circle":
+									cell.qansBySolver = 1;
+									break;
+								case "dot":
+									cell.qsubBySolver = 1;
+									break;
+								case "aboloUpperLeft":
+									cell.qansBySolver = 5;
+									break;
+								case "aboloUpperRight":
+									cell.qansBySolver = 4;
+									break;
+								case "aboloLowerLeft":
+									cell.qansBySolver = 2;
+									break;
+								case "aboloLowerRight":
+									cell.qansBySolver = 3;
+									break;
+								case "shugakuPillow":
+									cell.qansBySolver = 40;
+									break;
+								case "shugakuFuton":
+									cell.qansBySolver = 50;
+									break;
+								case "shugakuWest":
+									cell.qsubBySolver = 1;
+									break;
+								case "shugakuEast":
+									cell.qsubBySolver = 2;
+									break;
+								case "shugakuSouth":
+									cell.qsubBySolver = 3;
+									break;
+										
+							}
+						}
+						// アイテムが 'kind' プロパティを持つオブジェクトの場合
+						else if (item && item.kind) {
+							switch (item.kind) {
+								case "text":
+									cell.qansBySolver = parseInt(item.data, 10);
+									break;
+								case "sudokuCandidateSet": // 数独の候補数字など
+									cell.qcandBySolver = [];
+									for (let n = 0; n < this.rows; ++n) {
+										cell.qcandBySolver.push(false);
+									}
+									for (let n = 0; n < item.values.length; ++n) {
+										const value = item.values[n];
+										if (value >= 1 && value <= this.rows) {
+											cell.qcandBySolver[value - 1] = true;
+										}
+									}
+									break;
+							}
+						}
+					}
+				}
+			}
+			// resultが文字列の場合、特定のパターンで盤面を塗りつぶす
+			else {
+				// パズルの種類 (pid) によってデフォルト値を変える
+				// "shakashaka" なら 2、それ以外なら 1
+				const defaultValue = (this.pid === "shakashaka") ? 2 : 1;
+
+				for (let i = 0; i < this.cell.length; ++i) {
+					const cell = this.cell[i];
+					const cellY = (cell.by - 1) / 2;
+					const cellX = (cell.bx - 1) / 2;
+
+					// セルのX座標とY座標の偶奇が一致する場合 (市松模様)
+					if (cellY % 2 === cellX % 2) {
+						cell.qansBySolver = defaultValue;
 					}
 				}
 			}
 		},
-
+		
 		clearSolverAnswerForBorders: function () {
 			var needUpdateField = false;
 
@@ -200,49 +284,130 @@ pzpr.classmgr.makeCommon({
 			return needUpdateField;
 		},
 
-		updateSolverAnswerForBorders: function (result) {
+		updateSolverAnswerForBorders: function(result) {
+			// 最初に、既存のソルバーによる境界線の回答をすべてクリアする
 			this.clearSolverAnswerForBorders();
-			if (typeof result === "string") {
-				for (var i = 0; i < this.border.length; ++i) {
-					var border = this.border[i];
-					border.qsubBySolver = 2;
-				}
-				return;
-			}
 
-			var dataByBorder = [];
-			for (var y = 0; y < this.rows * 2 + 1; ++y) {
-				var row = [];
-				for (var x = 0; x < this.cols * 2 + 1; ++x) {
-					row.push([]);
-				}
-				dataByBorder.push(row);
-			}
-			var dataRaw = result.data;
-			for (var i = 0; i < dataRaw.length; ++i) {
-				var elem = dataRaw[i];
-				if (elem.color !== "green") { // TODO
-					continue;
-				}
-				if (elem.x % 2 === elem.y % 2) {
-					continue;
-				}
-				dataByBorder[elem.y][elem.x].push(elem.item);
-			}
-			for (var i = 0; i < this.border.length; ++i) {
-				var border = this.border[i];
-				var data = dataByBorder[border.by][border.bx];
+			// resultがオブジェクトの場合、詳細な回答データを処理する
+			if (typeof result !== "string") {
 
-				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "line" || data[j] === "wall") {
-						border.lineBySolver = 1;
-					} else if (data[j] === "cross") {
-						border.qsubBySolver = 2;
+				// 内部グリッド（セルと境界線を含む）を表現する2次元配列を初期化
+				const gridItems = Array.from({ length: 2 * this.rows + 1 }, () =>
+					Array.from({ length: 2 * this.cols + 1 }, () => [])
+				);
+
+				// ソルバーのデータを処理し、アイテムをグリッドに振り分ける
+				for (const entry of result.data) {
+					// アイテムの色が'green'で、かつ境界線の位置にある場合
+					// (座標のxとyの偶奇が異なる)
+					if (entry.color === "green" && (entry.x % 2 !== entry.y % 2)) {
+						gridItems[entry.y][entry.x].push(entry.item);
 					}
+				}
+
+				// 盤面の全境界線をループして、ソルバーの回答を設定する
+				for (const border of this.border) {
+					// 境界線の内部座標(bx, by)に対応するアイテムリストを取得
+					const itemsOnBorder = gridItems[border.by][border.bx];
+
+					// 境界線上のアイテムの種類に応じて、状態を更新
+					for (const item of itemsOnBorder) {
+						if (item === "line" || item === "wall") {
+							border.lineBySolver = 1; // 線を引く
+						} else if (item === "cross") {
+							border.qsubBySolver = 2; // 線を引かない印 (×) を付ける
+						}
+					}
+				}
+
+			}
+			// resultが文字列の場合、すべての境界線にデフォルトの回答を設定する
+			else {
+				for (const border of this.border) {
+					// すべての境界線に補助的な回答 '2' (おそらく'×印') を設定
+					border.qsubBySolver = 2;
 				}
 			}
 		},
 
+		showAnswer: function() {
+			// 表示すべき解答データ (this.answers) がなければ何もしない
+			if (!this.answers) {
+				return;
+			}
+
+			let answerData;
+			let totalAnswers;
+			const currentIndex = this.answerIndex;
+
+			// this.answers の型に応じて、表示するデータと総解答数を設定する
+			if (typeof this.answers === 'string') {
+				// 解答が単一の文字列の場合 (例: "terminated")
+				answerData = this.answers;
+				totalAnswers = 0; // 総数は意味を持たない
+			} else {
+				// 解答が複数あるオブジェクトの場合
+				answerData = this.answers.answers[currentIndex];
+				totalAnswers = this.answers.answers.length;
+			}
+
+			// UI上の「n/m」カウンター表示を更新する
+			const locatorElement = ui.popupmgr.popups.auxeditor.pop.querySelector(".solver-answer-locator");
+			if (answerData === "terminated") {
+				locatorElement.innerText = "Terminated";
+			} else if (totalAnswers > 0) {
+				locatorElement.innerText = `${currentIndex + 1}/${totalAnswers}`;
+			}
+
+			// 特定のパズル("numlin-aux")の場合、境界線の状態も更新する
+			if (this.pid === "numlin-aux") {
+				// 以前に解析した関数を呼び出す
+				this.updateSolverAnswerForBorders(answerData);
+			}
+
+			// 盤面全体を再描画して、変更を画面に反映させる
+			this.puzzle.painter.paintAll();
+		},
+
+		locateAnswer: function(direction) {
+			// 解答データがなければ何もしない
+			if (this.answers === null) {
+				return;
+			}
+
+			// 解答の総数を取得
+			const totalAnswers = (typeof this.answers === 'string') ? 0 : this.answers.answers.length;
+
+			// 移動方向に応じて、表示する解答のインデックスを変更する
+			switch (direction) {
+				case -2: // 「最初へ」
+					this.answerIndex = 0;
+					break;
+
+				case -1: // 「前へ」
+					this.answerIndex--;
+					if (this.answerIndex < 0) {
+						this.answerIndex = 0; // 0より小さくはならない
+					}
+					break;
+
+				case 1: // 「次へ」
+					this.answerIndex++;
+					if (this.answerIndex >= totalAnswers) {
+						// 総数を超えないように、最後のインデックスに留める
+						this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
+					}
+					break;
+
+				default: // 「最後へ」 (directionが上記以外の値の場合)
+					this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
+					break;
+			}
+
+			// 新しいインデックスに基づいて解答の表示を更新する
+			this.showAnswer();
+		},
+		
 		is_autosolve: false,
 		updateIsAutosolve: function(mode) {
 			if (this.is_autosolve !== mode) {
@@ -326,6 +491,15 @@ pzpr.classmgr.makeCommon({
 				groups2.allclear(false);
 			}
 			groups.length = len;
+			
+			for (let i = 0; i < group.length; i++) {
+				const element = group[i];
+				element.qansBySolver = 0;
+				element.qsubBySolver = 0;
+				element.lineBySolver = 0;
+				element.qcandBySolver = null;
+			}
+			
 			return len - clen;
 		},
 		getGroup: function(group) {

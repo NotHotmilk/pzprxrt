@@ -597,7 +597,10 @@ pzpr.classmgr.makeCommon({
 		},
 
 		isDot: function() {
-			return this.qsub === 1 || this.qsubBySolver === 1;
+			return this.qsub === 1;
+		},
+		isDotBySolver: function (){
+			return this.qsubBySolver === 1;
 		},
 
 		//---------------------------------------------------------------------------
@@ -923,7 +926,10 @@ pzpr.classmgr.makeCommon({
 		// border.removeLineAndQsub()  removes line and qsub
 		//-----------------------------------------------------------------------
 		isLine: function() {
-			return this.line > 0 || this.lineBySolver > 0;
+			return this.line > 0;
+		},
+		isLineBySolver: function() {
+			return this.lineBySolver > 0;
 		},
 		setLine: function(id) {
 			this.setLineVal(1);
@@ -953,6 +959,9 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		isBorder: function() {
 			return this.ques > 0 || this.qans > 0;
+		},
+		isBorderBySolver: function() {
+			return this.ques > 0 || this.qansBySolver > 0;
 		},
 		setBorder: function() {
 			if (this.puzzle.editmode) {

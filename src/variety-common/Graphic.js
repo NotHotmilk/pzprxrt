@@ -244,7 +244,7 @@ pzpr.classmgr.makeCommon({
 				var cell = clist[i];
 
 				g.vid = "c_dot_" + cell.id;
-				if (cell.isDot()) {
+				if (cell.isDot()|| cell.isDotBySolver()) {
 					if (!cell.trial) {
 						g.fillStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
 					} else {
@@ -536,6 +536,27 @@ pzpr.classmgr.makeCommon({
 				{}
 			);
 		},
+		drawSolverAnsNumbers: function() {
+
+			// 1. ソルバーの答えを描画するためのグラフィックスコンテキスト（レイヤー）を準備する。
+			// この呼び出しは、描画の土台を整える役割を持つ。
+			this.vinc("cell_solver_ans_number", "auto");
+
+			// 2. 共通の数字描画関数を呼び出す。
+			this.drawNumbers_com(
+				// 第1引数: 描画するテキスト（数字）を取得するための関数
+				this.getSolverAnsNumberText,
+
+				// 第2引数: テキストの色を取得するための関数
+				this.getSolverAnsNumberColor,
+
+				// 第3引数: 描画する各テキスト要素に設定するIDの接頭辞
+				"cell_solver_ans_text_",
+
+				// 第4引数: 描画オプション（今回は空なのでデフォルト設定が使われる）
+				{}
+			);
+		},
 		drawHatenas: function() {
 			function getQuesHatenaText(cell) {
 				return cell.ques === -2 || cell.qnum === -2 ? "?" : "";
@@ -578,6 +599,19 @@ pzpr.classmgr.makeCommon({
 		},
 		getAnsNumberText: function(cell) {
 			return this.getNumberText(cell, cell.anum);
+		},
+		getSolverAnsNumberText: function(cell) {
+
+			// ソルバーによる答え(qansBySolver)が 0 かどうかをチェックする。
+			// 0 は「数字なし」を意味する。
+			if (cell.qansBySolver === 0) {
+				// 描画すべき数字がないため、空の文字列を返す。
+				return "";
+			} else {
+				// 描画すべき数字がある場合、
+				// 共通のテキスト整形関数を呼び出して、最終的な表示文字列を取得する。
+				return this.getNumberText(cell, cell.qansBySolver);
+			}
 		},
 		getNumberText: function(cell, num) {
 			if (!cell.numberAsLetter) {
@@ -645,7 +679,10 @@ pzpr.classmgr.makeCommon({
 			}
 			return !cell.trial ? this.qanscolor : this.trialcolor;
 		},
-
+		getSolverAnsNumberColor: function(cell) {
+			return this.solvercolor;
+		},
+		
 		//---------------------------------------------------------------------------
 		// pc.drawNumbersExCell()  ExCellの数字をCanvasに書き込む
 		//---------------------------------------------------------------------------
@@ -697,6 +734,64 @@ pzpr.classmgr.makeCommon({
 						});
 					} else {
 						g.vhide();
+					}
+				}
+			}
+		},
+
+		drawCandidateNumbers: function(numCandidates) {
+			// 1. 描画の準備
+			const candidateContext = this.vinc("cell_candnumber", "auto");
+
+			// セル内に作るミニグリッドの辺の長さ (例: 9個の候補なら3x3なので、gridSizeは3)
+			const gridSize = Math.round(Math.sqrt(numCandidates));
+
+			const cellsInRange = this.range.cells;
+
+			// 2. 各セルを順番に処理
+			for (const cell of cellsInRange) {
+				// 現在のセルの候補数字リストを取得 (例: [true, false, true, ...])
+				const candidates = cell.qcandBySolver;
+
+				// 3. 各候補数字 (例: 1から9まで) を順番に処理
+				for (let candidateIndex = 0; candidateIndex < numCandidates; candidateIndex++) {
+
+					// 描画する各候補数字に、ユニークなIDを割り当てる
+					candidateContext.vid = `cell_candtext_${cell.id}_${candidateIndex}`;
+
+					// 候補数字リストが存在し、かつ現在の候補が表示すべきものとしてマークされているかチェック
+					if (candidates && candidates[candidateIndex]) {
+
+						// 4. 描画処理を実行
+						candidateContext.fillStyle = this.solvercolor; // 描画色を設定
+
+						// --- セル内のミニグリッド上での位置を計算 ---
+						const miniGridCol = candidateIndex % gridSize;      // ミニグリッドの列 (0, 1, 2, ...)
+						const miniGridRow = Math.floor(candidateIndex / gridSize); // ミニグリッドの行 (0, 1, 2, ...)
+
+						// セルの中心を(0,0)としたときの相対的なオフセット(-1〜+1)を計算
+						const offsetX = (miniGridCol + 0.5) / gridSize * 2 - 1;
+						const offsetY = (miniGridRow + 0.5) / gridSize * 2 - 1;
+
+						// 盤面全体での最終的な描画座標を計算
+						const finalX = (cell.bx + offsetX) * this.bw;
+						const finalY = (cell.by + offsetY) * this.bh;
+
+						// 描画オプション (文字サイズなど) を設定
+						const displayOptions = {
+							ratio: (1 / gridSize) * 0.9, // 文字サイズをセルの大きさの1/gridSizeより少し小さくする
+							hoffset: 0
+						};
+
+						// 実際に描画する数字 (インデックスは0からなので+1する)
+						const numberToDraw = candidateIndex + 1;
+
+						// 共通のテキスト描画関数を呼び出す
+						this.disptext(String(numberToDraw), finalX, finalY, displayOptions);
+
+					} else {
+						// 5. 候補が存在しない場合は、対応する描画要素を隠す
+						candidateContext.vhide();
 					}
 				}
 			}
@@ -1293,7 +1388,7 @@ pzpr.classmgr.makeCommon({
 		},
 		getLineColor: function(border) {
 			this.addlw = 0;
-			if (border.isLine()) {
+			if (border.isLine() || border.isLineBySolver()) {
 				var info = border.error || border.qinfo,
 					puzzle = this.puzzle;
 				var isIrowake =
@@ -1479,19 +1574,36 @@ pzpr.classmgr.makeCommon({
 		// pc.drawTriangle1()  三角形をCanvasに書き込む(1マスのみ)
 		//---------------------------------------------------------------------------
 		drawTriangle: function() {
-			var g = this.vinc("cell_triangle", "crispEdges");
+			const triangleContext = this.vinc("cell_triangle", "crispEdges");
+			const cellsInRange = this.range.cells;
 
-			var clist = this.range.cells;
-			for (var i = 0; i < clist.length; i++) {
-				var cell = clist[i],
-					num = cell.ques !== 0 ? cell.ques : cell.qans;
+			// --- ループ1: ソルバーによる三角形の描画（下層レイヤー） ---
+			for (let i = 0; i < cellsInRange.length; i++) {
+				const cell = cellsInRange[i];
 
-				g.vid = "c_tri_" + cell.id;
-				if (num >= 2 && num <= 5) {
-					g.fillStyle = this.getTriangleColor(cell);
-					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, num);
+				const solverAns = cell.qansBySolver;
+				triangleContext.vid = `c_tri_solver_${cell.id}`;
+
+				if (solverAns >= 2 && solverAns <= 5) {
+					triangleContext.fillStyle = this.solvercolor;
+					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, solverAns);
 				} else {
-					g.vhide();
+					triangleContext.vhide();
+				}
+			}
+
+			// --- ループ2: 問題およびユーザー回答による三角形の描画（上層レイヤー） ---
+			for (let i = 0; i < cellsInRange.length; i++) {
+				const cell = cellsInRange[i];
+
+				const displayAns = (cell.ques !== 0) ? cell.ques : cell.qans;
+				triangleContext.vid = `c_tri_${cell.id}`;
+
+				if (displayAns >= 2 && displayAns <= 5) {
+					triangleContext.fillStyle = this.getTriangleColor(cell);
+					this.drawTriangle1(cell.bx * this.bw, cell.by * this.bh, displayAns);
+				} else {
+					triangleContext.vhide();
 				}
 			}
 		},
