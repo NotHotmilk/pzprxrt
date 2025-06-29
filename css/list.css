@@ -98,6 +98,9 @@ div.lists {
 div.lists ul {
   padding-left: 32px;
 }
+div.solvers {
+  background-color: #dff8ff;
+}
 div.blocks {
   background-color: #ffdfdf;
 }
