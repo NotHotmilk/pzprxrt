@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-06-24
+ * Date: 2025-06-30
  */
 // intro.js
 
@@ -1288,6 +1288,7 @@ function toBGimage(pid) {
 		"kaisu",
 		"kissing",
 		"kropki",
+		"kurarin",
 		"kuroclone",
 		"kuromenbun",
 		"ladders",
@@ -3831,7 +3832,8 @@ ui.keypopup = {
 		retsurin: [10, 0],
 		forestwalk: [10, 0],
 		onsen: [10, 0],
-		wataridori: [10, 0]
+		wataridori: [10, 0],
+		kurarin: [133, 0]
 	},
 
 	//---------------------------------------------------------------------------
@@ -3988,6 +3990,8 @@ ui.keypopup = {
 			this.generate_infinity(mode);
 		} else if (type === 132) {
 			this.generate_outofsight(mode);
+		} else if (type === 133) {
+			this.generate_kurarin(mode);
 		} else if (type === 5339) {
 			this.generate_swslither();
 		}
@@ -4644,6 +4648,18 @@ ui.keypopup = {
 	generate_swslither: function() {
 		this.generate_main(
 			[["5", "🐑"], ["6", "🐺"], null, "1", "2", "3", "0", " ", ["-", "?"]],
+			3
+		);
+	},
+
+	generate_kurarin: function() {
+		this.generate_main(
+			[
+				["1", { text: "●" }],
+				["2", { text: "●", color: "gray" }],
+				["3", { text: "○" }],
+				" "
+			],
 			3
 		);
 	},
