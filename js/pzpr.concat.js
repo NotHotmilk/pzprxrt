@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-06-30
+ * Date: 2025-07-07
  */
 // intro.js
 
@@ -3239,13 +3239,22 @@ pzpr.MetaData.prototype = {
 					break;
 				case "autosolver":
 				case "run_autosolver":
-					exec = pid === "nurimisaki" || 
-						pid === "nurikabe" || pid === "lits" || 
-						pid === "heyawake" || pid === "slither" || 
-						pid === "mashu" || pid === "yajilin" ||
-						pid === "anymino" || pid === "guidearrow" || 
-						pid === "shakashaka" || pid === "lightup" ||
-						pid === "shugaku" || pid === "kurarin";
+					exec = 
+						pid === "nurimisaki" || 
+						pid === "nurikabe" || 
+						pid === "lits" || 
+						pid === "heyawake" ||
+						pid === "slither" || 
+						pid === "mashu" || 
+						pid === "yajilin" ||
+						pid === "anymino" ||
+						pid === "guidearrow" || 
+						pid === "shakashaka" ||
+						pid === "lightup" ||
+						pid === "shugaku" ||
+						pid === "kurarin" ||
+						pid === "squarejam"
+					;
 					break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
@@ -5252,13 +5261,26 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" ||
-				this.pid === "lits" || this.pid === "heyawake" || 
-				this.pid === "yajilin" || this.pid === "anymino" || 
-				this.pid === "guidearrow" || this.pid === "shakashaka" ||
-				this.pid === "lightup" || this.pid === "shugaku" ||
-				this.pid === "kurarin";
-			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin" || this.pid === "kurarin";
+			var updateCells = 
+				this.pid === "nurimisaki" || 
+				this.pid === "nurikabe" ||
+				this.pid === "lits" || 
+				this.pid === "heyawake" || 
+				this.pid === "yajilin" || 
+				this.pid === "anymino" || 
+				this.pid === "guidearrow" || 
+				this.pid === "shakashaka" ||
+				this.pid === "lightup" || 
+				this.pid === "shugaku" ||
+				this.pid === "kurarin"
+			;
+			var updateBorders = 
+				this.pid === "slither" ||
+				this.pid === "mashu" ||
+				this.pid === "yajilin" || 
+				this.pid === "kurarin" ||
+				this.pid === "squarejam"
+			;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
 				var needUpdateField = false;
@@ -5425,13 +5447,14 @@ pzpr.classmgr.makeCommon({
 				}
 			}
 		},
-		
+
 		clearSolverAnswerForBorders: function () {
 			var needUpdateField = false;
 
 			for (var i = 0; i < this.border.length; ++i) {
 				var border = this.border[i];
-				if (border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+				if (border.qansBySolver !== 0 || border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+					border.qansBySolver = 0;
 					border.lineBySolver = 0;
 					border.qsubBySolver = 0;
 					needUpdateField = true;
@@ -5439,7 +5462,7 @@ pzpr.classmgr.makeCommon({
 			}
 			return needUpdateField;
 		},
-
+		
 		updateSolverAnswerForBorders: function (result) {
 			this.clearSolverAnswerForBorders();
 			if (typeof result === "string") {
@@ -5474,8 +5497,13 @@ pzpr.classmgr.makeCommon({
 				var data = dataByBorder[border.by][border.bx];
 
 				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "line" || data[j] === "wall") {
-						border.lineBySolver = 1;
+					var item = data[j];
+					if (item === "line" || item === "wall" || item === "boldWall") {
+						if (this.pid === "squarejam") {
+							border.qansBySolver = 1;
+						} else {
+							border.lineBySolver = 1;
+						}
 					} else if (data[j] === "cross") {
 						border.qsubBySolver = 2;
 					}
@@ -8447,9 +8475,11 @@ pzpr.classmgr.makeCommon({
 			subshadecolor: "rgb(220, 220, 255)",
 
 			// Colors of components produced by solver
-			solvercolor: "rgb(192, 192, 255)",
-			solverqanscolor: "rgb(0, 160, 192)",
-
+			// solvercolor: "rgb(192, 192, 255)",
+			// solverqanscolor: "rgb(0, 160, 192)",
+			solvercolor: "rgb(225,158,176)",
+			solverqanscolor: "rgb(156,12,99)",
+			
 			// 黒マスの色
 			shadecolor: "black",
 			errcolor1: "rgb(192, 0, 0)",
@@ -14080,7 +14110,7 @@ pzpr.classmgr.makeCommon({
 		},
 		getBorderColor_qans: function(border) {
 			var err = border.error || border.qinfo;
-			if (border.isBorder()) {
+			if (border.qans === 1 || border.qansBySolver === 1) {
 				if (err === 1) {
 					return this.errcolor1;
 				} else if (err === -1) {
@@ -14088,7 +14118,7 @@ pzpr.classmgr.makeCommon({
 				} else if (border.trial) {
 					return this.linetrialcolor;
 				} else {
-					return this.qanscolor;
+					return this.getColorSolverAware(border.qans === 1, border.qansBySolver === 1, this.qanscolor); // 変更点
 				}
 			} else if (!!border.isCmp && border.isCmp()) {
 				return this.qcmpcolor;
@@ -14151,10 +14181,10 @@ pzpr.classmgr.makeCommon({
 				var border = blist[i];
 
 				g.vid = "b_qsub1_" + border.id;
-				if (border.qsub === 1) {
+				if (border.qsub === 1 || border.qsubBySolver === 2) {
 					var px = border.bx * this.bw + this.getBorderHorizontalOffset(border),
 						py = border.by * this.bh;
-					g.fillStyle = !border.trial ? this.pekecolor : this.linetrialcolor;
+					g.fillStyle = this.getColorSolverAware(border.qsub === 1, border.qsubBySolver === 2, this.pekecolor); // 変更点
 					if (border.isHorz()) {
 						g.fillRectCenter(px, py, 0.5, this.bh - m);
 					} else {
