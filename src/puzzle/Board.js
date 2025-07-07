@@ -283,13 +283,14 @@ pzpr.classmgr.makeCommon({
 				}
 			}
 		},
-		
+
 		clearSolverAnswerForBorders: function () {
 			var needUpdateField = false;
 
 			for (var i = 0; i < this.border.length; ++i) {
 				var border = this.border[i];
-				if (border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+				if (border.qansBySolver !== 0 || border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+					border.qansBySolver = 0;
 					border.lineBySolver = 0;
 					border.qsubBySolver = 0;
 					needUpdateField = true;
@@ -297,7 +298,7 @@ pzpr.classmgr.makeCommon({
 			}
 			return needUpdateField;
 		},
-
+		
 		updateSolverAnswerForBorders: function (result) {
 			this.clearSolverAnswerForBorders();
 			if (typeof result === "string") {
@@ -332,8 +333,13 @@ pzpr.classmgr.makeCommon({
 				var data = dataByBorder[border.by][border.bx];
 
 				for (var j = 0; j < data.length; ++j) {
-					if (data[j] === "line" || data[j] === "wall") {
-						border.lineBySolver = 1;
+					var item = data[j];
+					if (item === "line" || item === "wall" || item === "boldWall") {
+						if (this.pid === "squarejam") {
+							border.qansBySolver = 1;
+						} else {
+							border.lineBySolver = 1;
+						}
 					} else if (data[j] === "cross") {
 						border.qsubBySolver = 2;
 					}

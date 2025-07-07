@@ -488,6 +488,7 @@
 			yosenabe: [0, 0, "よせなべ", "Yosenabe"],
 			zabajaba: [0, 0, "Zabajaba", "Zabajaba", "kaidan"],
 			anymino: [0, 0, "Anymino", "Anymino"],
+			heyajilimisaki: [0, 0, "へやジリみさき", "Heyajirimisaki", "", { alias: "heyajirimisaki" }],
 		}
 	);
 })();
