@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-07-07
+ * Date: 2025-07-08
  */
 // intro.js
 
@@ -3260,6 +3260,7 @@ pzpr.MetaData.prototype = {
                         "waterwalk",
                         "firewalk",
                         "forestwalk",
+						"ringring",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5282,6 +5283,7 @@ pzpr.classmgr.makeCommon({
 				"aquapelago",
 				"cbanana",
 				"firewalk",
+				"ringring",
 			].includes(this.pid);
 			const updateBorders = [
 				"slither",
@@ -5293,6 +5295,7 @@ pzpr.classmgr.makeCommon({
 				"waterwalk",
 				"firewalk",
 				"forestwalk",
+				"ringring",
 			].includes(this.pid);
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
