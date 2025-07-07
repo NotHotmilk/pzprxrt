@@ -97,12 +97,26 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = this.pid === "nurimisaki" || this.pid === "nurikabe" ||
-				this.pid === "lits" || this.pid === "heyawake" || 
-				this.pid === "yajilin" || this.pid === "anymino" || 
-				this.pid === "guidearrow" || this.pid === "shakashaka" ||
-				this.pid === "lightup" || this.pid === "shugaku";
-			var updateBorders = this.pid === "slither" || this.pid === "mashu" || this.pid === "yajilin";
+			var updateCells = 
+				this.pid === "nurimisaki" || 
+				this.pid === "nurikabe" ||
+				this.pid === "lits" || 
+				this.pid === "heyawake" || 
+				this.pid === "yajilin" || 
+				this.pid === "anymino" || 
+				this.pid === "guidearrow" || 
+				this.pid === "shakashaka" ||
+				this.pid === "lightup" || 
+				this.pid === "shugaku" ||
+				this.pid === "kurarin"
+			;
+			var updateBorders = 
+				this.pid === "slither" ||
+				this.pid === "mashu" ||
+				this.pid === "yajilin" || 
+				this.pid === "kurarin" ||
+				this.pid === "squarejam"
+			;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
 				var needUpdateField = false;
@@ -284,52 +298,49 @@ pzpr.classmgr.makeCommon({
 			return needUpdateField;
 		},
 
-		updateSolverAnswerForBorders: function(result) {
-			// 最初に、既存のソルバーによる境界線の回答をすべてクリアする
+		updateSolverAnswerForBorders: function (result) {
 			this.clearSolverAnswerForBorders();
-
-			// resultがオブジェクトの場合、詳細な回答データを処理する
-			if (typeof result !== "string") {
-
-				// 内部グリッド（セルと境界線を含む）を表現する2次元配列を初期化
-				const gridItems = Array.from({ length: 2 * this.rows + 1 }, () =>
-					Array.from({ length: 2 * this.cols + 1 }, () => [])
-				);
-
-				// ソルバーのデータを処理し、アイテムをグリッドに振り分ける
-				for (const entry of result.data) {
-					// アイテムの色が'green'で、かつ境界線の位置にある場合
-					// (座標のxとyの偶奇が異なる)
-					if (entry.color === "green" && (entry.x % 2 !== entry.y % 2)) {
-						gridItems[entry.y][entry.x].push(entry.item);
-					}
-				}
-
-				// 盤面の全境界線をループして、ソルバーの回答を設定する
-				for (const border of this.border) {
-					// 境界線の内部座標(bx, by)に対応するアイテムリストを取得
-					const itemsOnBorder = gridItems[border.by][border.bx];
-
-					// 境界線上のアイテムの種類に応じて、状態を更新
-					for (const item of itemsOnBorder) {
-						if (item === "line" || item === "wall") {
-							border.lineBySolver = 1; // 線を引く
-						} else if (item === "cross") {
-							border.qsubBySolver = 2; // 線を引かない印 (×) を付ける
-						}
-					}
-				}
-
-			}
-			// resultが文字列の場合、すべての境界線にデフォルトの回答を設定する
-			else {
-				for (const border of this.border) {
-					// すべての境界線に補助的な回答 '2' (おそらく'×印') を設定
+			if (typeof result === "string") {
+				for (var i = 0; i < this.border.length; ++i) {
+					var border = this.border[i];
 					border.qsubBySolver = 2;
+				}
+				return;
+			}
+
+			var dataByBorder = [];
+			for (var y = 0; y < this.rows * 2 + 1; ++y) {
+				var row = [];
+				for (var x = 0; x < this.cols * 2 + 1; ++x) {
+					row.push([]);
+				}
+				dataByBorder.push(row);
+			}
+			var dataRaw = result.data;
+			for (var i = 0; i < dataRaw.length; ++i) {
+				var elem = dataRaw[i];
+				if (elem.color !== "green") { // TODO
+					continue;
+				}
+				if (elem.x % 2 === elem.y % 2) {
+					continue;
+				}
+				dataByBorder[elem.y][elem.x].push(elem.item);
+			}
+			for (var i = 0; i < this.border.length; ++i) {
+				var border = this.border[i];
+				var data = dataByBorder[border.by][border.bx];
+
+				for (var j = 0; j < data.length; ++j) {
+					if (data[j] === "line" || data[j] === "wall") {
+						border.lineBySolver = 1;
+					} else if (data[j] === "cross") {
+						border.qsubBySolver = 2;
+					}
 				}
 			}
 		},
-
+		
 		showAnswer: function() {
 			// 表示すべき解答データ (this.answers) がなければ何もしない
 			if (!this.answers) {
