@@ -3238,26 +3238,30 @@ pzpr.MetaData.prototype = {
 					exec = pid === "country";
 					break;
 				case "autosolver":
-				case "run_autosolver":
-					exec = 
-						pid === "nurimisaki" || 
-						pid === "nurikabe" || 
-						pid === "lits" || 
-						pid === "heyawake" ||
-						pid === "slither" || 
-						pid === "mashu" || 
-						pid === "yajilin" ||
-						pid === "anymino" ||
-						pid === "guidearrow" || 
-						pid === "shakashaka" ||
-						pid === "lightup" ||
-						pid === "shugaku" ||
-						pid === "kurarin" ||
-						pid === "squarejam" ||
-						pid === "aquapelago" ||
-						pid === "cbanana" 
-					;
-					break;
+                case "run_autosolver":
+                    exec = [
+                        "nurimisaki",
+                        "nurikabe",
+                        "lits",
+                        "heyawake",
+                        "slither",
+                        "mashu",
+                        "yajilin",
+                        "anymino",
+                        "guidearrow",
+                        "shakashaka",
+                        "lightup",
+                        "shugaku",
+                        "kurarin",
+                        "squarejam",
+                        "aquapelago",
+                        "cbanana",
+                        "icewalk",
+                        "waterwalk",
+                        "firewalk",
+                        "forestwalk",
+                    ].includes(pid);
+                    break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
 					break;
@@ -5263,28 +5267,33 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
-			var updateCells = 
-				this.pid === "nurimisaki" || 
-				this.pid === "nurikabe" ||
-				this.pid === "lits" || 
-				this.pid === "heyawake" || 
-				this.pid === "yajilin" || 
-				this.pid === "anymino" || 
-				this.pid === "guidearrow" || 
-				this.pid === "shakashaka" ||
-				this.pid === "lightup" || 
-				this.pid === "shugaku" ||
-				this.pid === "kurarin" ||
-				this.pid === "aquapelago" ||
-				this.pid === "cbanana" 
-			;
-			var updateBorders = 
-				this.pid === "slither" ||
-				this.pid === "mashu" ||
-				this.pid === "yajilin" || 
-				this.pid === "kurarin" ||
-				this.pid === "squarejam"
-			;
+			const updateCells = [
+				"nurimisaki", 
+				"nurikabe",
+				"lits",
+				"heyawake",
+				"yajilin",
+				"anymino",
+				"guidearrow",
+				"shakashaka",
+				"lightup",
+				"shugaku",
+				"kurarin",
+				"aquapelago",
+				"cbanana",
+				"firewalk",
+			].includes(this.pid);
+			const updateBorders = [
+				"slither",
+				"mashu", 
+				"yajilin",
+				"kurarin", 
+				"squarejam",
+				"icewalk",
+				"waterwalk",
+				"firewalk",
+				"forestwalk",
+			].includes(this.pid);
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
 				var needUpdateField = false;
@@ -5330,6 +5339,30 @@ pzpr.classmgr.makeCommon({
 			// 既存のソルバーによる解答を一旦クリアする
 			this.clearSolverAnswerForCells();
 
+			// ソルバーからの文字列と、セルに設定するプロパティ・値を対応付けるマップ
+			const solverItemMap = {
+				"block":           { prop: 'qansBySolver', value: 1 },
+				"fill":            { prop: 'qansBySolver', value: 1 },
+				"circle":          { prop: 'qansBySolver', value: 1 },
+				"dot":             { prop: 'qsubBySolver', value: 1 },
+				"aboloUpperLeft":  { prop: 'qansBySolver', value: 5 },
+				"aboloUpperRight": { prop: 'qansBySolver', value: 4 },
+				"aboloLowerLeft":  { prop: 'qansBySolver', value: 2 },
+				"aboloLowerRight": { prop: 'qansBySolver', value: 3 },
+				"shugakuPillow":   { prop: 'qansBySolver', value: 40 },
+				"shugakuFuton":    { prop: 'qansBySolver', value: 50 },
+				"shugakuWest":     { prop: 'qsubBySolver', value: 1 },
+				"shugakuEast":     { prop: 'qsubBySolver', value: 2 },
+				"shugakuSouth":    { prop: 'qsubBySolver', value: 3 },
+				"firewalkCellUlDr":    { prop: 'qansBySolver', value: 11 },
+				"firewalkCellUrDl":    { prop: 'qansBySolver', value: 12 },
+				"firewalkCellUl":      { prop: 'qansBySolver', value: 13 },
+				"firewalkCellUr":      { prop: 'qansBySolver', value: 14 },
+				"firewalkCellDl":      { prop: 'qansBySolver', value: 15 },
+				"firewalkCellDr":      { prop: 'qansBySolver', value: 16 },
+				"firewalkCellUnknown": { prop: 'qansBySolver', value: 17 }
+			};
+
 			// resultがオブジェクトの場合、詳細な解答データを処理する
 			if (typeof result !== "string") {
 				// 各セルに対応するアイテムを格納するための2次元配列を初期化
@@ -5368,46 +5401,10 @@ pzpr.classmgr.makeCommon({
 					// セルに割り当てられたアイテムの種類に応じて、セルの状態を更新
 					for (let k = 0; k < itemsInCell.length; ++k) {
 						const item = itemsInCell[k];
-
-						// アイテムがオブジェクトでない場合（単純な文字列）
 						if (typeof item === 'string') {
-							switch (item) {
-								case "block":
-								case "fill":
-								case "circle":
-									cell.qansBySolver = 1;
-									break;
-								case "dot":
-									cell.qsubBySolver = 1;
-									break;
-								case "aboloUpperLeft":
-									cell.qansBySolver = 5;
-									break;
-								case "aboloUpperRight":
-									cell.qansBySolver = 4;
-									break;
-								case "aboloLowerLeft":
-									cell.qansBySolver = 2;
-									break;
-								case "aboloLowerRight":
-									cell.qansBySolver = 3;
-									break;
-								case "shugakuPillow":
-									cell.qansBySolver = 40;
-									break;
-								case "shugakuFuton":
-									cell.qansBySolver = 50;
-									break;
-								case "shugakuWest":
-									cell.qsubBySolver = 1;
-									break;
-								case "shugakuEast":
-									cell.qsubBySolver = 2;
-									break;
-								case "shugakuSouth":
-									cell.qsubBySolver = 3;
-									break;
-										
+							const mapping = solverItemMap[item];
+							if (mapping) {
+								cell[mapping.prop] = mapping.value;
 							}
 						}
 						// アイテムが 'kind' プロパティを持つオブジェクトの場合
