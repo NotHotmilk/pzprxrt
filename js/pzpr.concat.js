@@ -3253,7 +3253,9 @@ pzpr.MetaData.prototype = {
 						pid === "lightup" ||
 						pid === "shugaku" ||
 						pid === "kurarin" ||
-						pid === "squarejam"
+						pid === "squarejam" ||
+						pid === "aquapelago" ||
+						pid === "cbanana" 
 					;
 					break;
 				case "voxas_tatami":
@@ -5272,7 +5274,9 @@ pzpr.classmgr.makeCommon({
 				this.pid === "shakashaka" ||
 				this.pid === "lightup" || 
 				this.pid === "shugaku" ||
-				this.pid === "kurarin"
+				this.pid === "kurarin" ||
+				this.pid === "aquapelago" ||
+				this.pid === "cbanana" 
 			;
 			var updateBorders = 
 				this.pid === "slither" ||
