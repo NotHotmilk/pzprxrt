@@ -72,6 +72,7 @@
 			}
 			if (this.draggingSG) {
 				this.draggingSG = false;
+				this.board.autoSolve();
 				cell.draw();
 			}
 		},

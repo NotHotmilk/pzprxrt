@@ -64,9 +64,11 @@
 			subshadecolor: "rgb(220, 220, 255)",
 
 			// Colors of components produced by solver
-			solvercolor: "rgb(192, 192, 255)",
-			solverqanscolor: "rgb(0, 160, 192)",
-
+			// solvercolor: "rgb(192, 192, 255)",
+			// solverqanscolor: "rgb(0, 160, 192)",
+			solvercolor: "rgb(225,158,176)",
+			solverqanscolor: "rgb(156,12,99)",
+			
 			// 黒マスの色
 			shadecolor: "black",
 			errcolor1: "rgb(192, 0, 0)",

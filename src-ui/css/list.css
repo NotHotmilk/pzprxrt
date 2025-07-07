@@ -1,5 +1,5 @@
 body {
-  background: url("/img/tajmahal.png");
+  background: url("../img/tajmahal.png");
   text-align: center;
   color: black;
   line-height: 120%;
@@ -98,6 +98,9 @@ div.lists {
 div.lists ul {
   padding-left: 32px;
 }
+div.solvers {
+  background-color: #dff8ff;
+}
 div.blocks {
   background-color: #ffdfdf;
 }
@@ -115,4 +118,16 @@ div.numbers {
 }
 div.others {
   background-color: #ffffcc;
+}
+
+li.solver-implemented a:not(.rules)::after {
+  content: " (ソルバー部分のみ実装済)";
+  font-size: smaller;
+  color: #555;       
+  margin-left: 0.3em;
+}
+
+
+[lang="en"] li.solver-implemented a:not(.rules)::after {
+  content: " (Solver part only implemented)";
 }

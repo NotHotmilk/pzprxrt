@@ -190,6 +190,8 @@
 		shadecolor: "#444444",
 		enablebcolor: true,
 
+
+		
 		paint: function() {
 			this.drawBGCells();
 

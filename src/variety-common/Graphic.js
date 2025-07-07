@@ -1148,7 +1148,7 @@ pzpr.classmgr.makeCommon({
 		},
 		getBorderColor_qans: function(border) {
 			var err = border.error || border.qinfo;
-			if (border.isBorder()) {
+			if (border.qans === 1 || border.qansBySolver === 1) {
 				if (err === 1) {
 					return this.errcolor1;
 				} else if (err === -1) {
@@ -1156,7 +1156,7 @@ pzpr.classmgr.makeCommon({
 				} else if (border.trial) {
 					return this.linetrialcolor;
 				} else {
-					return this.qanscolor;
+					return this.getColorSolverAware(border.qans === 1, border.qansBySolver === 1, this.qanscolor); // 変更点
 				}
 			} else if (!!border.isCmp && border.isCmp()) {
 				return this.qcmpcolor;
@@ -1219,10 +1219,10 @@ pzpr.classmgr.makeCommon({
 				var border = blist[i];
 
 				g.vid = "b_qsub1_" + border.id;
-				if (border.qsub === 1) {
+				if (border.qsub === 1 || border.qsubBySolver === 2) {
 					var px = border.bx * this.bw + this.getBorderHorizontalOffset(border),
 						py = border.by * this.bh;
-					g.fillStyle = !border.trial ? this.pekecolor : this.linetrialcolor;
+					g.fillStyle = this.getColorSolverAware(border.qsub === 1, border.qsubBySolver === 2, this.pekecolor); // 変更点
 					if (border.isHorz()) {
 						g.fillRectCenter(px, py, 0.5, this.bh - m);
 					} else {
