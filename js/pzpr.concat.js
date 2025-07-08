@@ -3261,6 +3261,7 @@ pzpr.MetaData.prototype = {
                         "firewalk",
                         "forestwalk",
 						"ringring",
+						"nurimaze",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5284,6 +5285,7 @@ pzpr.classmgr.makeCommon({
 				"cbanana",
 				"firewalk",
 				"ringring",
+				"nurimaze"
 			].includes(this.pid);
 			const updateBorders = [
 				"slither",
