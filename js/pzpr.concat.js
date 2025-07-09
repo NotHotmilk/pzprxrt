@@ -3262,7 +3262,8 @@ pzpr.MetaData.prototype = {
                         "forestwalk",
 						"ringring",
 						"nurimaze",
-						"easyasabc"
+						"easyasabc",
+						"fillomino",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5288,6 +5289,7 @@ pzpr.classmgr.makeCommon({
 				"ringring",
 				"nurimaze",
 				"easyasabc",
+				"fillomino"
 			].includes(this.pid);
 			const updateBorders = [
 				"slither",
@@ -5300,6 +5302,7 @@ pzpr.classmgr.makeCommon({
 				"firewalk",
 				"forestwalk",
 				"ringring",
+				"fillomino"
 			].includes(this.pid);
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5507,7 +5510,7 @@ pzpr.classmgr.makeCommon({
 				for (var j = 0; j < data.length; ++j) {
 					var item = data[j];
 					if (item === "line" || item === "wall" || item === "boldWall") {
-						if (this.pid === "squarejam") {
+						if (this.pid === "squarejam" || this.pid === "fillomino") {
 							border.qansBySolver = 1;
 						} else {
 							border.lineBySolver = 1;
@@ -13507,23 +13510,11 @@ pzpr.classmgr.makeCommon({
 			);
 		},
 		drawSolverAnsNumbers: function() {
-
-			// 1. ソルバーの答えを描画するためのグラフィックスコンテキスト（レイヤー）を準備する。
-			// この呼び出しは、描画の土台を整える役割を持つ。
 			this.vinc("cell_solver_ans_number", "auto");
-
-			// 2. 共通の数字描画関数を呼び出す。
 			this.drawNumbers_com(
-				// 第1引数: 描画するテキスト（数字）を取得するための関数
 				this.getSolverAnsNumberText,
-
-				// 第2引数: テキストの色を取得するための関数
 				this.getSolverAnsNumberColor,
-
-				// 第3引数: 描画する各テキスト要素に設定するIDの接頭辞
 				"cell_solver_ans_text_",
-
-				// 第4引数: 描画オプション（今回は空なのでデフォルト設定が使われる）
 				{}
 			);
 		},
