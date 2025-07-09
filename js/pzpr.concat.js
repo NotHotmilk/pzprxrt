@@ -3264,6 +3264,7 @@ pzpr.MetaData.prototype = {
 						"nurimaze",
 						"easyasabc",
 						"fillomino",
+						"sashigane",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5271,39 +5272,37 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
+			const updateBoth = [
+				"yajilin",
+				"kurarin",
+				"ringring",
+				"fillomino",
+				"firewalk",
+			].includes(this.pid);
 			const updateCells = [
 				"nurimisaki", 
 				"nurikabe",
 				"lits",
 				"heyawake",
-				"yajilin",
 				"anymino",
 				"guidearrow",
 				"shakashaka",
 				"lightup",
 				"shugaku",
-				"kurarin",
 				"aquapelago",
 				"cbanana",
-				"firewalk",
-				"ringring",
 				"nurimaze",
 				"easyasabc",
-				"fillomino"
-			].includes(this.pid);
+			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
 				"mashu", 
-				"yajilin",
-				"kurarin", 
 				"squarejam",
 				"icewalk",
 				"waterwalk",
-				"firewalk",
 				"forestwalk",
-				"ringring",
-				"fillomino"
-			].includes(this.pid);
+				"sashigane"
+			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
 				var needUpdateField = false;
@@ -5473,6 +5472,12 @@ pzpr.classmgr.makeCommon({
 		},
 		
 		updateSolverAnswerForBorders: function (result) {
+			const useOuterBorder = [
+				"squarejam",
+				"fillomino",
+				"sashigane",
+			].includes(this.pid);
+			
 			this.clearSolverAnswerForBorders();
 			if (typeof result === "string") {
 				for (var i = 0; i < this.border.length; ++i) {
@@ -5508,7 +5513,7 @@ pzpr.classmgr.makeCommon({
 				for (var j = 0; j < data.length; ++j) {
 					var item = data[j];
 					if (item === "line" || item === "wall" || item === "boldWall") {
-						if (this.pid === "squarejam" || this.pid === "fillomino") {
+						if (useOuterBorder) {
 							border.qansBySolver = 1;
 						} else {
 							border.lineBySolver = 1;
