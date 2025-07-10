@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-07-10
+ * Date: 2025-07-11
  */
 // intro.js
 
@@ -3265,6 +3265,7 @@ pzpr.MetaData.prototype = {
 						"easyasabc",
 						"fillomino",
 						"sashigane",
+						"chainedb",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5293,6 +5294,7 @@ pzpr.classmgr.makeCommon({
 				"cbanana",
 				"nurimaze",
 				"easyasabc",
+				"chainedb",
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
