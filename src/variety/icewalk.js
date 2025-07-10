@@ -357,6 +357,8 @@
 	},
 	"Graphic@firewalk": {
 		icecolor: "rgb(255, 192, 192)",
+		solvercolor: "rgb(193,125,145)",
+		solverqanscolor: "rgb(133,9,82)",
 
 		getDotFillColor: function(dot) {
 			if (dot.getDot() === 1) {
@@ -389,48 +391,50 @@
 			var pad = this.lw,
 				bigpad = this.bw / 2;
 			for (var i = 0; i < clist.length; i++) {
-				var cell = clist[i],
-					color = cell.qans ? this.getBGCellColor(cell) : null;
+				var cell = clist[i];
+
+				var qans = cell.qans;
+				if (cell.qansBySolver === 11) { qans = 1; }
+				else if (cell.qansBySolver === 12) { qans = 2; }
+
+				var adj = cell.adjborder;
+				var isTop = adj.top.isLine() || adj.top.isLineBySolver();
+				var isBottom = adj.bottom.isLine() || adj.bottom.isLineBySolver();
+				var isLeft = adj.left.isLine() || adj.left.isLineBySolver();
+				var isRight = adj.right.isLine() || adj.right.isLineBySolver();
+				var lcnt = (isTop ? 1 : 0) + (isBottom ? 1 : 0) + (isLeft ? 1 : 0) + (isRight ? 1 : 0);
+
+				var isCurve = (lcnt === 2 && cell.ice()) || (cell.qansBySolver >= 13 && cell.qansBySolver <= 16);
+
+				var color = (qans > 0 || isCurve) ? this.getBGCellColor(cell) : null;
 				g.vid = "c_arc_bg_" + cell.id;
+
 				if (!!color) {
 					g.fillStyle = color;
 
-					if (cell.lcnt === 4) {
-						g.fillRectCenter(
-							cell.bx * this.bw,
-							cell.by * this.bh,
-							this.bw - pad,
-							this.bh - pad
-						);
+					if (lcnt === 4) {
+						g.fillRectCenter(cell.bx * this.bw, cell.by * this.bh, this.bw - pad, this.bh - pad);
 					} else if (cell.qans === 3) {
-						g.fillRectCenter(
-							cell.bx * this.bw,
-							cell.by * this.bh,
-							this.bw / 2,
-							this.bh / 2
-						);
+						g.fillRectCenter(cell.bx * this.bw, cell.by * this.bh, this.bw / 2, this.bh / 2);
 					} else {
-						var adj = cell.adjborder;
 						var ox, oy;
-						if (
-							(cell.qans === 1 && adj.top.isLine() && adj.left.isLine()) ||
-							(cell.qans === 2 && adj.bottom.isLine() && adj.left.isLine())
-						) {
+						var hasTL = (qans === 1 && isTop && isLeft) || cell.qansBySolver === 13;
+						var hasTR = (qans === 2 && isTop && isRight) || cell.qansBySolver === 14;
+						var hasBL = (qans === 2 && isBottom && isLeft) || cell.qansBySolver === 15;
+
+						if (hasTL || hasBL) { // Left side curve
 							ox = (cell.bx - 1) * this.bw - pad + bigpad;
 						} else {
 							ox = cell.bx * this.bw + pad - bigpad;
 						}
-						if (
-							(cell.qans === 1 && adj.left.isLine() && adj.top.isLine()) ||
-							(cell.qans === 2 && adj.right.isLine() && adj.top.isLine())
-						) {
+						if (hasTL || hasTR) { // Top side curve
 							oy = (cell.by - 1) * this.bh - pad + bigpad;
 						} else {
 							oy = cell.by * this.bh + pad - bigpad;
 						}
 
 						var w = this.bw + bigpad - pad * 2;
-						var h = this.bw + bigpad - pad * 2;
+						var h = this.bh + bigpad - pad * 2;
 						g.fillRect(ox, oy, w, h);
 					}
 				} else {
@@ -445,57 +449,53 @@
 			var clist = this.range.borders.cellinside();
 			for (var i = 0; i < clist.length; i++) {
 				var cell = clist[i];
-				var px1 = (cell.bx - 1) * this.bw,
-					py1 = (cell.by - 1) * this.bh,
-					px2 = (cell.bx + 1) * this.bw,
-					py2 = (cell.by + 1) * this.bh;
+
+				var qans = cell.qans;
+				if (cell.qansBySolver === 11) { qans = 1; }
+				else if (cell.qansBySolver === 12) { qans = 2; }
 
 				var adj = cell.adjborder;
+				var isTop = adj.top.isLine() || adj.top.isLineBySolver();
+				var isBottom = adj.bottom.isLine() || adj.bottom.isLineBySolver();
+				var isLeft = adj.left.isLine() || adj.left.isLineBySolver();
+				var isRight = adj.right.isLine() || adj.right.isLineBySolver();
+
+				var px1 = (cell.bx - 1) * this.bw, py1 = (cell.by - 1) * this.bh,
+					px2 = (cell.bx + 1) * this.bw, py2 = (cell.by + 1) * this.bh;
 
 				for (var arc = 0; arc < 4; arc++) {
 					var showArc = false;
-					var color = null;
+					var colorBorder = null;
 					switch (arc) {
-						case 0:
-							showArc =
-								cell.qans === 1 && adj.top.isLine() && adj.left.isLine();
-							color = showArc ? this.getLineColor(adj.top) : null;
+						case 0: // Top-Left arc
+							showArc = (qans === 1 && isTop && isLeft) || cell.qansBySolver === 13;
+							colorBorder = showArc ? adj.top : null;
 							break;
-						case 1:
-							showArc =
-								cell.qans === 2 && adj.top.isLine() && adj.right.isLine();
-							color = showArc ? this.getLineColor(adj.top) : null;
+						case 1: // Top-Right arc
+							showArc = (qans === 2 && isTop && isRight) || cell.qansBySolver === 14;
+							colorBorder = showArc ? adj.top : null;
 							break;
-						case 2:
-							showArc =
-								cell.qans === 1 && adj.bottom.isLine() && adj.right.isLine();
-							color = showArc ? this.getLineColor(adj.bottom) : null;
+						case 2: // Bottom-Right arc
+							showArc = (qans === 1 && isBottom && isRight) || cell.qansBySolver === 16;
+							colorBorder = showArc ? adj.bottom : null;
 							break;
-						case 3:
-							showArc =
-								cell.qans === 2 && adj.bottom.isLine() && adj.left.isLine();
-							color = showArc ? this.getLineColor(adj.bottom) : null;
+						case 3: // Bottom-Left arc
+							showArc = (qans === 2 && isBottom && isLeft) || cell.qansBySolver === 15;
+							colorBorder = showArc ? adj.bottom : null;
 							break;
 					}
 
 					g.vid = "c_arc_" + arc + "_" + cell.id;
+					var color = !!colorBorder ? this.getLineColor(colorBorder) : null;
 					if (!!color) {
 						g.beginPath();
 						g.strokeStyle = color;
 
 						switch (arc) {
-							case 0:
-								g.arc(px1, py1, rsize, 0, Math.PI / 2);
-								break;
-							case 1:
-								g.arc(px2, py1, rsize, Math.PI / 2, Math.PI);
-								break;
-							case 2:
-								g.arc(px2, py2, rsize, Math.PI, Math.PI * 1.5);
-								break;
-							case 3:
-								g.arc(px1, py2, rsize, Math.PI * 1.5, Math.PI * 2);
-								break;
+							case 0: g.arc(px1, py1, rsize, 0, Math.PI / 2); break;
+							case 1: g.arc(px2, py1, rsize, Math.PI / 2, Math.PI); break;
+							case 2: g.arc(px2, py2, rsize, Math.PI, Math.PI * 1.5); break;
+							case 3: g.arc(px1, py2, rsize, Math.PI * 1.5, Math.PI * 2); break;
 						}
 						g.stroke();
 					} else {

@@ -753,6 +753,8 @@
 			this.drawSubNumbers();
 			this.drawAnsNumbers();
 			this.drawQuesNumbers();
+			
+			this.drawSolverAnsNumbers();
 
 			this.drawBorders();
 			this.drawBorderQsubs();

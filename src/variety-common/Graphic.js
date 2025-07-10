@@ -537,23 +537,11 @@ pzpr.classmgr.makeCommon({
 			);
 		},
 		drawSolverAnsNumbers: function() {
-
-			// 1. ソルバーの答えを描画するためのグラフィックスコンテキスト（レイヤー）を準備する。
-			// この呼び出しは、描画の土台を整える役割を持つ。
 			this.vinc("cell_solver_ans_number", "auto");
-
-			// 2. 共通の数字描画関数を呼び出す。
 			this.drawNumbers_com(
-				// 第1引数: 描画するテキスト（数字）を取得するための関数
 				this.getSolverAnsNumberText,
-
-				// 第2引数: テキストの色を取得するための関数
 				this.getSolverAnsNumberColor,
-
-				// 第3引数: 描画する各テキスト要素に設定するIDの接頭辞
 				"cell_solver_ans_text_",
-
-				// 第4引数: 描画オプション（今回は空なのでデフォルト設定が使われる）
 				{}
 			);
 		},
@@ -601,15 +589,9 @@ pzpr.classmgr.makeCommon({
 			return this.getNumberText(cell, cell.anum);
 		},
 		getSolverAnsNumberText: function(cell) {
-
-			// ソルバーによる答え(qansBySolver)が 0 かどうかをチェックする。
-			// 0 は「数字なし」を意味する。
 			if (cell.qansBySolver === 0) {
-				// 描画すべき数字がないため、空の文字列を返す。
 				return "";
 			} else {
-				// 描画すべき数字がある場合、
-				// 共通のテキスト整形関数を呼び出して、最終的な表示文字列を取得する。
 				return this.getNumberText(cell, cell.qansBySolver);
 			}
 		},
@@ -680,7 +662,11 @@ pzpr.classmgr.makeCommon({
 			return !cell.trial ? this.qanscolor : this.trialcolor;
 		},
 		getSolverAnsNumberColor: function(cell) {
-			return this.solvercolor;
+			if (!cell.trial) {
+				return this.getColorSolverAware(cell.anum !== -1 && cell.anum === cell.qansBySolver, cell.qansBySolver !== 0);
+			} else {
+				return this.trialcolor;
+			}
 		},
 		
 		//---------------------------------------------------------------------------
@@ -1213,7 +1199,7 @@ pzpr.classmgr.makeCommon({
 		drawBorderQsubs: function() {
 			var g = this.vinc("border_qsub", "crispEdges", true);
 
-			var m = this.cw * 0.15; //Margin
+			var m = this.cw * 0.3; //Margin
 			var blist = this.range.borders;
 			for (var i = 0; i < blist.length; i++) {
 				var border = blist[i];
@@ -1223,10 +1209,11 @@ pzpr.classmgr.makeCommon({
 					var px = border.bx * this.bw + this.getBorderHorizontalOffset(border),
 						py = border.by * this.bh;
 					g.fillStyle = this.getColorSolverAware(border.qsub === 1, border.qsubBySolver === 2, this.pekecolor); // 変更点
+					var width = 1;
 					if (border.isHorz()) {
-						g.fillRectCenter(px, py, 0.5, this.bh - m);
+						g.fillRectCenter(px, py, width, this.bh - m);
 					} else {
-						g.fillRectCenter(px, py, this.bw - m, 0.5);
+						g.fillRectCenter(px, py, this.bw - m, width);
 					}
 				} else {
 					g.vhide();
@@ -1659,7 +1646,7 @@ pzpr.classmgr.makeCommon({
 		//---------------------------------------------------------------------------
 		drawMBs: function() {
 			var g = this.vinc("cell_mb", "auto", true);
-			g.lineWidth = 1;
+			g.lineWidth = 2;
 
 			var rsize = this.cw * 0.35;
 			var clist = this.range.cells;
@@ -1667,21 +1654,31 @@ pzpr.classmgr.makeCommon({
 				var cell = clist[i],
 					px,
 					py;
-				if (cell.qsub > 0) {
+				if (cell.qsub > 0 || cell.qsubBySolver > 0) {
 					px = cell.bx * this.bw;
 					py = cell.by * this.bh;
-					g.strokeStyle = !cell.trial ? this.mbcolor : "rgb(192, 192, 192)";
+                    // g.strokeStyle = !cell.trial ? this.mbcolor : "rgb(192, 192, 192)";
 				}
 
 				g.vid = "c_MB1_" + cell.id;
-				if (cell.qsub === 1) {
+				if (cell.qsub === 1 || cell.qsubBySolver === 1) {
+					if (!cell.trial) {
+						g.strokeStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
+					} else {
+						g.strokeStyle = "rgb(192, 192, 192)";
+					}
 					g.strokeCircle(px, py, rsize);
 				} else {
 					g.vhide();
 				}
 
 				g.vid = "c_MB2_" + cell.id;
-				if (cell.qsub === 2) {
+				if (cell.qsub === 2 || cell.qsubBySolver === 2) {
+					if (!cell.trial) {
+						g.strokeStyle = this.getColorSolverAware(cell.qsub === 2, cell.qsubBySolver === 2);
+					} else {
+						g.strokeStyle = "rgb(192, 192, 192)";
+					}
 					g.strokeCross(px, py, rsize);
 				} else {
 					g.vhide();

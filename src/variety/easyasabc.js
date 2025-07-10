@@ -58,6 +58,7 @@
 								: indicator.getmaxnum();
 					}
 					indicator.set(val);
+					this.board.autoSolve();
 				}
 			}
 		}
@@ -316,6 +317,8 @@
 			this.drawAnsNumbers();
 			this.drawQuesNumbers();
 			this.drawNumbersExCell();
+			
+			this.drawSolverAnsNumbers();
 
 			this.drawChassis();
 

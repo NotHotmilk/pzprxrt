@@ -29,11 +29,14 @@
     "lint": "eslint src src-ui test sample",
     "test": "mocha -r source-map-support/register -R progress --recursive test",
     "coverage": "nyc --reporter=lcov npm run test",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "npm test",
+    "dev": "npx grunt && npx serve dist",
+    "deploy": "npx grunt release && gh-pages -d dist"
   },
   "devDependencies": {
     "del-cli": "^4.0.1",
     "eslint": "^8.43.0",
+    "gh-pages": "^6.3.0",
     "grunt": "^1.5.3",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",

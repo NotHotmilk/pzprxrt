@@ -36,12 +36,34 @@
 		gridcolor_type: "DARK",
 
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
+
+		drawDotCells: function() {
+			var g = this.vinc("cell_dot", "auto", true);
+
+			var dsize = Math.max(this.cw * 0.12, 2);
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+
+				g.vid = "c_dot_" + cell.id;
+				if (cell.isDot()|| cell.isDotBySolver()) {
+					if (!cell.trial) {
+						g.fillStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
+					} else {
+						g.fillStyle = this.trialcolor;
+					}
+					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, dsize);
+				} else {
+					g.vhide();
+				}
+			}
+		},
 
 		paint: function() {
 			this.drawBGCells();
 			this.drawShadedCells();
 			this.drawGrid();
+			this.drawDotCells();
 
 			this.drawQuesNumbers();
 

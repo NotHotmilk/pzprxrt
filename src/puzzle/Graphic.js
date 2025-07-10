@@ -66,8 +66,8 @@
 			// Colors of components produced by solver
 			// solvercolor: "rgb(192, 192, 255)",
 			// solverqanscolor: "rgb(0, 160, 192)",
-			solvercolor: "rgb(225,158,176)",
-			solverqanscolor: "rgb(156,12,99)",
+			solvercolor: "rgb(236,169,187)",
+			solverqanscolor: "rgb(172,6,106)",
 			
 			// 黒マスの色
 			shadecolor: "black",

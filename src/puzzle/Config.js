@@ -473,24 +473,36 @@
 					exec = pid === "country";
 					break;
 				case "autosolver":
-				case "run_autosolver":
-					exec = 
-						pid === "nurimisaki" || 
-						pid === "nurikabe" || 
-						pid === "lits" || 
-						pid === "heyawake" ||
-						pid === "slither" || 
-						pid === "mashu" || 
-						pid === "yajilin" ||
-						pid === "anymino" ||
-						pid === "guidearrow" || 
-						pid === "shakashaka" ||
-						pid === "lightup" ||
-						pid === "shugaku" ||
-						pid === "kurarin" ||
-						pid === "squarejam"
-					;
-					break;
+                case "run_autosolver":
+                    exec = [
+                        "nurimisaki",
+                        "nurikabe",
+                        "lits",
+                        "heyawake",
+                        "slither",
+                        "mashu",
+                        "yajilin",
+                        "anymino",
+                        "guidearrow",
+                        "shakashaka",
+                        "lightup",
+                        "shugaku",
+                        "kurarin",
+                        "squarejam",
+                        "aquapelago",
+                        "cbanana",
+                        "icewalk",
+                        "waterwalk",
+                        "firewalk",
+                        "forestwalk",
+						"ringring",
+						"nurimaze",
+						"easyasabc",
+						"fillomino",
+						"sashigane",
+						"chainedb",
+                    ].includes(pid);
+                    break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
 					break;

@@ -139,12 +139,12 @@
 		fontShadecolor: "white",
 		noerrcolor: "#666666",
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
 
 		paint: function() {
 			this.drawBGCells();
 			this.drawShadedCells();
 			this.drawGrid();
+			this.drawDotCells();
 
 			this.drawQuesNumbers();
 
@@ -154,7 +154,7 @@
 		},
 
 		getShadedCellColor: function(cell) {
-			if (!cell.isShade()) {
+			if (!cell.isShade() && cell.qansBySolver !== 1) {
 				return null;
 			}
 
@@ -167,7 +167,7 @@
 			} else if (info === -1) {
 				return this.noerrcolor;
 			}
-			return cell.qnum !== -1 ? this.shadecolor : this.qanscolor;
+			return this.getColorSolverAware(cell.isShade(), cell.qansBySolver === 1, cell.qnum !== -1 ? this.shadecolor : this.qanscolor);
 		}
 	},
 	"Graphic@mrtile,archipelago": {

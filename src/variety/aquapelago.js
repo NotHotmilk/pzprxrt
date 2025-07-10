@@ -145,13 +145,12 @@
 		fontShadecolor: "white",
 		qcmpcolor: "#7F7F7F",
 		enablebcolor: true,
-		bgcellcolor_func: "qsub1",
 
 		paint: function() {
 			this.drawBGCells();
 			this.drawGrid();
 			this.drawShadedCells();
-
+			this.drawDotCells();
 			this.drawQuesNumbers();
 
 			this.drawChassis();
@@ -162,7 +161,7 @@
 		},
 
 		getShadedCellColor: function(cell) {
-			if (!cell.isShade()) {
+			if (!cell.isShade() && cell.qansBySolver !== 1) {
 				return null;
 			}
 
@@ -173,7 +172,7 @@
 			} else if (cell.trial) {
 				return this.trialcolor;
 			}
-			return cell.qnum !== -1 ? this.shadecolor : this.qanscolor;
+			return this.getColorSolverAware(cell.isShade(), cell.qansBySolver === 1, cell.qnum !== -1 ? this.shadecolor : this.qanscolor);
 		},
 		getQuesNumberColor: function(cell) {
 			return cell.qcmp === 1 ? this.qcmpcolor : this.fontShadecolor;

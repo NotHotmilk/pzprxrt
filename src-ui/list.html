@@ -15,7 +15,11 @@
 <h2 id="title"><span lang="ja">パズルの種類のリスト</span><span lang="en">List of puzzle types</span></h2>
 
 <div id="design1">
-
+ <div class="icon-legend">
+  <p lang="ja">⚠️: 大きな盤面でヒントが少ない場合にソルバーの動作が特に重くなる可能性のあるパズル</p>
+  <p lang="en">⚠️: Puzzles that may cause heavy solver operation on large boards with few hints</p>
+ </div>
+ 
   <menu class="selector" id="puzmenu">
     <li class="puzmenusel" id='puzsort_none' data-sort='none'>
       <span lang="ja">日付順</span><span lang="en">Sort by date</span>
@@ -24,24 +28,36 @@
    </menu>
 
 <br clear="all">
-
 <div class="puztable" id="table_all">
  <div class='container'>
   <div class="lists solvers">
    <b lang="ja">ソルバー対応パズル</b>
    <b lang="en">Solver Supported Puzzles</b>
    <ul>
-    <li data-pid="guidearrow"></li>
+    <li data-pid="guidearrow" class="heavy-solver"></li>
     <li data-pid="shugaku"></li>
     <li data-pid="kurarin"></li>
     <li data-pid="squarejam"></li>
+    <li data-pid="aquapelago"></li>
+    <li data-pid="cbanana"></li>
+    <li data-pid="icewalk" class="heavy-solver"></li>
+    <li data-pid="waterwalk" class="heavy-solver"></li>
+    <li data-pid="firewalk" class="heavy-solver double-display-bug"></li>
+    <li data-pid="forestwalk" class="heavy-solver"></li>
+    <li data-pid="ringring"></li>
+    <li data-pid="nurimaze"></li>
+    <li data-pid="easyasabc"></li>
+    <li data-pid="fillomino"></li>
+    <li data-pid="sashigane"></li>
+    <li data-pid="chainedb"></li>
+    
    </ul>
   </div>
   <div class="lists solvers">
    <b lang="ja">ソルバー対応パズル（<a href="https://semiexp.net/pzprrt/">pzprRT</a>）</b>
    <b lang="en">Solver Supported Puzzles (<a href="https://semiexp.net/pzprrt/">pzprRT</a>)</b>
    <ul>
-    <li data-pid="nurikabe"></li>
+    <li data-pid="nurikabe" class="heavy-solver"></li>
     <li data-pid="lits"></li>
     <li data-pid="heyawake"></li>
     <li data-pid="slither"></li>
@@ -222,7 +238,7 @@
    </ul>
   </div>
   <div class="lists loops">
-   <b lang="ja">アイスバーン系・ウォーク系</b>
+   <b lang="ja">アイスバーン系・アイスウォーク系</b>
    <b lang="en">Icebarn or Icewalk like Puzzles</b>
    <ul>
     <li data-pid="icebarn"></li>

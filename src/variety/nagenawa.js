@@ -201,6 +201,8 @@
 				this.drawBorders();
 			} else if (pid === "ringring") {
 				this.drawQuesCells();
+				this.drawShadedCells();
+				this.drawDotCells();
 			} else if (this.pid === "orbital") {
 				this.drawCircledNumbers();
 			}
@@ -214,6 +216,38 @@
 		}
 	},
 	"Graphic@ringring": {
+		drawDotCells: function() {
+			var g = this.vinc("cell_dot", "auto", true);
+			
+			var count_white = 0;
+			for (var c = 0; c < this.board.cell.length; c++) {
+				var cell = this.board.cell[c];
+				if (cell.ques === 0) {
+					count_white++;
+				}
+			}
+			var parity_odd = count_white % 2 === 1;
+
+			var dsize = Math.max(this.cw * 0.06, 2);
+			var clist = this.range.cells;
+			for (var i = 0; i < clist.length; i++) {
+				var cell = clist[i];
+
+				g.vid = "c_dot_" + cell.id;
+				if (parity_odd && cell.ques === 0 && (cell.isDot()|| cell.isDotBySolver())) {
+					if (!cell.trial) {
+						g.fillStyle = this.getColorSolverAware(cell.qsub === 1, cell.qsubBySolver === 1);
+					} else {
+						g.fillStyle = this.trialcolor;
+					}
+					g.fillCircle(cell.bx * this.bw, cell.by * this.bh, dsize);
+				} else {
+					g.vhide();
+				}
+			}
+		},
+
+		
 		drawTarget: function() {}
 	},
 	"Graphic@orbital": {
