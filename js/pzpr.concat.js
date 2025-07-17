@@ -969,6 +969,7 @@ pzpr.classmgr = {
 			zabajaba: [0, 0, "Zabajaba", "Zabajaba", "kaidan"],
 			anymino: [0, 0, "Anymino", "Anymino"],
 			heyajilimisaki: [0, 0, "へやジリみさき", "Heyajirimisaki", "", { alias: "heyajirimisaki" }],
+			soulmates: [0, 0, "ソウルメイツ", "Soulmates"],
 		}
 	);
 })();
@@ -3269,6 +3270,7 @@ pzpr.MetaData.prototype = {
 						"sashigane",
 						"chainedb",
 						"isowatari",
+						"soulmates",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5298,7 +5300,8 @@ pzpr.classmgr.makeCommon({
 				"nurimaze",
 				"easyasabc",
 				"chainedb",
-				"isowatari"
+				"isowatari",
+				"soulmates",
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
