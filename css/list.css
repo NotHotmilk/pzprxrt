@@ -140,6 +140,13 @@ li.double-display-bug a:not(.rules)::after {
   margin-left: -4px;
 }
 
+.heavy-solver.solver-implemented a:not(.rules)::before {
+  content: '⚠️🛠️';
+  margin-left: -4px;
+  letter-spacing: -4px;
+  padding-right: 4px;
+}
+
 .icon-legend {
   text-align: left;
   padding: 0 1em;
