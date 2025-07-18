@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-07-17
+ * Date: 2025-07-18
  */
 // intro.js
 
@@ -970,6 +970,7 @@ pzpr.classmgr = {
 			anymino: [0, 0, "Anymino", "Anymino"],
 			heyajilimisaki: [0, 0, "へやジリみさき", "Heyajirimisaki", "", { alias: "heyajirimisaki" }],
 			soulmates: [0, 0, "ソウルメイツ", "Soulmates"],
+			longest: [0, 0, "短辺消失", "The Longest"],
 		}
 	);
 })();
@@ -3271,6 +3272,7 @@ pzpr.MetaData.prototype = {
 						"chainedb",
 						"isowatari",
 						"soulmates",
+						"longest"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5310,7 +5312,8 @@ pzpr.classmgr.makeCommon({
 				"icewalk",
 				"waterwalk",
 				"forestwalk",
-				"sashigane"
+				"sashigane",
+				"longest",
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5485,6 +5488,7 @@ pzpr.classmgr.makeCommon({
 				"squarejam",
 				"fillomino",
 				"sashigane",
+				"longest",
 			].includes(this.pid);
 			
 			this.clearSolverAnswerForBorders();
