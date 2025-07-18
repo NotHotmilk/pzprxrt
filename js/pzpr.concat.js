@@ -970,7 +970,7 @@ pzpr.classmgr = {
 			anymino: [0, 0, "Anymino", "Anymino"],
 			heyajilimisaki: [0, 0, "へやジリみさき", "Heyajirimisaki", "", { alias: "heyajirimisaki" }],
 			soulmates: [0, 0, "ソウルメイツ", "Soulmates"],
-			longest: [0, 0, "短辺消失", "The Longest"],
+			the_longest: [0, 0, "短辺消失", "The Longest"],
 		}
 	);
 })();
@@ -2930,6 +2930,10 @@ pzpr.MetaData.prototype = {
 				variant: true,
 				volatile: true
 			}); /* All cells must be visited */
+			this.add("the_shortest", false, {
+				variant: true,
+				volatile: true
+			});
 			/* generic variant */
 			this.add("variant", false, { variant: true, volatile: true });
 			this.add("variantid", "", { volatile: true });
@@ -3272,7 +3276,8 @@ pzpr.MetaData.prototype = {
 						"chainedb",
 						"isowatari",
 						"soulmates",
-						"longest"
+						"the_longest",
+						"dbchoco"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -3349,6 +3354,9 @@ pzpr.MetaData.prototype = {
 							"wataridori"
 						].indexOf(pid) >= 0;
 					break;
+				case "the_shortest":
+					exec = pid === "the_longest";
+					break;
 				default:
 					exec = !!this.list[name];
 			}
@@ -3407,6 +3415,10 @@ pzpr.MetaData.prototype = {
 
 				case "run_autosolver":
 					puzzle.board.autoSolve(true);
+					break;
+					
+				case "the_shortest":
+					puzzle.board.autoSolve();
 					break;
 			}
 		}
@@ -5313,7 +5325,8 @@ pzpr.classmgr.makeCommon({
 				"waterwalk",
 				"forestwalk",
 				"sashigane",
-				"longest",
+				"the_longest",
+				"dbchoco",
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5488,7 +5501,8 @@ pzpr.classmgr.makeCommon({
 				"squarejam",
 				"fillomino",
 				"sashigane",
-				"longest",
+				"the_longest",
+				"dbchoco",
 			].includes(this.pid);
 			
 			this.clearSolverAnswerForBorders();
