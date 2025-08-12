@@ -21315,6 +21315,9 @@ window.solveProblem = function (url) {
     var urlEncoded = new TextEncoder().encode(url);
     var buf = Solver._malloc(urlEncoded.length);
     Solver.HEAPU8.set(urlEncoded, buf);
+    
+    // debug
+    console.log("Solving problem with URL:", url);
 
     var ans = Solver._solve_problem(buf, urlEncoded.length);
     Solver._free(buf);
