@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-08-19
+ * Date: 2025-08-20
  */
 // intro.js
 
@@ -8702,9 +8702,9 @@ pzpr.classmgr.makeCommon({
 						? "Helvetica, Verdana, Arial, "
 						: '"Times New Roman", ';
 				} else {
-					this.fontfamily = '';
+					this.fontfamily = "";
 				}
-				this.fontfamily = '"Neue Haas Grotesk Text Pro", "Work Sans", ' + this.fontfamily;
+				this.fontfamily = '"Neue Haas Grotesk Text Pro", "Outfit", ' + this.fontfamily;
 				this.fontfamily += isgothic ? "sans-serif" : "serif";
 			},
 
@@ -21322,9 +21322,6 @@ window.solveProblem = function (url) {
     var urlEncoded = new TextEncoder().encode(url);
     var buf = Solver._malloc(urlEncoded.length);
     Solver.HEAPU8.set(urlEncoded, buf);
-    
-    // debug
-    console.log("Solving problem with URL:", url);
 
     var ans = Solver._solve_problem(buf, urlEncoded.length);
     Solver._free(buf);
