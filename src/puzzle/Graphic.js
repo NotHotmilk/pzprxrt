@@ -239,6 +239,7 @@
 				} else {
 					this.fontfamily = "";
 				}
+				this.fontfamily = '"Neue Haas Grotesk Text Pro", "Outfit", ' + this.fontfamily;
 				this.fontfamily += isgothic ? "sans-serif" : "serif";
 			},
 

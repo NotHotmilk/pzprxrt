@@ -161,6 +161,10 @@
 				variant: true,
 				volatile: true
 			}); /* All cells must be visited */
+			this.add("the_shortest", false, {
+				variant: true,
+				volatile: true
+			});
 			/* generic variant */
 			this.add("variant", false, { variant: true, volatile: true });
 			this.add("variantid", "", { volatile: true });
@@ -501,6 +505,14 @@
 						"fillomino",
 						"sashigane",
 						"chainedb",
+						"isowatari",
+						"soulmates",
+						"the_longest",
+						"dbchoco",
+						"triparty",
+						"hogemashu",
+						"tentaisho",
+						"sandwalk",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -577,6 +589,9 @@
 							"wataridori"
 						].indexOf(pid) >= 0;
 					break;
+				case "the_shortest":
+					exec = pid === "the_longest";
+					break;
 				default:
 					exec = !!this.list[name];
 			}
@@ -635,6 +650,10 @@
 
 				case "run_autosolver":
 					puzzle.board.autoSolve(true);
+					break;
+					
+				case "the_shortest":
+					puzzle.board.autoSolve();
 					break;
 			}
 		}

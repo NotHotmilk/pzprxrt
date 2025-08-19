@@ -491,6 +491,12 @@
 			zabajaba: [0, 0, "Zabajaba", "Zabajaba", "kaidan"],
 			anymino: [0, 0, "Anymino", "Anymino"],
 			heyajilimisaki: [0, 0, "へやジリみさき", "Heyajirimisaki", "", { alias: "heyajirimisaki" }],
+			soulmates: [0, 0, "ソウルメイツ", "Soulmates"],
+			the_longest: [0, 0, "短辺消失", "The Longest"],
+			triparty: [0, 0, "三つ巴", "Triparty"],
+			hogemashu: [0, 0, "ほげましゅ", "Hogemashu", "", { alias: "hogemasyu" }],
+			sandwalk: [0, 0, "サンドウォーク", "Sand Walk", "icewalk"],
+			
 		}
 	);
 })();

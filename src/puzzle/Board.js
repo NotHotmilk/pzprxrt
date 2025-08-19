@@ -119,6 +119,9 @@ pzpr.classmgr.makeCommon({
 				"nurimaze",
 				"easyasabc",
 				"chainedb",
+				"isowatari",
+				"soulmates",
+				"triparty",
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
@@ -127,7 +130,12 @@ pzpr.classmgr.makeCommon({
 				"icewalk",
 				"waterwalk",
 				"forestwalk",
-				"sashigane"
+				"sashigane",
+				"the_longest",
+				"dbchoco",
+				"hogemashu",
+				"tentaisho",
+				"sandwalk",
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -302,6 +310,9 @@ pzpr.classmgr.makeCommon({
 				"squarejam",
 				"fillomino",
 				"sashigane",
+				"the_longest",
+				"dbchoco",
+				"tentaisho",
 			].includes(this.pid);
 			
 			this.clearSolverAnswerForBorders();

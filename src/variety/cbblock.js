@@ -323,6 +323,9 @@
 	Graphic: {
 		gridcolor_type: "LIGHT",
 
+		solvercolor: "rgb(218,138,158)",
+		solverqanscolor: "rgb(151,5,93)",
+		
 		paint: function() {
 			this.drawBGCells();
 			this.drawDashedGrid();
@@ -342,7 +345,9 @@
 
 			this.drawChassis();
 
-			this.drawPekes();
+			if (this.pid !== "dbchoco") {
+				this.drawPekes();
+			}
 
 			if (this.pid !== "cbblock") {
 				this.drawQuesNumbers();

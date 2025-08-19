@@ -4,7 +4,7 @@
 	} else {
 		pzpr.classmgr.makeCustom(pidlist, classbase);
 	}
-})(["icewalk", "waterwalk", "firewalk", "forestwalk"], {
+})(["icewalk", "waterwalk", "firewalk", "forestwalk", "sandwalk"], {
 	MouseEvent: {
 		inputModes: {
 			edit: ["ice", "number", "clear", "info-line"],
@@ -53,6 +53,17 @@
 		},
 		mouseinput_other: function() {
 			if (this.inputMode === "water") {
+				this.inputIcebarn();
+			}
+		}
+	},
+	"MouseEvent@sandwalk": {
+		inputModes: {
+			edit: ["sand", "number", "clear", "info-line"],
+			play: ["line", "peke", "info-line"]
+		},
+		mouseinput_other: function() {
+			if (this.inputMode === "sand") {
 				this.inputIcebarn();
 			}
 		}
@@ -249,6 +260,37 @@
 			}
 		}
 	},
+	"Cell@sandwalk": {
+		setErrorSand: function () {
+			this.setCellLineError(1);
+			var adc = this.adjacent,
+				adb = this.adjborder;
+			if (adb.top.isLine()) {
+				adc.top.setCellLineError(0);
+			}
+			if (adb.bottom.isLine()) {
+				adc.bottom.setCellLineError(0);
+			}
+			if (adb.left.isLine()) {
+				adc.left.setCellLineError(0);
+			}
+			if (adb.right.isLine()) {
+				adc.right.setCellLineError(0);
+			}
+		},
+
+		//---------------------------------------------------------------------------
+		// cell.setCellLineError()    セルと周りの線にエラーフラグを設定する
+		//---------------------------------------------------------------------------
+		setCellLineError: function (flag) {
+			var bx = this.bx,
+				by = this.by;
+			if (flag) {
+				this.seterr(1);
+			}
+			this.board.borderinside(bx - 1, by - 1, bx + 1, by + 1).seterr(1);
+		}
+	},
 	Cross: {
 		l2cnt: 0
 	},
@@ -354,6 +396,9 @@
 	},
 	"Graphic@forestwalk": {
 		icecolor: "rgb(195, 253, 186)"
+	},
+	"Graphic@sandwalk": {
+		icecolor: "rgb(255,219,150)"
 	},
 	"Graphic@firewalk": {
 		icecolor: "rgb(255, 192, 192)",
@@ -676,6 +721,7 @@
 			"checkLessWalk",
 			"checkOverWalk",
 			"checkForestCell@forestwalk",
+			"checkSandWalk@sandwalk",
 
 			"checkOneLoop",
 			"checkDoubleTurnOutside@firewalk",
@@ -796,6 +842,52 @@
 			this.checkAllCell(function(cell) {
 				return cell.lcnt > 0 && cell.lcnt < 3 && cell.ice();
 			}, "lnNoBranch");
+		}
+	},
+	"AnsCheck@sandwalk": {
+		checkSandWalk: function() {
+			var bd = this.board;
+			for (var i = 0; i < bd.cell.length; i++) {
+				var cell = bd.cell[i];
+				// 砂地マス(ques===6)で、線が2本(lcnt===2)の場合のみチェック
+				if (!cell.ice() || cell.lcnt !== 2) {
+					continue;
+				}
+
+				var adb = cell.adjborder;
+				var adc = cell.adjacent;
+				var neighbors = []; // 線で繋がっている隣のセルを格納
+
+				if (adb.top.isLine()) { neighbors.push(adc.top); }
+				if (adb.bottom.isLine()) { neighbors.push(adc.bottom); }
+				if (adb.left.isLine()) { neighbors.push(adc.left); }
+				if (adb.right.isLine()) { neighbors.push(adc.right); }
+
+				if (neighbors.length < 2) { continue; }
+
+				var n1 = neighbors[0], n2 = neighbors[1];
+
+				// 隣接セルに線が2本ずつ引かれていない場合はチェック対象外
+				if (n1.lcnt !== 2 || n2.lcnt !== 2) { continue; }
+
+				var isStraight1 = n1.isLineStraight();
+				var isCurve1 = n1.isLineCurve();
+
+				var isStraight2 = n2.isLineStraight();
+				var isCurve2 = n2.isLineCurve();
+
+				// (片方が直進 かつ もう片方がカーブ) ならOK
+				if ((isStraight1 && isCurve2) || (isCurve1 && isStraight2)) {
+					continue;
+				}
+
+				// ルール違反の場合
+				this.failcode.add("lnSandWalk");
+				if (this.checkOnly) { break; }
+
+				cell.setErrorSand();
+			}
+			
 		}
 	}
 });

@@ -17,7 +17,9 @@
 <div id="design1">
  <div class="icon-legend">
   <p lang="ja">⚠️: 大きな盤面でヒントが少ない場合にソルバーの動作が特に重くなる可能性のあるパズル</p>
+  <p lang="ja">🛠️️: ソルバーとインターフェースが実装済みの、解答判定のないパズル</p>
   <p lang="en">⚠️: Puzzles that may cause heavy solver operation on large boards with few hints</p>
+  <p lang="en">🛠️: Puzzles with implemented solver and interface, but without answer checking</p>
  </div>
  
   <menu class="selector" id="puzmenu">
@@ -44,13 +46,16 @@
     <li data-pid="waterwalk" class="heavy-solver"></li>
     <li data-pid="firewalk" class="heavy-solver double-display-bug"></li>
     <li data-pid="forestwalk" class="heavy-solver"></li>
+    <li data-pid="sandwalk" class="heavy-solver"></li>
     <li data-pid="ringring"></li>
     <li data-pid="nurimaze"></li>
     <li data-pid="easyasabc"></li>
     <li data-pid="fillomino"></li>
     <li data-pid="sashigane"></li>
     <li data-pid="chainedb"></li>
-    
+    <li data-pid="isowatari"></li>
+    <li data-pid="dbchoco" class="heavy-solver"></li>
+    <li data-pid="hogemashu"></li>
    </ul>
   </div>
   <div class="lists solvers">
@@ -73,6 +78,9 @@
    <ul>
     <li data-pid="anymino" class="solver-implemented"></li>
     <li data-pid="heyajilimisaki"></li>
+    <li data-pid="soulmates" class="heavy-solver solver-implemented"></li>
+    <li data-pid="the_longest" class="heavy-solver solver-implemented"></li>
+    <li data-pid="triparty" class="heavy-solver solver-implemented"></li>
    </ul>
   </div>
   <div class="lists blocks">
@@ -199,6 +207,7 @@
     <li data-pid="tapaloop"></li>
     <li data-pid="dotchi"></li>
     <li data-pid="ovotovata"></li>
+    <li data-pid="bdwalk"></li>
     <li data-pid="railpool"></li>
     <li data-pid="disloop"></li>
     <li data-pid="antmill"></li>
@@ -248,7 +257,6 @@
     <li data-pid="icelom"></li>
     <li data-pid="icelom2"></li>
     <li data-pid="icewalk"></li>
-    <li data-pid="bdwalk"></li>
     <li data-pid="waterwalk"></li>
     <li data-pid="firewalk"></li>
     <li data-pid="forestwalk"></li>

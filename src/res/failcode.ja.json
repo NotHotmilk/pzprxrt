@@ -472,6 +472,8 @@
     "mashuOnLine": "線が上を通っていない丸があります。",
     "mashuWCurve": "白丸の上で線が曲がっています。",
     "mashuWStNbr": "白丸の隣で線が曲がっていません。",
+    "hogemashuGStrig": "灰丸の上で線が直進しています。",
+    "hogemashuGSet": "灰丸の隣のマスが直進と直角の組になっていません。",
     "ms2x2.yinyang": "2x2のくろまるのカタマリがあります。",
     "msConsecGt3.nondango": "くろまるが3つ以上連続しています。",
     "msDivide.yinyang": "タテヨコにつながっていないくろまるがあります。",
@@ -895,5 +897,6 @@
     "bkNoNum.narrow": "マークが入っていない領域があります。",
     "bkNumGe2.narrow": "1つの領域に2つ以上のマークが入っています。",
     "bkSameShape.narrow": "同じマークの入った2つの領域が同じ形をしています。",
-    "nmSame2x2.narrow": "2×2の白マスが同じマークの入った領域にあります。"
+    "nmSame2x2.narrow": "2×2の白マスが同じマークの入った領域にあります。",
+    "lnSandWalk": "砂の前後で直進と直角の組になっていません。"
 }

@@ -120,16 +120,6 @@ div.others {
   background-color: #ffffcc;
 }
 
-li.solver-implemented a:not(.rules)::after {
-  content: "(ソルバー部分のみ実装済)";
-  font-size: smaller;
-  color: #555;       
-  margin-left: 0.3em;
-}
-[lang="en"] li.solver-implemented a:not(.rules)::after {
-  content: "(Solver part only implemented)";
-}
-
 li.double-display-bug a:not(.rules)::after {
   content: "(表示に軽微なバグあり)";
   font-size: smaller;
@@ -143,6 +133,18 @@ li.double-display-bug a:not(.rules)::after {
 .heavy-solver a:not(.rules)::before {
   content: '⚠️';
   margin-left: -4px;
+}
+
+.solver-implemented a:not(.rules)::before {
+  content: '🛠️';
+  margin-left: -4px;
+}
+
+.heavy-solver.solver-implemented a:not(.rules)::before {
+  content: '⚠️🛠️';
+  margin-left: -4px;
+  letter-spacing: -4px;
+  padding-right: 4px;
 }
 
 .icon-legend {

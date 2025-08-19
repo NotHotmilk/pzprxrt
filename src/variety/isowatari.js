@@ -199,6 +199,7 @@
 				this.addOpe(this.count, val);
 				this.count = val;
 				this.draw();
+				this.board.autoSolve();
 			}
 		},
 		getmaxnum: function() {
@@ -270,7 +271,6 @@
 		enablebcolor: true,
 
 		shadecolor: "rgb(80, 80, 80)",
-		bgcellcolor_func: "qsub1",
 
 		circlefillcolor_func: "qnum2",
 		circleratio: [0.3, 0.25],
@@ -285,6 +285,7 @@
 			this.drawQuesBorders();
 
 			this.drawCircles();
+			this.drawDotCells();
 
 			this.drawClusterSize();
 			this.drawCursor_isowatari();
