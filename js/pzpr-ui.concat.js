@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-08-20
+ * Date: 2025-08-22
  */
 // intro.js
 
@@ -2821,7 +2821,8 @@ ui.popupmgr.addpopup("imagesave", {
 		ui.puzzle.mouse.enableMouse = false;
 
 		this.form.filename.value = pzpr.variety(ui.puzzle.pid).urlid + ".png";
-		this.form.cellsize.value = ui.menuconfig.get("cellsizeval");
+		this.form.cellsize.value = 150;
+		//ui.menuconfig.get("cellsizeval");
 		if (ui.puzzle.board.bank) {
 			this.bankLabel.style.display = "";
 			this.form.bank.checked = ui.puzzle.board.bank.shouldDrawBank();

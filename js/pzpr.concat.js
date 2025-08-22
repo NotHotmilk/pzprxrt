@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-08-20
+ * Date: 2025-08-22
  */
 // intro.js
 
@@ -8704,7 +8704,7 @@ pzpr.classmgr.makeCommon({
 				} else {
 					this.fontfamily = "";
 				}
-				this.fontfamily = '"Neue Haas Grotesk Text Pro", "Outfit", ' + this.fontfamily;
+				this.fontfamily = '"Noto Sans JP", "Neue Haas Grotesk Text Pro",  ' + this.fontfamily;
 				this.fontfamily += isgothic ? "sans-serif" : "serif";
 			},
 
