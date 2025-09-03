@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-09-02
+ * Date: 2025-09-03
  */
 // intro.js
 
@@ -3287,6 +3287,9 @@ pzpr.MetaData.prototype = {
 						"tentaisho",
 						"sandwalk",
 						"midloop",
+						"country",
+						"moonsun",
+						"nonogram"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5326,6 +5329,7 @@ pzpr.classmgr.makeCommon({
 				"isowatari",
 				"soulmates",
 				"triparty",
+				"nonogram",
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
@@ -5341,6 +5345,8 @@ pzpr.classmgr.makeCommon({
 				"tentaisho",
 				"sandwalk",
 				"midloop",
+				"country",
+				"moonsun",
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
