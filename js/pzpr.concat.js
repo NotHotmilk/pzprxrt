@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-09-03
+ * Date: 2025-09-23
  */
 // intro.js
 
@@ -3289,7 +3289,8 @@ pzpr.MetaData.prototype = {
 						"midloop",
 						"country",
 						"moonsun",
-						"nonogram"
+						"nonogram",
+						"hashikake",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5347,6 +5348,7 @@ pzpr.classmgr.makeCommon({
 				"midloop",
 				"country",
 				"moonsun",
+				"hashikake",
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5566,8 +5568,10 @@ pzpr.classmgr.makeCommon({
 						} else {
 							border.lineBySolver = 1;
 						}
-					} else if (data[j] === "cross") {
+					} else if (item === "cross") {
 						border.qsubBySolver = 2;
+					} else if (item === "doubleLine") {
+						border.lineBySolver = 2;
 					}
 				}
 			}
