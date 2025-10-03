@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-09-23
+ * Date: 2025-10-03
  */
 // intro.js
 
@@ -3291,6 +3291,8 @@ pzpr.MetaData.prototype = {
 						"moonsun",
 						"nonogram",
 						"hashikake",
+						"sudoku",
+						"kakuro",
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5331,6 +5333,8 @@ pzpr.classmgr.makeCommon({
 				"soulmates",
 				"triparty",
 				"nonogram",
+				"sudoku",
+				"kakuro"
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
@@ -5387,6 +5391,11 @@ pzpr.classmgr.makeCommon({
 					cell.qsubBySolver = 0;
 					needUpdateField = true;
 				}
+
+				if (cell.qcandBySolver !== null) {
+					cell.qcandBySolver = null;
+					needUpdateField = true;
+				}
 			}
 			return needUpdateField;
 		},
@@ -5436,6 +5445,15 @@ pzpr.classmgr.makeCommon({
 
 					// アイテムの色が'green'で、座標がセルの中心を示す場合 (x, yが共に奇数)
 					if (itemData.color === "green" && itemData.x % 2 === 1 && itemData.y % 2 === 1) {
+						if (this.pid === "kakuro"){ // カックロは座標系がずれている
+							const cellY = (itemData.y - 1) / 2 - 1;
+							const cellX = (itemData.x - 1) / 2 - 1;
+
+							console.log(itemData);
+							cellItems[cellY][cellX].push(itemData.item);
+							continue;
+						}
+						
 						// パズルの内部座標からセルのインデックスに変換
 						const cellY = (itemData.y - 1) / 2;
 						const cellX = (itemData.x - 1) / 2;
@@ -5468,17 +5486,32 @@ pzpr.classmgr.makeCommon({
 									cell.qansBySolver = parseInt(item.data, 10);
 									break;
 								case "sudokuCandidateSet": // 数独の候補数字など
-									cell.qcandBySolver = [];
-									for (let n = 0; n < this.rows; ++n) {
-										cell.qcandBySolver.push(false);
+									if (this.pid === "sudoku") {
+										cell.qcandBySolver = [];
+										for (let n = 0; n < this.rows; ++n) {
+											cell.qcandBySolver.push(false);
+										}
+										for (let n = 0; n < item.values.length; ++n) {
+											const value = item.values[n];
+											if (value >= 1 && value <= this.rows) {
+												cell.qcandBySolver[value - 1] = true;
+											}
+										}
 									}
-									for (let n = 0; n < item.values.length; ++n) {
-										const value = item.values[n];
-										if (value >= 1 && value <= this.rows) {
-											cell.qcandBySolver[value - 1] = true;
+									else if (this.pid === "kakuro") {
+										cell.qcandBySolver = [];
+										for (let n = 0; n < 9; ++n) {
+											cell.qcandBySolver.push(false);
+										}
+										for (let n = 0; n < 9; ++n) {
+											const value = item.values[n];
+											if (value >= 1 && value <= 9) {
+												cell.qcandBySolver[value - 1] = true;
+											}
 										}
 									}
 									break;
+									
 							}
 						}
 					}
@@ -13770,8 +13803,8 @@ pzpr.classmgr.makeCommon({
 			const cellsInRange = this.range.cells;
 
 			// 2. 各セルを順番に処理
-			for (const cell of cellsInRange) {
-				// 現在のセルの候補数字リストを取得 (例: [true, false, true, ...])
+			for (let i = 0; i < cellsInRange.length; i++) {
+				const cell = cellsInRange[i];
 				const candidates = cell.qcandBySolver;
 
 				// 3. 各候補数字 (例: 1から9まで) を順番に処理
@@ -13812,6 +13845,7 @@ pzpr.classmgr.makeCommon({
 
 					} else {
 						// 5. 候補が存在しない場合は、対応する描画要素を隠す
+						console.log(`Hiding candidate ${candidateIndex + 1} for cell ${cell.id}`);
 						candidateContext.vhide();
 					}
 				}
