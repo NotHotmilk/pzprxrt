@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-10-04
+ * Date: 2025-10-12
  */
 // intro.js
 
@@ -3475,6 +3475,12 @@ ui.toolarea = {
 			rect.left + (rect.width - bounds.width) / 2,
 			Math.max(16, rect.top - bounds.height - 16)
 		);
+	},
+	nonogram_applyoffset: function() {
+		if (ui.puzzle) {
+			ui.puzzle.board.excellOffsets = null; // オフセットのキャッシュをクリア
+			ui.puzzle.setCanvasSize();
+		}
 	},
 	enterTrial: function() {
 		if (ui.puzzle.board.trialstage === 0) {

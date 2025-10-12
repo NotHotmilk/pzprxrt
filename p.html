@@ -376,6 +376,13 @@ if ('serviceWorker' in navigator) {
         <button class="btn" data-button-exec="run_autosolver">自動解答</button>
       </span>
     </div>
+    <!--ののぐらむ専用-->
+    <div data-disp-pid="nonogram" data-config="nonogram_applyoffset">
+        <span>手動オフセット調整</span>
+        <label>左:<input type="number" id="offset_h" style="width: 40px;" min="1"></label>
+        <label>上:<input type="number" id="offset_v" style="width: 40px;" min="1"></label>
+        <button type="button" class="btn" data-button-exec="nonogram_applyoffset">適用</button>
+    </div>
   </div>
   <hr class="separator" id="separator1">
   <div id="variantpanel" style="display:none;">
