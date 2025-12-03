@@ -3311,7 +3311,9 @@ pzpr.MetaData.prototype = {
 						"kakuro",
 						"nothree",
 						"morningwalk",
-						"energywalk"
+						"energywalk",
+						"nuritwin",
+						"heteromino"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5356,7 +5358,8 @@ pzpr.classmgr.makeCommon({
 				"nonogram",
 				"sudoku",
 				"kakuro",
-				"nothree"
+				"nothree",
+				"nuritwin"
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
@@ -5377,6 +5380,7 @@ pzpr.classmgr.makeCommon({
 				"hashikake",
 				"morningwalk",
 				"energywalk",
+				"heteromino"
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5583,6 +5587,7 @@ pzpr.classmgr.makeCommon({
 				"the_longest",
 				"dbchoco",
 				"tentaisho",
+				"heteromino"
 			].includes(this.pid);
 			
 			this.clearSolverAnswerForBorders();
@@ -14301,7 +14306,7 @@ pzpr.classmgr.makeCommon({
 			return null;
 		},
 		getQansBorderColor: function(border) {
-			if (border.qans >= 1) {
+			if (border.qans >= 1 || border.qansBySolver >= 1) {
 				return this.getBorderColor_qans(border);
 			}
 			return null;
