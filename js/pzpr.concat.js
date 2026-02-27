@@ -7,12 +7,12 @@
  * This script includes candle.js, see below
  *  https://github.com/sabo2/candle
  *
- * Copyright 2009-2025 sabo2
+ * Copyright 2009-2026 sabo2
  *
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-12-09
+ * Date: 2026-02-27
  */
 // intro.js
 
@@ -987,6 +987,7 @@ pzpr.classmgr = {
 			triparty: [0, 0, "三つ巴", "Triparty"],
 			hogemashu: [0, 0, "ほげましゅ", "Hogemashu", "", { alias: "hogemasyu" }],
 			sandwalk: [0, 0, "サンドウォーク", "Sand Walk", "icewalk"],
+			mountain: [0, 0, "マウンテン", "Mountain", "mountain"]
 			
 		}
 	);
@@ -3313,7 +3314,8 @@ pzpr.MetaData.prototype = {
 						"morningwalk",
 						"energywalk",
 						"nuritwin",
-						"heteromino"
+						"heteromino",
+						"mountain"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5359,7 +5361,8 @@ pzpr.classmgr.makeCommon({
 				"sudoku",
 				"kakuro",
 				"nothree",
-				"nuritwin"
+				"nuritwin",
+				"mountain"
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",

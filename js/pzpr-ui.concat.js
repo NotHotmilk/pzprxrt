@@ -7,12 +7,12 @@
  * This script includes candle.js, see below
  *  https://github.com/sabo2/candle
  *
- * Copyright 2009-2025 sabo2
+ * Copyright 2009-2026 sabo2
  *
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2025-12-09
+ * Date: 2026-02-27
  */
 // intro.js
 
