@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-02-27
+ * Date: 2026-04-15
  */
 // intro.js
 
@@ -987,8 +987,8 @@ pzpr.classmgr = {
 			triparty: [0, 0, "三つ巴", "Triparty"],
 			hogemashu: [0, 0, "ほげましゅ", "Hogemashu", "", { alias: "hogemasyu" }],
 			sandwalk: [0, 0, "サンドウォーク", "Sand Walk", "icewalk"],
-			mountain: [0, 0, "マウンテン", "Mountain", "mountain"]
-			
+			mountain: [0, 0, "マウンテン", "Mountain", "mountain"],
+			douzokukeno: [0, 0, "同族嫌悪", "Self Hatred", "mountain"]
 		}
 	);
 })();
@@ -3315,7 +3315,8 @@ pzpr.MetaData.prototype = {
 						"energywalk",
 						"nuritwin",
 						"heteromino",
-						"mountain"
+						"mountain",
+						"douzokukeno"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5362,7 +5363,8 @@ pzpr.classmgr.makeCommon({
 				"kakuro",
 				"nothree",
 				"nuritwin",
-				"mountain"
+				"mountain",
+				"douzokukeno"
 			].includes(this.pid) || updateBoth;
 			const updateBorders = [
 				"slither",
