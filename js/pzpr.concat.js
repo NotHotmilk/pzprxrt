@@ -5471,6 +5471,20 @@ pzpr.classmgr.makeCommon({
 			}
 			var url = ui.puzzle.getURL(pzpr.parser.URL_PZPRV3);
 			var result = window.solveProblem(url);
+			if (result === null) {
+				if (
+					!this.solverRetryPending &&
+					typeof window.whenSolverReady === "function"
+				) {
+					this.solverRetryPending = true;
+					var board = this;
+					window.whenSolverReady(function() {
+						board.solverRetryPending = false;
+						board.autoSolve(force);
+					});
+				}
+				return;
+			}
 
 			if (updateCells) {
 				this.updateSolverAnswerForCells(result);
@@ -21528,18 +21542,31 @@ pzpr.classmgr.makeCommon({
 })();
 
 var Solver = null;
+var SolverReadyCallbacks = [];
+var solverTarget = typeof window !== "undefined" ? window : globalThis;
 
 if (typeof Module === "function") {
 	Module().then(function(mod) {
 		Solver = mod;
+		var callbacks = SolverReadyCallbacks;
+		SolverReadyCallbacks = [];
+		for (var i = 0; i < callbacks.length; i++) {
+			callbacks[i]();
+		}
 	});
 }
 
-(typeof window !== "undefined" ? window : globalThis).solveProblem = function(
-	url
-) {
+solverTarget.whenSolverReady = function(callback) {
+	if (Solver) {
+		callback();
+	} else {
+		SolverReadyCallbacks.push(callback);
+	}
+};
+
+solverTarget.solveProblem = function(url) {
 	if (!Solver) {
-		return "solver is not ready";
+		return null;
 	}
 	var urlEncoded = new TextEncoder().encode(url);
 	var buf = Solver._malloc(urlEncoded.length);
