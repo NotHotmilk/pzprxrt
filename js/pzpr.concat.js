@@ -3337,6 +3337,7 @@ pzpr.MetaData.prototype = {
                         "nurikabe",
                         "lits",
                         "heyawake",
+                        "heyajilimisaki",
                         "slither",
                         "mashu",
                         "yajilin",
