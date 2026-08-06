@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-07-31
+ * Date: 2026-08-06
  */
 // intro.js
 
@@ -3418,7 +3418,8 @@ pzpr.MetaData.prototype = {
 						"mountain",
 						"douzokukeno",
 						"ruleofthree",
-						"onetwothreefour"
+						"onetwothreefour",
+						"kaero"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5449,6 +5450,7 @@ pzpr.classmgr.makeCommon({
 				"ringring",
 				"fillomino",
 				"firewalk",
+				"kaero",
 			].includes(this.pid);
 			const updateCells = [
 				"nurimisaki", 
@@ -5652,7 +5654,7 @@ pzpr.classmgr.makeCommon({
 								case "text":
 									var solverValue = parseInt(item.data, 10);
 									if (
-										this.pid === "easyasabc" &&
+										(this.pid === "easyasabc" || this.pid === "kaero") &&
 										typeof item.data === "string"
 									) {
 										var letterCode = item.data.charCodeAt(0);
@@ -14790,7 +14792,14 @@ pzpr.classmgr.makeCommon({
 				} else if (info === -1) {
 					return this.noerrcolor;
 				} else if (isDispmove) {
-					return border.trial ? this.movetrialcolor : this.movelinecolor;
+					var defaultMoveColor = border.trial
+						? this.movetrialcolor
+						: this.movelinecolor;
+					return this.getColorSolverAware(
+						border.line === 1,
+						border.lineBySolver === 1,
+						defaultMoveColor
+					);
 				} else if (isIrowake) {
 					return border.path.color;
 				} else {
@@ -21861,3 +21870,5 @@ solverTarget.solveProblem = function(url) {
 
 	return result.description;
 };
+
+//# sourceMappingURL=pzpr.concat.js.map
