@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-06
+ * Date: 2026-08-07
  */
 // intro.js
 
@@ -3415,11 +3415,13 @@ pzpr.MetaData.prototype = {
 						"energywalk",
 						"nuritwin",
 						"heteromino",
+						"subomino",
 						"mountain",
 						"douzokukeno",
 						"ruleofthree",
 						"onetwothreefour",
-						"kaero"
+						"kaero",
+						"vertigo"
                     ].includes(pid);
                     break;
 				case "voxas_tatami":
@@ -5499,7 +5501,9 @@ pzpr.classmgr.makeCommon({
 				"hashikake",
 				"morningwalk",
 				"energywalk",
-				"heteromino"
+				"heteromino",
+				"subomino",
+				"vertigo"
 			].includes(this.pid) || updateBoth;
 			if (!this.is_autosolve && !force) {
 				// clear solver answers if necessary
@@ -5767,7 +5771,8 @@ pzpr.classmgr.makeCommon({
 				"the_longest",
 				"dbchoco",
 				"tentaisho",
-				"heteromino"
+				"heteromino",
+				"subomino"
 			].includes(this.pid);
 			
 			this.clearSolverAnswerForBorders();
