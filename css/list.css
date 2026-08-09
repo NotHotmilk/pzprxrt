@@ -120,16 +120,6 @@ div.others {
   background-color: #ffffcc;
 }
 
-li.double-display-bug a:not(.rules)::after {
-  content: "(表示に軽微なバグあり)";
-  font-size: smaller;
-  color: #555;
-  margin-left: 0.3em;
-}
-[lang="en"] li.double-display-bug a:not(.rules)::after {
-  content: "(Minor display bug exists)";
-}
-
 .heavy-solver a:not(.rules)::before {
   content: '⚠️';
   margin-left: -4px;

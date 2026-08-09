@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-08
+ * Date: 2026-08-10
  */
 // intro.js
 
@@ -803,6 +803,7 @@ ui.listener = {
 		ui.setdisplay("keypopup");
 		ui.setdisplay("bgcolor");
 		ui.setdisplay("mouseonly");
+		ui.setdisplay("autosolver");
 		for (var key in ui.puzzle.config.getVariants()) {
 			ui.setdisplay(key);
 		}
@@ -3484,6 +3485,13 @@ ui.toolarea = {
 				this.displayVariantPanel();
 			}
 
+			if (idname === "run_autosolver") {
+				var autosolverBtn = toolitem.el.querySelector("button");
+				if (!!autosolverBtn) {
+					autosolverBtn.disabled = ui.puzzle.playeronly ? "true" : "";
+				}
+			}
+
 			var disabled = null;
 			/* 子要素の設定を行う */
 			if (!!toolitem.children) {
@@ -3524,6 +3532,9 @@ ui.toolarea = {
 				}
 				if (idname === "mouseonly") {
 					disabled = ui.puzzle.editmode && ui.puzzle.pid === "magnets";
+				}
+				if (idname === "autosolver") {
+					disabled = ui.puzzle.playeronly;
 				}
 				if (ui.puzzle.config.getvariant(idname)) {
 					disabled = !ui.puzzle.editmode;
