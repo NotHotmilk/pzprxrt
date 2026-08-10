@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-10
+ * Date: 2026-08-11
  */
 // intro.js
 
@@ -660,6 +660,7 @@ ui.event = {
 };
 
 // Listener.js v3.4.1
+/* global getEL:readonly */
 
 //---------------------------------------------------------------------------
 // ★UIListener Puzzleに付加するListenerイベント設定の管理を行う
@@ -683,6 +684,8 @@ ui.listener = {
 		puzzle.on("resize", this.onResize);
 
 		puzzle.on("cellop", this.onCellOp);
+
+		puzzle.on("solverstatus", this.onSolverStatusChange);
 	},
 
 	//---------------------------------------------------------------------------
@@ -836,6 +839,16 @@ ui.listener = {
 
 	onCellOp: function(puzzle, op) {
 		ui.network.onCellOp(op);
+	},
+
+	//---------------------------------------------------------------------------
+	// listener.onSolverStatusChange() リアルタイムソルバーの実行状態が変わったときに呼び出される関数
+	//---------------------------------------------------------------------------
+	onSolverStatusChange: function(puzzle, solving) {
+		var statusEl = getEL("autosolverstatus");
+		if (!!statusEl) {
+			statusEl.style.display = solving ? "" : "none";
+		}
 	}
 };
 

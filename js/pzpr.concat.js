@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-10
+ * Date: 2026-08-11
  */
 // intro.js
 
@@ -5456,65 +5456,71 @@ pzpr.classmgr.makeCommon({
 				"ringring",
 				"fillomino",
 				"firewalk",
-				"kaero",
+				"kaero"
 			].includes(this.pid);
-			const updateCells = [
-				"nurimisaki", 
-				"nurikabe",
-				"lits",
-				"heyawake",
-				"anymino",
-				"guidearrow",
-				"shakashaka",
-				"lightup",
-				"shugaku",
-				"aquapelago",
-				"cbanana",
-				"nurimaze",
-				"easyasabc",
-				"chainedb",
-				"isowatari",
-				"soulmates",
-				"nonogram",
-				"sudoku",
-				"kakuro",
-				"nothree",
-				"nuritwin",
-				"mountain",
-				"suguru",
-				"ruleofthree",
-				"onetwothreefour",
-				"dungeon",
-				"celltinels"
-			].includes(this.pid) || updateBoth;
-			const updateBorders = [
-				"slither",
-				"mashu", 
-				"squarejam",
-				"icewalk",
-				"waterwalk",
-				"forestwalk",
-				"sashigane",
-				"longest",
-				"dbchoco",
-				"hogemashu",
-				"tentaisho",
-				"sandwalk",
-				"midloop",
-				"country",
-				"moonsun",
-				"hashikake",
-				"morningwalk",
-				"energywalk",
-				"heteromino",
-				"subomino",
-				"vertigo",
-				"timber",
-				"climber"
-			].includes(this.pid) || updateBoth;
+			const updateCells =
+				[
+					"nurimisaki",
+					"nurikabe",
+					"lits",
+					"heyawake",
+					"anymino",
+					"guidearrow",
+					"shakashaka",
+					"lightup",
+					"shugaku",
+					"aquapelago",
+					"cbanana",
+					"nurimaze",
+					"easyasabc",
+					"chainedb",
+					"isowatari",
+					"soulmates",
+					"nonogram",
+					"sudoku",
+					"kakuro",
+					"nothree",
+					"nuritwin",
+					"mountain",
+					"suguru",
+					"ruleofthree",
+					"onetwothreefour",
+					"dungeon",
+					"celltinels"
+				].includes(this.pid) || updateBoth;
+			const updateBorders =
+				[
+					"slither",
+					"mashu",
+					"squarejam",
+					"icewalk",
+					"waterwalk",
+					"forestwalk",
+					"sashigane",
+					"longest",
+					"dbchoco",
+					"hogemashu",
+					"tentaisho",
+					"sandwalk",
+					"midloop",
+					"country",
+					"moonsun",
+					"hashikake",
+					"morningwalk",
+					"energywalk",
+					"heteromino",
+					"subomino",
+					"vertigo",
+					"timber",
+					"climber"
+				].includes(this.pid) || updateBoth;
 			// 斜めの区画線は交点(bx/byがともに偶数)に届くので、境界線とは別に取り込む
 			const updateCrosses = ["climber"].includes(this.pid);
 			if (!this.is_autosolve && !force) {
+				// invalidate any solve currently running in the background, since its
+				// result would no longer be relevant once it comes back
+				this.solverRequestGeneration++;
+
 				// clear solver answers if necessary
 				var needUpdateField = false;
 				if (updateCells && this.clearSolverAnswerForCells()) {
@@ -5529,39 +5535,87 @@ pzpr.classmgr.makeCommon({
 				if (needUpdateField) {
 					this.puzzle.painter.paintAll();
 				}
+				this.setSolving(false);
 				return;
 			}
+			if (
+				typeof window === "undefined" ||
+				typeof window.solveProblemAsync !== "function"
+			) {
+				return;
+			}
+
 			var url = ui.puzzle.getURL(pzpr.parser.URL_PZPRV3);
-			var result = window.solveProblem(url);
-			if (result === null) {
-				if (
-					!this.solverRetryPending &&
-					typeof window.whenSolverReady === "function"
-				) {
-					this.solverRetryPending = true;
-					var board = this;
-					window.whenSolverReady(function() {
-						board.solverRetryPending = false;
-						board.autoSolve(force);
-					});
+
+			// Solving runs off the main thread (see SolverBridge.js/SolverWorker.js) so
+			// editing never blocks on it. Board input can change again before a solve
+			// comes back; solverRequestGeneration lets us recognize and discard results
+			// for board states that are no longer current.
+			var generation = ++this.solverRequestGeneration;
+			this.setSolving(true);
+
+			// don't keep showing the previous board's answer while a new one is
+			// being computed
+			var needUpdateFieldOnStart = false;
+			if (updateCells && this.clearSolverAnswerForCells()) {
+				needUpdateFieldOnStart = true;
+			}
+			if (updateBorders && this.clearSolverAnswerForBorders()) {
+				needUpdateFieldOnStart = true;
+			}
+			if (updateCrosses && this.clearSolverAnswerForCrosses()) {
+				needUpdateFieldOnStart = true;
+			}
+			if (needUpdateFieldOnStart) {
+				this.puzzle.painter.paintAll();
+			}
+
+			var board = this;
+			window.solveProblemAsync(url).then(
+				function(result) {
+					if (generation !== board.solverRequestGeneration) {
+						return; // superseded by a newer board state; drop this result
+					}
+					board.setSolving(false);
+
+					if (updateCells) {
+						board.updateSolverAnswerForCells(result);
+					}
+					if (updateBorders) {
+						board.updateSolverAnswerForBorders(result);
+					}
+					if (updateCrosses) {
+						board.updateSolverAnswerForCrosses(result);
+					}
+
+					board.puzzle.painter.paintAll();
+				},
+				function() {
+					if (generation !== board.solverRequestGeneration) {
+						return;
+					}
+					board.setSolving(false);
 				}
-				return;
-			}
-
-			if (updateCells) {
-				this.updateSolverAnswerForCells(result);
-			}
-			if (updateBorders) {
-				this.updateSolverAnswerForBorders(result);
-			}
-			if (updateCrosses) {
-				this.updateSolverAnswerForCrosses(result);
-			}
-
-			this.puzzle.painter.paintAll();
+			);
 		},
 
-		clearSolverAnswerForCells: function () {
+		// 0 changes each time the board input relevant to the solver changes; used to
+		// discard a solve result that is no longer relevant to the current board state
+		solverRequestGeneration: 0,
+
+		// true while a real-time solve is running in the background worker
+		solving: false,
+		setSolving: function(value) {
+			if (this.solving === value) {
+				return;
+			}
+			this.solving = value;
+			if (this.puzzle) {
+				this.puzzle.emit("solverstatus", value);
+			}
+		},
+
+		clearSolverAnswerForCells: function() {
 			var needUpdateField = false;
 
 			for (var i = 0; i < this.cell.length; ++i) {
@@ -5583,27 +5637,27 @@ pzpr.classmgr.makeCommon({
 		updateSolverAnswerForCells: function(result) {
 			this.clearSolverAnswerForCells();
 			const solverItemMap = {
-				"block":           { prop: 'qansBySolver', value: 1 },
-				"fill":            { prop: 'qansBySolver', value: 1 },
-				"circle":          { prop: 'qansBySolver', value: 1 },
-				"dot":             { prop: 'qsubBySolver', value: 1 },
-				"cross":           { prop: 'qsubBySolver', value: 2 },
-				"aboloUpperLeft":  { prop: 'qansBySolver', value: 5 },
-				"aboloUpperRight": { prop: 'qansBySolver', value: 4 },
-				"aboloLowerLeft":  { prop: 'qansBySolver', value: 2 },
-				"aboloLowerRight": { prop: 'qansBySolver', value: 3 },
-				"shugakuPillow":   { prop: 'qansBySolver', value: 40 },
-				"shugakuFuton":    { prop: 'qansBySolver', value: 50 },
-				"shugakuWest":     { prop: 'qsubBySolver', value: 1 },
-				"shugakuEast":     { prop: 'qsubBySolver', value: 2 },
-				"shugakuSouth":    { prop: 'qsubBySolver', value: 3 },
-				"firewalkCellUlDr":    { prop: 'qansBySolver', value: 11 },
-				"firewalkCellUrDl":    { prop: 'qansBySolver', value: 12 },
-				"firewalkCellUl":      { prop: 'qansBySolver', value: 13 },
-				"firewalkCellUr":      { prop: 'qansBySolver', value: 14 },
-				"firewalkCellDl":      { prop: 'qansBySolver', value: 15 },
-				"firewalkCellDr":      { prop: 'qansBySolver', value: 16 },
-				"firewalkCellUnknown": { prop: 'qansBySolver', value: 17 }
+				block: { prop: "qansBySolver", value: 1 },
+				fill: { prop: "qansBySolver", value: 1 },
+				circle: { prop: "qansBySolver", value: 1 },
+				dot: { prop: "qsubBySolver", value: 1 },
+				cross: { prop: "qsubBySolver", value: 2 },
+				aboloUpperLeft: { prop: "qansBySolver", value: 5 },
+				aboloUpperRight: { prop: "qansBySolver", value: 4 },
+				aboloLowerLeft: { prop: "qansBySolver", value: 2 },
+				aboloLowerRight: { prop: "qansBySolver", value: 3 },
+				shugakuPillow: { prop: "qansBySolver", value: 40 },
+				shugakuFuton: { prop: "qansBySolver", value: 50 },
+				shugakuWest: { prop: "qsubBySolver", value: 1 },
+				shugakuEast: { prop: "qsubBySolver", value: 2 },
+				shugakuSouth: { prop: "qsubBySolver", value: 3 },
+				firewalkCellUlDr: { prop: "qansBySolver", value: 11 },
+				firewalkCellUrDl: { prop: "qansBySolver", value: 12 },
+				firewalkCellUl: { prop: "qansBySolver", value: 13 },
+				firewalkCellUr: { prop: "qansBySolver", value: 14 },
+				firewalkCellDl: { prop: "qansBySolver", value: 15 },
+				firewalkCellDr: { prop: "qansBySolver", value: 16 },
+				firewalkCellUnknown: { prop: "qansBySolver", value: 17 }
 			};
 
 			// resultがオブジェクトの場合、詳細な解答データを処理する
@@ -5627,18 +5681,20 @@ pzpr.classmgr.makeCommon({
 					const itemData = solverData[i];
 
 					// アイテムの色が'green'で、座標がセルの中心を示す場合 (x, yが共に奇数)
-					if (itemData.color === "green" && itemData.x % 2 === 1 && itemData.y % 2 === 1) {
-						if (
-							this.pid === "kakuro" ||
-							this.pid === "easyasabc"
-						) { // カックロとABCプレースは座標系がずれている
+					if (
+						itemData.color === "green" &&
+						itemData.x % 2 === 1 &&
+						itemData.y % 2 === 1
+					) {
+						if (this.pid === "kakuro" || this.pid === "easyasabc") {
+							// カックロとABCプレースは座標系がずれている
 							const cellY = (itemData.y - 1) / 2 - 1;
 							const cellX = (itemData.x - 1) / 2 - 1;
 
 							cellItems[cellY][cellX].push(itemData.item);
 							continue;
 						}
-						
+
 						// パズルの内部座標からセルのインデックスに変換
 						const cellY = (itemData.y - 1) / 2;
 						const cellX = (itemData.x - 1) / 2;
@@ -5658,7 +5714,7 @@ pzpr.classmgr.makeCommon({
 					// セルに割り当てられたアイテムの種類に応じて、セルの状態を更新
 					for (let k = 0; k < itemsInCell.length; ++k) {
 						const item = itemsInCell[k];
-						if (typeof item === 'string') {
+						if (typeof item === "string") {
 							const mapping =
 								this.pid === "soulmates" && item === "circle"
 									? { prop: "qsubBySolver", value: 2 }
@@ -5705,8 +5761,7 @@ pzpr.classmgr.makeCommon({
 												cell.qcandBySolver[value - 1] = true;
 											}
 										}
-									}
-									else if (this.pid === "kakuro") {
+									} else if (this.pid === "kakuro") {
 										cell.qcandBySolver = [];
 										for (let n = 0; n < 9; ++n) {
 											cell.qcandBySolver.push(false);
@@ -5717,8 +5772,7 @@ pzpr.classmgr.makeCommon({
 												cell.qcandBySolver[value - 1] = true;
 											}
 										}
-									}
-									else if (this.pid === "onetwothreefour") {
+									} else if (this.pid === "onetwothreefour") {
 										const candidateCount =
 											this.rows === 6 && this.cols === 6 ? 3 : 4;
 										cell.qcandBySolver = [];
@@ -5733,7 +5787,6 @@ pzpr.classmgr.makeCommon({
 										}
 									}
 									break;
-									
 							}
 						}
 					}
@@ -5744,11 +5797,7 @@ pzpr.classmgr.makeCommon({
 				// パズルの種類 (pid) によってデフォルト値を変える
 				// "shakashaka" なら 2、それ以外なら 1
 				const defaultValue =
-					this.pid === "shakashaka"
-						? 2
-						: this.pid === "ruleofthree"
-						? 11
-						: 1;
+					this.pid === "shakashaka" ? 2 : this.pid === "ruleofthree" ? 11 : 1;
 
 				for (let i = 0; i < this.cell.length; ++i) {
 					const cell = this.cell[i];
@@ -5763,12 +5812,16 @@ pzpr.classmgr.makeCommon({
 			}
 		},
 
-		clearSolverAnswerForBorders: function () {
+		clearSolverAnswerForBorders: function() {
 			var needUpdateField = false;
 
 			for (var i = 0; i < this.border.length; ++i) {
 				var border = this.border[i];
-				if (border.qansBySolver !== 0 || border.lineBySolver !== 0 || border.qsubBySolver !== 0) {
+				if (
+					border.qansBySolver !== 0 ||
+					border.lineBySolver !== 0 ||
+					border.qsubBySolver !== 0
+				) {
 					border.qansBySolver = 0;
 					border.lineBySolver = 0;
 					border.qsubBySolver = 0;
@@ -5777,8 +5830,8 @@ pzpr.classmgr.makeCommon({
 			}
 			return needUpdateField;
 		},
-		
-		updateSolverAnswerForBorders: function (result) {
+
+		updateSolverAnswerForBorders: function(result) {
 			const useOuterBorder = [
 				"squarejam",
 				"fillomino",
@@ -5789,7 +5842,7 @@ pzpr.classmgr.makeCommon({
 				"heteromino",
 				"subomino"
 			].includes(this.pid);
-			
+
 			this.clearSolverAnswerForBorders();
 			if (typeof result === "string" || result.hasAnswer === false) {
 				for (var i = 0; i < this.border.length; ++i) {
@@ -5810,7 +5863,8 @@ pzpr.classmgr.makeCommon({
 			var dataRaw = result.data;
 			for (var i = 0; i < dataRaw.length; ++i) {
 				var elem = dataRaw[i];
-				if (elem.color !== "green") { // TODO
+				if (elem.color !== "green") {
+					// TODO
 					continue;
 				}
 				if (elem.x % 2 === elem.y % 2) {
@@ -5838,8 +5892,8 @@ pzpr.classmgr.makeCommon({
 				}
 			}
 		},
-		
-		clearSolverAnswerForCrosses: function () {
+
+		clearSolverAnswerForCrosses: function() {
 			var needUpdateField = false;
 
 			for (var i = 0; i < this.cross.length; ++i) {
@@ -5854,7 +5908,7 @@ pzpr.classmgr.makeCommon({
 
 		// 交点に置かれた斜線(slash / backslash)を取り込む。
 		// マス(奇数,奇数)でも境界線(偶奇が異なる)でもない、偶数同士の座標が交点にあたる。
-		updateSolverAnswerForCrosses: function (result) {
+		updateSolverAnswerForCrosses: function(result) {
 			this.clearSolverAnswerForCrosses();
 			if (typeof result === "string" || result.hasAnswer === false) {
 				return;
@@ -5900,7 +5954,7 @@ pzpr.classmgr.makeCommon({
 			const currentIndex = this.answerIndex;
 
 			// this.answers の型に応じて、表示するデータと総解答数を設定する
-			if (typeof this.answers === 'string') {
+			if (typeof this.answers === "string") {
 				// 解答が単一の文字列の場合 (例: "terminated")
 				answerData = this.answers;
 				totalAnswers = 0; // 総数は意味を持たない
@@ -5911,7 +5965,9 @@ pzpr.classmgr.makeCommon({
 			}
 
 			// UI上の「n/m」カウンター表示を更新する
-			const locatorElement = ui.popupmgr.popups.auxeditor.pop.querySelector(".solver-answer-locator");
+			const locatorElement = ui.popupmgr.popups.auxeditor.pop.querySelector(
+				".solver-answer-locator"
+			);
 			if (answerData === "terminated") {
 				locatorElement.innerText = "Terminated";
 			} else if (totalAnswers > 0) {
@@ -5935,7 +5991,8 @@ pzpr.classmgr.makeCommon({
 			}
 
 			// 解答の総数を取得
-			const totalAnswers = (typeof this.answers === 'string') ? 0 : this.answers.answers.length;
+			const totalAnswers =
+				typeof this.answers === "string" ? 0 : this.answers.answers.length;
 
 			// 移動方向に応じて、表示する解答のインデックスを変更する
 			switch (direction) {
@@ -5958,7 +6015,8 @@ pzpr.classmgr.makeCommon({
 					}
 					break;
 
-				default: // 「最後へ」 (directionが上記以外の値の場合)
+				default:
+					// 「最後へ」 (directionが上記以外の値の場合)
 					this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
 					break;
 			}
@@ -5966,7 +6024,7 @@ pzpr.classmgr.makeCommon({
 			// 新しいインデックスに基づいて解答の表示を更新する
 			this.showAnswer();
 		},
-		
+
 		is_autosolve: false,
 		updateIsAutosolve: function(mode) {
 			if (this.is_autosolve !== mode) {
@@ -6050,7 +6108,7 @@ pzpr.classmgr.makeCommon({
 				groups2.allclear(false);
 			}
 			groups.length = len;
-			
+
 			for (let i = 0; i < group.length; i++) {
 				const element = group[i];
 				element.qansBySolver = 0;
@@ -6058,7 +6116,7 @@ pzpr.classmgr.makeCommon({
 				element.lineBySolver = 0;
 				element.qcandBySolver = null;
 			}
-			
+
 			return len - clen;
 		},
 		getGroup: function(group) {
@@ -21939,4 +21997,147 @@ solverTarget.solveProblem = function(url) {
 	var result = JSON.parse(resultStr.substring(0, resultStr.length));
 
 	return result.description;
+};
+
+//---------------------------------------------------------------------------
+// solveProblemAsync(url)
+//
+// Off-main-thread version of solveProblem(). Solves run in a Web Worker so a
+// slow solve never freezes editor input. Results for the last SOLVE_CACHE_LIMIT
+// distinct board URLs are memoized so re-solving an already-seen board is free.
+// Each entry is just a URL string plus a small parsed-JSON answer, so even a
+// few hundred entries amount to at most a few MB - keeping a generous number
+// of them costs effectively nothing.
+//
+// While a solve is in flight, only the most recently requested URL is kept:
+// if the board changes again before the worker replies, the superseded
+// request is dropped (its promise is simply never settled) and the newest
+// URL is solved next, so the solver always converges on the latest input
+// without piling up stale work.
+//---------------------------------------------------------------------------
+var SOLVE_CACHE_LIMIT = 100;
+var solveCache = new Map(); // url -> description, insertion order = LRU order
+
+function cacheGet(url) {
+	if (!solveCache.has(url)) {
+		return undefined;
+	}
+	var value = solveCache.get(url);
+	solveCache.delete(url);
+	solveCache.set(url, value); // move to the "most recently used" end
+	return value;
+}
+
+function cacheSet(url, value) {
+	solveCache.delete(url);
+	solveCache.set(url, value);
+	if (solveCache.size > SOLVE_CACHE_LIMIT) {
+		solveCache.delete(solveCache.keys().next().value);
+	}
+}
+
+var solverWorker = null;
+var workerBusy = false;
+var nextRequestId = 1;
+var inFlightRequest = null; // {id, url, resolve, reject}
+var latestQueuedRequest = null; // {url, resolve, reject}
+
+function canUseWorker() {
+	return typeof Worker !== "undefined";
+}
+
+function getSolverWorker() {
+	if (solverWorker) {
+		return solverWorker;
+	}
+	solverWorker = new Worker("./js/SolverWorker.js");
+	solverWorker.onmessage = function(e) {
+		var data = e.data;
+		var req = inFlightRequest;
+		inFlightRequest = null;
+		workerBusy = false;
+		if (req && data.id === req.id) {
+			if (data.ok) {
+				cacheSet(req.url, data.description);
+				req.resolve(data.description);
+			} else {
+				req.reject(new Error(data.error));
+			}
+		}
+		pumpSolverQueue();
+	};
+	solverWorker.onerror = function(err) {
+		var req = inFlightRequest;
+		inFlightRequest = null;
+		workerBusy = false;
+		if (req) {
+			req.reject(err);
+		}
+		pumpSolverQueue();
+	};
+	return solverWorker;
+}
+
+function pumpSolverQueue() {
+	if (workerBusy || !latestQueuedRequest) {
+		return;
+	}
+	var req = latestQueuedRequest;
+	latestQueuedRequest = null;
+
+	var cached = cacheGet(req.url);
+	if (cached !== undefined) {
+		req.resolve(cached);
+		pumpSolverQueue();
+		return;
+	}
+
+	workerBusy = true;
+	var id = nextRequestId++;
+	inFlightRequest = {
+		id: id,
+		url: req.url,
+		resolve: req.resolve,
+		reject: req.reject
+	};
+	getSolverWorker().postMessage({ id: id, url: req.url });
+}
+
+// Used when Web Workers aren't available (e.g. Node-based tests): wraps the
+// synchronous solveProblem() in a promise so callers only ever deal with
+// solveProblemAsync(), waiting for the module to finish loading if needed.
+function solveWithoutWorker(url) {
+	return new Promise(function(resolve, reject) {
+		function run() {
+			try {
+				resolve(solverTarget.solveProblem(url));
+			} catch (err) {
+				reject(err);
+			}
+		}
+		if (Solver) {
+			run();
+		} else {
+			solverTarget.whenSolverReady(run);
+		}
+	});
+}
+
+solverTarget.solveProblemAsync = function(url) {
+	var cached = cacheGet(url);
+	if (cached !== undefined) {
+		return Promise.resolve(cached);
+	}
+
+	if (!canUseWorker()) {
+		return solveWithoutWorker(url).then(function(description) {
+			cacheSet(url, description);
+			return description;
+		});
+	}
+
+	return new Promise(function(resolve, reject) {
+		latestQueuedRequest = { url: url, resolve: resolve, reject: reject };
+		pumpSolverQueue();
+	});
 };
