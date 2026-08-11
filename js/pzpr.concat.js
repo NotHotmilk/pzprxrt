@@ -5462,6 +5462,13 @@ pzpr.classmgr.makeCommon({
 		},
 
 		autoSolve: function(force) {
+			// Once a disabled solver has no pending or displayed state, board edits
+			// have nothing to invalidate or clear. Keep this before the puzzle-type
+			// checks so the normal editor path stays constant-time.
+			if (!this.is_autosolve && !force && !this.solverStateActive) {
+				return;
+			}
+
 			const updateBoth = [
 				"yajilin",
 				"heyajilimisaki",
@@ -5548,6 +5555,7 @@ pzpr.classmgr.makeCommon({
 				if (needUpdateField) {
 					this.puzzle.painter.paintAll();
 				}
+				this.solverStateActive = false;
 				this.setSolving(false);
 				return;
 			}
@@ -5565,6 +5573,7 @@ pzpr.classmgr.makeCommon({
 			// comes back; solverRequestGeneration lets us recognize and discard results
 			// for board states that are no longer current.
 			var generation = ++this.solverRequestGeneration;
+			this.solverStateActive = true;
 			this.setSolving(true);
 
 			// don't keep showing the previous board's answer while a new one is
@@ -5607,6 +5616,7 @@ pzpr.classmgr.makeCommon({
 					if (generation !== board.solverRequestGeneration) {
 						return;
 					}
+					board.solverStateActive = false;
 					board.setSolving(false);
 				}
 			);
@@ -5615,6 +5625,10 @@ pzpr.classmgr.makeCommon({
 		// 0 changes each time the board input relevant to the solver changes; used to
 		// discard a solve result that is no longer relevant to the current board state
 		solverRequestGeneration: 0,
+
+		// true while a solve is pending or its answer is displayed; when false, a
+		// disabled solver can skip the otherwise full-board answer-clearing scans
+		solverStateActive: false,
 
 		// true while a real-time solve is running in the background worker
 		solving: false,
