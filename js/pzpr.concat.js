@@ -22009,11 +22009,13 @@ solverTarget.solveProblem = function(url) {
 // few hundred entries amount to at most a few MB - keeping a generous number
 // of them costs effectively nothing.
 //
-// While a solve is in flight, only the most recently requested URL is kept:
-// if the board changes again before the worker replies, the superseded
-// request is dropped (its promise is simply never settled) and the newest
-// URL is solved next, so the solver always converges on the latest input
-// without piling up stale work.
+// At most one older request is ever kept around. The moment a newer board
+// state arrives, whatever was queued behind the current solve is rejected and
+// dropped, and if a solve is actually running in the worker it gets killed
+// outright (the worker is terminated and a fresh one takes over) rather than
+// being left to grind to completion. Without this, rapidly editing a heavy
+// board could otherwise pile up an ever-growing backlog of abandoned promises
+// and leave the CPU stuck finishing solves nobody needs anymore.
 //---------------------------------------------------------------------------
 var SOLVE_CACHE_LIMIT = 100;
 var solveCache = new Map(); // url -> description, insertion order = LRU order
@@ -22050,23 +22052,34 @@ function getSolverWorker() {
 	if (solverWorker) {
 		return solverWorker;
 	}
-	solverWorker = new Worker("./js/SolverWorker.js");
-	solverWorker.onmessage = function(e) {
+	var thisWorker = new Worker("./js/SolverWorker.js");
+	solverWorker = thisWorker;
+
+	thisWorker.onmessage = function(e) {
+		// ignore messages from a worker/request that has since been superseded
+		// and cancelled (see cancelInFlightRequest())
+		if (solverWorker !== thisWorker || !inFlightRequest) {
+			return;
+		}
 		var data = e.data;
+		if (data.id !== inFlightRequest.id) {
+			return;
+		}
 		var req = inFlightRequest;
 		inFlightRequest = null;
 		workerBusy = false;
-		if (req && data.id === req.id) {
-			if (data.ok) {
-				cacheSet(req.url, data.description);
-				req.resolve(data.description);
-			} else {
-				req.reject(new Error(data.error));
-			}
+		if (data.ok) {
+			cacheSet(req.url, data.description);
+			req.resolve(data.description);
+		} else {
+			req.reject(new Error(data.error));
 		}
 		pumpSolverQueue();
 	};
-	solverWorker.onerror = function(err) {
+	thisWorker.onerror = function(err) {
+		if (solverWorker !== thisWorker) {
+			return;
+		}
 		var req = inFlightRequest;
 		inFlightRequest = null;
 		workerBusy = false;
@@ -22075,7 +22088,23 @@ function getSolverWorker() {
 		}
 		pumpSolverQueue();
 	};
-	return solverWorker;
+	return thisWorker;
+}
+
+// Kills whatever solve is currently running in the worker (if any) so its CPU
+// time isn't wasted computing an answer nobody will use, and rejects its
+// promise so callers waiting on it settle immediately instead of leaking.
+function cancelInFlightRequest() {
+	if (solverWorker) {
+		solverWorker.terminate();
+		solverWorker = null;
+	}
+	workerBusy = false;
+	if (inFlightRequest) {
+		var req = inFlightRequest;
+		inFlightRequest = null;
+		req.reject(new Error("solve superseded by a newer board state"));
+	}
 }
 
 function pumpSolverQueue() {
@@ -22124,6 +22153,20 @@ function solveWithoutWorker(url) {
 }
 
 solverTarget.solveProblemAsync = function(url) {
+	if (canUseWorker()) {
+		// only one older request is ever kept on hold; anything else gets
+		// cancelled immediately, whether it was still queued or already
+		// running, before we consider the new one
+		if (latestQueuedRequest) {
+			var queued = latestQueuedRequest;
+			latestQueuedRequest = null;
+			queued.reject(new Error("solve superseded by a newer board state"));
+		}
+		if (inFlightRequest) {
+			cancelInFlightRequest();
+		}
+	}
+
 	var cached = cacheGet(url);
 	if (cached !== undefined) {
 		return Promise.resolve(cached);
