@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-11
+ * Date: 2026-08-12
  */
 // intro.js
 
@@ -22011,14 +22011,23 @@ solverTarget.solveProblem = function(url) {
 //
 // At most one older request is ever kept around. The moment a newer board
 // state arrives, whatever was queued behind the current solve is rejected and
-// dropped, and if a solve is actually running in the worker it gets killed
-// outright (the worker is terminated and a fresh one takes over) rather than
-// being left to grind to completion. Without this, rapidly editing a heavy
-// board could otherwise pile up an ever-growing backlog of abandoned promises
-// and leave the CPU stuck finishing solves nobody needs anymore.
+// dropped, and any workers solving the superseded state are killed outright.
+//
+// Soulmates and Double Choco start in the persistent dynamic worker. If that
+// solve exceeds a puzzle-specific grace period, an ephemeral
+// worker starts the original board-specific (static) encoding. The first
+// successful result wins. A dynamic win preserves its reusable SAT session; a
+// static win kills the still-running dynamic worker, so the next request gets
+// a clean dynamic session. A loss is never remembered as a permanent policy.
 //---------------------------------------------------------------------------
 var SOLVE_CACHE_LIMIT = 100;
 var solveCache = new Map(); // url -> description, insertion order = LRU order
+
+// The delays avoid spending a second core on the normal fast path. They are
+// deliberately much shorter than the measured reversal cases, but long enough
+// for a warm dynamic session to finish without launching a static worker.
+var DOUBLE_CHOCO_STATIC_DELAY_MS = 750;
+var SOULMATES_STATIC_DELAY_MS = 1000;
 
 function cacheGet(url) {
 	if (!solveCache.has(url)) {
@@ -22038,7 +22047,18 @@ function cacheSet(url, value) {
 	}
 }
 
-var solverWorker = null;
+function staticFallbackDelay(url) {
+	if (url.indexOf("dbchoco/") !== -1) {
+		return DOUBLE_CHOCO_STATIC_DELAY_MS;
+	}
+	if (url.indexOf("soulmates") !== -1) {
+		return SOULMATES_STATIC_DELAY_MS;
+	}
+	return null;
+}
+
+var dynamicSolverWorker = null;
+var staticSolverWorker = null;
 var workerBusy = false;
 var nextRequestId = 1;
 var inFlightRequest = null; // {id, url, resolve, reject}
@@ -22048,17 +22068,17 @@ function canUseWorker() {
 	return typeof Worker !== "undefined";
 }
 
-function getSolverWorker() {
-	if (solverWorker) {
-		return solverWorker;
-	}
+function workerForMode(mode) {
+	return mode === "dynamic" ? dynamicSolverWorker : staticSolverWorker;
+}
+
+function createSolverWorker(mode) {
 	var thisWorker = new Worker("./js/SolverWorker.js");
-	solverWorker = thisWorker;
 
 	thisWorker.onmessage = function(e) {
-		// ignore messages from a worker/request that has since been superseded
-		// and cancelled (see cancelInFlightRequest())
-		if (solverWorker !== thisWorker || !inFlightRequest) {
+		// Ignore messages from workers that have since lost a race or been
+		// cancelled because the board changed.
+		if (workerForMode(mode) !== thisWorker || !inFlightRequest) {
 			return;
 		}
 		var data = e.data;
@@ -22066,45 +22086,160 @@ function getSolverWorker() {
 			return;
 		}
 		var req = inFlightRequest;
-		inFlightRequest = null;
-		workerBusy = false;
 		if (data.ok) {
-			cacheSet(req.url, data.description);
-			req.resolve(data.description);
+			finishSolverRequest(req, mode, data.description);
 		} else {
-			req.reject(new Error(data.error));
+			failSolverPath(req, mode, new Error(data.error));
 		}
-		pumpSolverQueue();
 	};
 	thisWorker.onerror = function(err) {
-		if (solverWorker !== thisWorker) {
+		if (workerForMode(mode) !== thisWorker || !inFlightRequest) {
 			return;
 		}
-		var req = inFlightRequest;
-		inFlightRequest = null;
-		workerBusy = false;
-		if (req) {
-			req.reject(err);
-		}
-		pumpSolverQueue();
+		failSolverPath(inFlightRequest, mode, err);
 	};
 	return thisWorker;
 }
 
-// Kills whatever solve is currently running in the worker (if any) so its CPU
-// time isn't wasted computing an answer nobody will use, and rejects its
-// promise so callers waiting on it settle immediately instead of leaking.
-function cancelInFlightRequest() {
-	if (solverWorker) {
-		solverWorker.terminate();
-		solverWorker = null;
+function getDynamicSolverWorker() {
+	if (!dynamicSolverWorker) {
+		dynamicSolverWorker = createSolverWorker("dynamic");
 	}
+	return dynamicSolverWorker;
+}
+
+function terminateDynamicSolverWorker() {
+	if (dynamicSolverWorker) {
+		var worker = dynamicSolverWorker;
+		dynamicSolverWorker = null;
+		worker.terminate();
+	}
+}
+
+function terminateStaticSolverWorker() {
+	if (staticSolverWorker) {
+		var worker = staticSolverWorker;
+		staticSolverWorker = null;
+		worker.terminate();
+	}
+}
+
+function clearStaticFallbackTimer(req) {
+	if (req.staticFallbackTimer !== null) {
+		clearTimeout(req.staticFallbackTimer);
+		req.staticFallbackTimer = null;
+	}
+}
+
+function describeError(err) {
+	return String((err && err.message) || err);
+}
+
+function startStaticFallback(req) {
+	if (inFlightRequest !== req || req.staticStatus !== "waiting") {
+		return;
+	}
+	clearStaticFallbackTimer(req);
+	req.staticStatus = "running";
+
+	try {
+		staticSolverWorker = createSolverWorker("static");
+		staticSolverWorker.postMessage({
+			id: req.id,
+			url: req.url,
+			mode: "static"
+		});
+	} catch (err) {
+		terminateStaticSolverWorker();
+		failSolverPath(req, "static", err);
+	}
+}
+
+function finishSolverRequest(req, winner, description) {
+	if (inFlightRequest !== req) {
+		return;
+	}
+	clearStaticFallbackTimer(req);
+	inFlightRequest = null;
 	workerBusy = false;
-	if (inFlightRequest) {
-		var req = inFlightRequest;
-		inFlightRequest = null;
-		req.reject(new Error("solve superseded by a newer board state"));
+
+	if (winner === "dynamic") {
+		// Keep the reusable dynamic session, but stop a static hedge if it was
+		// launched and lost.
+		terminateStaticSolverWorker();
+	} else {
+		// The static worker is always one-shot. The dynamic worker must also be
+		// killed because synchronous Wasm cannot be interrupted in place.
+		terminateStaticSolverWorker();
+		terminateDynamicSolverWorker();
 	}
+
+	cacheSet(req.url, description);
+	req.resolve(description);
+	pumpSolverQueue();
+}
+
+function finishSolverRequestWithError(req) {
+	if (inFlightRequest !== req) {
+		return;
+	}
+	clearStaticFallbackTimer(req);
+	inFlightRequest = null;
+	workerBusy = false;
+	terminateStaticSolverWorker();
+	terminateDynamicSolverWorker();
+
+	var messages = [];
+	if (req.dynamicError) {
+		messages.push("dynamic: " + describeError(req.dynamicError));
+	}
+	if (req.staticError) {
+		messages.push("static: " + describeError(req.staticError));
+	}
+	req.reject(new Error(messages.join("; ") || "solver worker failed"));
+	pumpSolverQueue();
+}
+
+function failSolverPath(req, mode, err) {
+	if (inFlightRequest !== req) {
+		return;
+	}
+
+	if (mode === "dynamic") {
+		terminateDynamicSolverWorker();
+		req.dynamicStatus = "failed";
+		req.dynamicError = err;
+		if (req.staticStatus === "waiting") {
+			startStaticFallback(req);
+		} else if (
+			req.staticStatus === "disabled" ||
+			req.staticStatus === "failed"
+		) {
+			finishSolverRequestWithError(req);
+		}
+	} else {
+		terminateStaticSolverWorker();
+		req.staticStatus = "failed";
+		req.staticError = err;
+		if (req.dynamicStatus === "failed") {
+			finishSolverRequestWithError(req);
+		}
+	}
+}
+
+// Kills whatever solve is currently running so CPU time is not wasted on an
+// answer for a board state that has already been superseded.
+function cancelInFlightRequest() {
+	if (!inFlightRequest) {
+		return;
+	}
+	var req = inFlightRequest;
+	inFlightRequest = null;
+	workerBusy = false;
+	clearStaticFallbackTimer(req);
+	terminateStaticSolverWorker();
+	terminateDynamicSolverWorker();
+	req.reject(new Error("solve superseded by a newer board state"));
 }
 
 function pumpSolverQueue() {
@@ -22127,9 +22262,31 @@ function pumpSolverQueue() {
 		id: id,
 		url: req.url,
 		resolve: req.resolve,
-		reject: req.reject
+		reject: req.reject,
+		dynamicStatus: "running",
+		staticStatus:
+			staticFallbackDelay(req.url) === null ? "disabled" : "waiting",
+		dynamicError: null,
+		staticError: null,
+		staticFallbackTimer: null
 	};
-	getSolverWorker().postMessage({ id: id, url: req.url });
+	var activeRequest = inFlightRequest;
+	var delay = staticFallbackDelay(req.url);
+	if (delay !== null) {
+		activeRequest.staticFallbackTimer = setTimeout(function() {
+			startStaticFallback(activeRequest);
+		}, delay);
+	}
+
+	try {
+		getDynamicSolverWorker().postMessage({
+			id: id,
+			url: req.url,
+			mode: "dynamic"
+		});
+	} catch (err) {
+		failSolverPath(activeRequest, "dynamic", err);
+	}
 }
 
 // Used when Web Workers aren't available (e.g. Node-based tests): wraps the
