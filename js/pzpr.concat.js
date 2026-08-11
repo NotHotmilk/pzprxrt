@@ -3046,6 +3046,10 @@ pzpr.MetaData.prototype = {
 				variant: true,
 				volatile: true
 			});
+			this.add("dbchoco_bitter", false, {
+				variant: true,
+				volatile: true
+			}); /* dbchoco: gray area = 2 transformed copies of the paired white area's shape */
 			/* generic variant */
 			this.add("variant", false, { variant: true, volatile: true });
 			this.add("variantid", "", { volatile: true });
@@ -3515,6 +3519,9 @@ pzpr.MetaData.prototype = {
 				case "the_shortest":
 					exec = pid === "longest";
 					break;
+				case "dbchoco_bitter":
+					exec = pid === "dbchoco";
+					break;
 				default:
 					exec = !!this.list[name];
 			}
@@ -3576,6 +3583,12 @@ pzpr.MetaData.prototype = {
 					break;
 					
 				case "the_shortest":
+					puzzle.board.autoSolve();
+					break;
+
+				case "dbchoco_bitter":
+					puzzle.checker.resetCache();
+					puzzle.redraw();
 					puzzle.board.autoSolve();
 					break;
 			}
