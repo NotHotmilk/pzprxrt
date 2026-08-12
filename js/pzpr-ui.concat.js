@@ -3504,7 +3504,7 @@ ui.toolarea = {
 			if (idname === "run_autosolver") {
 				var autosolverBtn = toolitem.el.querySelector("button");
 				if (!!autosolverBtn) {
-					autosolverBtn.disabled = ui.puzzle.playeronly ? "true" : "";
+					autosolverBtn.disabled = ui.puzzle.playeronly;
 				}
 			}
 
@@ -3611,7 +3611,10 @@ ui.toolarea = {
 	irowake: function() {
 		ui.puzzle.irowake();
 	},
-	run_autosolver: function () {
+	run_autosolver: function() {
+		if (ui.puzzle.playeronly) {
+			return;
+		}
 		ui.puzzle.board.autoSolve(true);
 	},
 	encolorall: function() {
