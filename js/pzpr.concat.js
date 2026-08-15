@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-12
+ * Date: 2026-08-15
  */
 // intro.js
 
@@ -3049,7 +3049,7 @@ pzpr.MetaData.prototype = {
 			this.add("dbchoco_bitter", false, {
 				variant: true,
 				volatile: true
-			}); /* dbchoco: gray area = 2 transformed copies of the paired white area's shape */
+			}); /* dbchoco: one area = 2 transformed copies of the other area's shape */
 			/* generic variant */
 			this.add("variant", false, { variant: true, volatile: true });
 			this.add("variantid", "", { volatile: true });
@@ -3428,6 +3428,7 @@ pzpr.MetaData.prototype = {
 						"vertigo",
 						"timber",
 						"dungeon",
+						"lohkous",
 						"climber",
 						"celltinels"
                     ].includes(pid);
@@ -5532,6 +5533,7 @@ pzpr.classmgr.makeCommon({
 					"subomino",
 					"vertigo",
 					"timber",
+					"lohkous",
 					"climber"
 				].includes(this.pid) || updateBoth;
 			// 斜めの区画線は交点(bx/byがともに偶数)に届くので、境界線とは別に取り込む
@@ -5867,7 +5869,8 @@ pzpr.classmgr.makeCommon({
 				"dbchoco",
 				"tentaisho",
 				"heteromino",
-				"subomino"
+				"subomino",
+				"lohkous"
 			].includes(this.pid);
 
 			this.clearSolverAnswerForBorders();
