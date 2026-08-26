@@ -311,6 +311,47 @@ div.popup form {
   padding: 0pt;
 }
 
+div.numberlink-generator-popup form {
+  min-width: 22em;
+  padding: 4pt;
+}
+.numberlink-generator-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8pt;
+  margin-bottom: 5pt;
+}
+.numberlink-generator-checkbox {
+  justify-content: flex-start;
+}
+.numberlink-generator-row input[type="number"] {
+  width: 4em;
+}
+.numberlink-generator-note {
+  max-width: 28em;
+  margin: 6pt 0;
+}
+.numberlink-generator-status {
+  min-height: 1.6em;
+  margin-top: 5pt;
+}
+
+.numlin-solver-panel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6pt;
+}
+.numlin-solver-count {
+  min-width: 3.5em;
+  text-align: center;
+  display: inline-block;
+}
+.numlin-solver-status {
+  min-height: 1.4em;
+}
+
 div#about {
   margin: 4pt 0pt 2pt 4pt;
   line-height: 1.1;

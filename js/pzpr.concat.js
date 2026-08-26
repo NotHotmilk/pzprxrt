@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-17
+ * Date: 2026-08-26
  */
 // intro.js
 
@@ -3063,6 +3063,7 @@ pzpr.MetaData.prototype = {
 
 			this.add("autosolver", false, { volatile: true });
 			this.add("run_autosolver", false, { volatile: true });
+			this.add("numlin_generator_open", false, { volatile: true });
 		},
 		add: function(name, defvalue, extoption) {
 			if (!extoption) {
@@ -3376,29 +3377,29 @@ pzpr.MetaData.prototype = {
 					exec = pid === "country";
 					break;
 				case "autosolver":
-                case "run_autosolver":
-                    exec = [
-                        "nurimisaki",
-                        "nurikabe",
-                        "lits",
-                        "heyawake",
-                        "heyajilimisaki",
-                        "slither",
-                        "mashu",
-                        "yajilin",
-                        "anymino",
-                        "guidearrow",
-                        "shakashaka",
-                        "lightup",
-                        "shugaku",
-                        "kurarin",
-                        "squarejam",
-                        "aquapelago",
-                        "cbanana",
-                        "icewalk",
-                        "waterwalk",
-                        "firewalk",
-                        "forestwalk",
+				case "run_autosolver":
+					exec = [
+						"nurimisaki",
+						"nurikabe",
+						"lits",
+						"heyawake",
+						"heyajilimisaki",
+						"slither",
+						"mashu",
+						"yajilin",
+						"anymino",
+						"guidearrow",
+						"shakashaka",
+						"lightup",
+						"shugaku",
+						"kurarin",
+						"squarejam",
+						"aquapelago",
+						"cbanana",
+						"icewalk",
+						"waterwalk",
+						"firewalk",
+						"forestwalk",
 						"ringring",
 						"nurimaze",
 						"easyasabc",
@@ -3437,8 +3438,11 @@ pzpr.MetaData.prototype = {
 						"lohkous",
 						"climber",
 						"celltinels"
-                    ].includes(pid);
-                    break;
+					].includes(pid);
+					break;
+				case "numlin_generator_open":
+					exec = pid === "numlin";
+					break;
 				case "voxas_tatami":
 					exec = pid === "voxas";
 					break;
@@ -3588,7 +3592,13 @@ pzpr.MetaData.prototype = {
 				case "run_autosolver":
 					puzzle.board.autoSolve(true);
 					break;
-					
+
+				case "numlin_generator_open":
+					// UI-only toggle: no puzzle-rule state to change here, just
+					// let the UI layer (which owns the popup) react.
+					puzzle.emit("numlin-generator-open-changed", newval);
+					break;
+
 				case "the_shortest":
 					puzzle.board.autoSolve();
 					break;
@@ -5978,88 +5988,6 @@ pzpr.classmgr.makeCommon({
 					}
 				}
 			}
-		},
-
-		showAnswer: function() {
-			// 表示すべき解答データ (this.answers) がなければ何もしない
-			if (!this.answers) {
-				return;
-			}
-
-			let answerData;
-			let totalAnswers;
-			const currentIndex = this.answerIndex;
-
-			// this.answers の型に応じて、表示するデータと総解答数を設定する
-			if (typeof this.answers === "string") {
-				// 解答が単一の文字列の場合 (例: "terminated")
-				answerData = this.answers;
-				totalAnswers = 0; // 総数は意味を持たない
-			} else {
-				// 解答が複数あるオブジェクトの場合
-				answerData = this.answers.answers[currentIndex];
-				totalAnswers = this.answers.answers.length;
-			}
-
-			// UI上の「n/m」カウンター表示を更新する
-			const locatorElement = ui.popupmgr.popups.auxeditor.pop.querySelector(
-				".solver-answer-locator"
-			);
-			if (answerData === "terminated") {
-				locatorElement.innerText = "Terminated";
-			} else if (totalAnswers > 0) {
-				locatorElement.innerText = `${currentIndex + 1}/${totalAnswers}`;
-			}
-
-			// 特定のパズル("numlin-aux")の場合、境界線の状態も更新する
-			if (this.pid === "numlin-aux") {
-				// 以前に解析した関数を呼び出す
-				this.updateSolverAnswerForBorders(answerData);
-			}
-
-			// 盤面全体を再描画して、変更を画面に反映させる
-			this.puzzle.painter.paintAll();
-		},
-
-		locateAnswer: function(direction) {
-			// 解答データがなければ何もしない
-			if (this.answers === null) {
-				return;
-			}
-
-			// 解答の総数を取得
-			const totalAnswers =
-				typeof this.answers === "string" ? 0 : this.answers.answers.length;
-
-			// 移動方向に応じて、表示する解答のインデックスを変更する
-			switch (direction) {
-				case -2: // 「最初へ」
-					this.answerIndex = 0;
-					break;
-
-				case -1: // 「前へ」
-					this.answerIndex--;
-					if (this.answerIndex < 0) {
-						this.answerIndex = 0; // 0より小さくはならない
-					}
-					break;
-
-				case 1: // 「次へ」
-					this.answerIndex++;
-					if (this.answerIndex >= totalAnswers) {
-						// 総数を超えないように、最後のインデックスに留める
-						this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
-					}
-					break;
-
-				default:
-					// 「最後へ」 (directionが上記以外の値の場合)
-					this.answerIndex = totalAnswers > 0 ? totalAnswers - 1 : 0;
-					break;
-			}
-
-			// 新しいインデックスに基づいて解答の表示を更新する
-			this.showAnswer();
 		},
 
 		is_autosolve: false,
@@ -22376,5 +22304,201 @@ solverTarget.solveProblemAsync = function(url) {
 	return new Promise(function(resolve, reject) {
 		latestQueuedRequest = { url: url, resolve: resolve, reject: reject };
 		pumpSolverQueue();
+	});
+};
+
+//---------------------------------------------------------------------------
+// Numberlink generation
+//
+// Generation has its own disposable worker so it never delays real-time
+// solving. Terminating the worker is also a hard cancellation boundary: it
+// stops native/SAT work immediately, even when that work cannot cooperatively
+// poll an abort flag.
+//---------------------------------------------------------------------------
+var numberlinkGeneratorWorker = null;
+var numberlinkGenerationRequest = null;
+var nextNumberlinkGenerationId = 1;
+
+function makeAbortError() {
+	var error = new Error("Numberlink generation was cancelled");
+	error.name = "AbortError";
+	return error;
+}
+
+function finishNumberlinkGeneration(request, error, description) {
+	if (numberlinkGenerationRequest !== request) {
+		return;
+	}
+	numberlinkGenerationRequest = null;
+	if (numberlinkGeneratorWorker) {
+		numberlinkGeneratorWorker.terminate();
+		numberlinkGeneratorWorker = null;
+	}
+	if (error) {
+		request.reject(error);
+	} else {
+		request.resolve(description);
+	}
+}
+
+solverTarget.cancelNumberlinkGeneration = function() {
+	if (!numberlinkGenerationRequest) {
+		return false;
+	}
+	finishNumberlinkGeneration(
+		numberlinkGenerationRequest,
+		makeAbortError(),
+		null
+	);
+	return true;
+};
+
+// onProgress(attempts), if given, is called each time a bounded-attempt
+// chunk in the worker comes back empty-handed and the search keeps going.
+// Fixed hint positions make the search deterministic, so the worker skips
+// this and reports failure immediately instead of looping (see
+// NumberlinkGeneratorWorker.js) - onProgress may simply never fire then.
+solverTarget.generateNumberlink = function(options, onProgress) {
+	if (!canUseWorker()) {
+		return Promise.reject(
+			new Error("Numberlink generation requires Web Worker support")
+		);
+	}
+	if (numberlinkGenerationRequest) {
+		solverTarget.cancelNumberlinkGeneration();
+	}
+
+	return new Promise(function(resolve, reject) {
+		var request = {
+			id: nextNumberlinkGenerationId++,
+			resolve: resolve,
+			reject: reject
+		};
+		numberlinkGenerationRequest = request;
+		var worker = new Worker("./js/NumberlinkGeneratorWorker.js");
+		numberlinkGeneratorWorker = worker;
+		worker.onmessage = function(e) {
+			if (
+				numberlinkGeneratorWorker !== worker ||
+				numberlinkGenerationRequest !== request ||
+				e.data.id !== request.id
+			) {
+				return;
+			}
+			if (e.data.progress) {
+				if (typeof onProgress === "function") {
+					onProgress(e.data.attempts);
+				}
+				return;
+			}
+			if (e.data.ok) {
+				finishNumberlinkGeneration(request, null, e.data.description);
+			} else {
+				finishNumberlinkGeneration(request, new Error(e.data.error), null);
+			}
+		};
+		worker.onerror = function(err) {
+			if (numberlinkGeneratorWorker !== worker) {
+				return;
+			}
+			finishNumberlinkGeneration(request, new Error(describeError(err)), null);
+		};
+		try {
+			worker.postMessage({ id: request.id, options: options });
+		} catch (err) {
+			finishNumberlinkGeneration(request, err, null);
+		}
+	});
+};
+
+//---------------------------------------------------------------------------
+// Numberlink enumeration
+//
+// Backs an enumeration-style real-time solver for Numberlink: before every
+// hint is placed, the puzzle is typically satisfied by many solutions that
+// are mere reroutings of each other, so a single always-on answer overlay
+// (as used for other puzzle types) would be misleading. Instead this lists
+// a handful of concrete solutions for the player to page through, and it is
+// only ever invoked by an explicit user action - never automatically when
+// the board is edited. Like generateNumberlink, it runs in its own
+// disposable worker so terminating that worker is a hard, immediate
+// cancellation.
+//---------------------------------------------------------------------------
+var numberlinkSolverWorker = null;
+var numberlinkSolverRequest = null;
+var nextNumberlinkSolverId = 1;
+
+function finishNumberlinkEnumeration(request, error, description) {
+	if (numberlinkSolverRequest !== request) {
+		return;
+	}
+	numberlinkSolverRequest = null;
+	if (numberlinkSolverWorker) {
+		numberlinkSolverWorker.terminate();
+		numberlinkSolverWorker = null;
+	}
+	if (error) {
+		request.reject(error);
+	} else {
+		request.resolve(description);
+	}
+}
+
+solverTarget.cancelNumberlinkEnumeration = function() {
+	if (!numberlinkSolverRequest) {
+		return false;
+	}
+	finishNumberlinkEnumeration(numberlinkSolverRequest, makeAbortError(), null);
+	return true;
+};
+
+solverTarget.enumerateNumberlinkAsync = function(url, numMaxAnswers) {
+	if (!canUseWorker()) {
+		return Promise.reject(
+			new Error("Numberlink enumeration requires Web Worker support")
+		);
+	}
+	if (numberlinkSolverRequest) {
+		solverTarget.cancelNumberlinkEnumeration();
+	}
+
+	return new Promise(function(resolve, reject) {
+		var request = {
+			id: nextNumberlinkSolverId++,
+			resolve: resolve,
+			reject: reject
+		};
+		numberlinkSolverRequest = request;
+		var worker = new Worker("./js/NumberlinkSolverWorker.js");
+		numberlinkSolverWorker = worker;
+		worker.onmessage = function(e) {
+			if (
+				numberlinkSolverWorker !== worker ||
+				numberlinkSolverRequest !== request ||
+				e.data.id !== request.id
+			) {
+				return;
+			}
+			if (e.data.ok) {
+				finishNumberlinkEnumeration(request, null, e.data.description);
+			} else {
+				finishNumberlinkEnumeration(request, new Error(e.data.error), null);
+			}
+		};
+		worker.onerror = function(err) {
+			if (numberlinkSolverWorker !== worker) {
+				return;
+			}
+			finishNumberlinkEnumeration(request, new Error(describeError(err)), null);
+		};
+		try {
+			worker.postMessage({
+				id: request.id,
+				url: url,
+				numMaxAnswers: numMaxAnswers
+			});
+		} catch (err) {
+			finishNumberlinkEnumeration(request, err, null);
+		}
 	});
 };

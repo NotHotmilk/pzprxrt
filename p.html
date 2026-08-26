@@ -388,6 +388,22 @@ if ('serviceWorker' in navigator) {
         <label>上:<input type="number" id="offset_v" style="width: 40px;" min="1"></label>
         <button type="button" class="btn" data-button-exec="nonogram_applyoffset">適用</button>
     </div>
+    <!--ナンバーリンク専用: 列挙式リアルタイムソルバー-->
+    <div data-disp-pid="numlin" class="numlin-solver-panel">
+      <button type="button" class="btn" id="numlin_solver_start" data-button-exec="numlinSolverSolve">__numberlinksolver.start__</button>
+      <button type="button" class="btn btn-danger" id="numlin_solver_stop" data-button-exec="numlinSolverStop" disabled>__numberlinksolver.stop__</button>
+      <button type="button" class="btn" id="numlin_solver_prev" data-button-exec="numlinSolverPrev" disabled>◀</button>
+      <span id="numlin_solver_count" class="numlin-solver-count"></span>
+      <button type="button" class="btn" id="numlin_solver_next" data-button-exec="numlinSolverNext" disabled>▶</button>
+      <span id="numlin_solver_status" class="numlin-solver-status"></span>
+    </div>
+    <!--ナンバーリンク専用: 自動生成ポップアップの開閉チェックボックス-->
+    <span class="config" data-config="numlin_generator_open">
+      <label>
+        <input type="checkbox">
+        <span>__numberlinkgenerator.checkbox__</span>
+      </label>
+    </span>
   </div>
   <hr class="separator" id="separator1">
   <div id="variantpanel" style="display:none;">
@@ -790,6 +806,46 @@ if ('serviceWorker' in navigator) {
       <br>
       <button type="button" class="btn btn-ok" data-button-exec="changesize">__dispsize.submit__</button>
       <button type="button" class="btn" data-button-exec="close">__close__</button>
+    </form>
+  </div>
+
+  <div class="popup numberlink-generator-popup">
+    <div class="titlebar">__numberlinkgenerator.title__</div>
+    <form name="numberlinkgenerator">
+      <div class="numberlink-generator-row">
+        <span>__numberlinkgenerator.size__</span>
+        <strong id="numberlink_generator_size"></strong>
+      </div>
+      <label class="numberlink-generator-row numberlink-generator-checkbox">
+        <input type="checkbox" name="useMarkedCells">
+        <span>__numberlinkgenerator.useMarkedCells__</span>
+      </label>
+      <p class="numberlink-generator-note">__numberlinkgenerator.useMarkedCellsNote__</p>
+      <label class="numberlink-generator-row">
+        <span>__numberlinkgenerator.symmetry__</span>
+        <select name="symmetry">
+          <option value="1" selected>__numberlinkgenerator.rotate180__</option>
+          <option value="2">__numberlinkgenerator.rotate90__</option>
+          <option value="3">__numberlinkgenerator.leftRight__</option>
+          <option value="4">__numberlinkgenerator.topBottom__</option>
+          <option value="0">__numberlinkgenerator.none__</option>
+        </select>
+      </label>
+      <label class="numberlink-generator-row numberlink-generator-checkbox">
+        <input type="checkbox" name="noAdjacent">
+        <span>__numberlinkgenerator.noAdjacent__</span>
+      </label>
+      <label class="numberlink-generator-row">
+        <span>__numberlinkgenerator.margin__</span>
+        <input type="number" name="margin" value="0" min="0" step="1">
+      </label>
+      <p class="numberlink-generator-note">__numberlinkgenerator.note__</p>
+      <div class="buttons">
+        <button type="button" class="btn btn-ok" id="numberlink_generator_start" data-button-exec="generate">__numberlinkgenerator.start__</button>
+        <button type="button" class="btn btn-danger" id="numberlink_generator_stop" data-button-exec="stop" disabled>__numberlinkgenerator.stop__</button>
+        <button type="button" class="btn" data-button-exec="close">__close__</button>
+      </div>
+      <div id="numberlink_generator_status" class="numberlink-generator-status" role="status" aria-live="polite"></div>
     </form>
   </div>
 
