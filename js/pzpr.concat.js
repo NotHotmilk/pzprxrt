@@ -22314,10 +22314,53 @@ solverTarget.solveProblemAsync = function(url) {
 // solving. Terminating the worker is also a hard cancellation boundary: it
 // stops native/SAT work immediately, even when that work cannot cooperatively
 // poll an abort flag.
+//
+// Free (non fixed-position) generation is an embarrassingly parallel random
+// restart search: each attempt only depends on its own seed, so racing
+// several independent single-threaded workers - one per available core -
+// finds a qualifying puzzle roughly N times faster than one worker trying
+// the same N seeds sequentially. This is plain multi-Worker fan-out, not
+// shared-memory Wasm threading: no SharedArrayBuffer or cross-origin
+// isolation headers are needed, since each worker just loads its own
+// ordinary single-threaded copy of the wasm module. Fixed hint positions
+// make the search deterministic (see NumberlinkGeneratorWorker.js), so
+// racing different seeds against them cannot help - that mode always runs
+// exactly one worker.
 //---------------------------------------------------------------------------
-var numberlinkGeneratorWorker = null;
+var numberlinkGeneratorWorkers = [];
 var numberlinkGenerationRequest = null;
 var nextNumberlinkGenerationId = 1;
+
+// A generous but bounded worker count: more workers than cores just
+// contend for the same CPU time, and an unbounded reading of
+// hardwareConcurrency could spin up an excessive number of wasm instances
+// on many-core machines.
+var MAX_NUMBERLINK_PARALLEL_JOBS = 8;
+
+// Every worker's chunk loop independently walks seed, seed+1, seed+2, ...
+// forever until it finds a puzzle or is cancelled. Spacing each worker's
+// starting seed by a large stride keeps their explored seed ranges from
+// ever overlapping, for far more attempts than a single generation click
+// could plausibly burn through.
+var WORKER_SEED_STRIDE = 1n << 40n;
+
+solverTarget.numberlinkParallelJobs = function(usingFixedPositions) {
+	if (usingFixedPositions) {
+		return 1;
+	}
+	var cores =
+		(typeof navigator !== "undefined" && navigator.hardwareConcurrency) || 1;
+	return Math.max(1, Math.min(cores, MAX_NUMBERLINK_PARALLEL_JOBS));
+};
+
+function seedForNumberlinkWorker(seedHigh, seedLow, workerIndex) {
+	var seed = (BigInt(seedHigh >>> 0) << 32n) | BigInt(seedLow >>> 0);
+	seed = (seed + BigInt(workerIndex) * WORKER_SEED_STRIDE) & 0xffffffffffffffffn;
+	return {
+		high: Number((seed >> 32n) & 0xffffffffn) >>> 0,
+		low: Number(seed & 0xffffffffn) >>> 0
+	};
+}
 
 function makeAbortError() {
 	var error = new Error("Numberlink generation was cancelled");
@@ -22325,15 +22368,19 @@ function makeAbortError() {
 	return error;
 }
 
+function terminateAllNumberlinkGeneratorWorkers() {
+	for (var i = 0; i < numberlinkGeneratorWorkers.length; i++) {
+		numberlinkGeneratorWorkers[i].terminate();
+	}
+	numberlinkGeneratorWorkers = [];
+}
+
 function finishNumberlinkGeneration(request, error, description) {
 	if (numberlinkGenerationRequest !== request) {
 		return;
 	}
 	numberlinkGenerationRequest = null;
-	if (numberlinkGeneratorWorker) {
-		numberlinkGeneratorWorker.terminate();
-		numberlinkGeneratorWorker = null;
-	}
+	terminateAllNumberlinkGeneratorWorkers();
 	if (error) {
 		request.reject(error);
 	} else {
@@ -22353,10 +22400,11 @@ solverTarget.cancelNumberlinkGeneration = function() {
 	return true;
 };
 
-// onProgress(attempts), if given, is called each time a bounded-attempt
-// chunk in the worker comes back empty-handed and the search keeps going.
-// Fixed hint positions make the search deterministic, so the worker skips
-// this and reports failure immediately instead of looping (see
+// onProgress(attempts), if given, is called every time any worker's
+// bounded-attempt chunk comes back empty-handed and the search keeps
+// going; attempts is the sum across every parallel worker so far. Fixed
+// hint positions make the search deterministic, so the single worker used
+// then skips this and reports failure immediately instead of looping (see
 // NumberlinkGeneratorWorker.js) - onProgress may simply never fire then.
 solverTarget.generateNumberlink = function(options, onProgress) {
 	if (!canUseWorker()) {
@@ -22368,6 +22416,11 @@ solverTarget.generateNumberlink = function(options, onProgress) {
 		solverTarget.cancelNumberlinkGeneration();
 	}
 
+	var usingFixedPositions = !!(
+		options.fixedPositions && options.fixedPositions.length > 0
+	);
+	var jobCount = solverTarget.numberlinkParallelJobs(usingFixedPositions);
+
 	return new Promise(function(resolve, reject) {
 		var request = {
 			id: nextNumberlinkGenerationId++,
@@ -22375,38 +22428,85 @@ solverTarget.generateNumberlink = function(options, onProgress) {
 			reject: reject
 		};
 		numberlinkGenerationRequest = request;
-		var worker = new Worker("./js/NumberlinkGeneratorWorker.js");
-		numberlinkGeneratorWorker = worker;
-		worker.onmessage = function(e) {
-			if (
-				numberlinkGeneratorWorker !== worker ||
-				numberlinkGenerationRequest !== request ||
-				e.data.id !== request.id
-			) {
+
+		var attemptsByWorker = [];
+		var failuresByWorker = [];
+		var finishedWorkerCount = 0;
+		for (var i = 0; i < jobCount; i++) {
+			attemptsByWorker.push(0);
+			failuresByWorker.push(null);
+		}
+
+		function reportProgress() {
+			if (typeof onProgress !== "function") {
 				return;
 			}
-			if (e.data.progress) {
-				if (typeof onProgress === "function") {
-					onProgress(e.data.attempts);
+			var total = 0;
+			for (var i = 0; i < attemptsByWorker.length; i++) {
+				total += attemptsByWorker[i];
+			}
+			onProgress(total);
+		}
+
+		function failWorker(workerIndex, error) {
+			failuresByWorker[workerIndex] = error;
+			finishedWorkerCount++;
+			if (finishedWorkerCount >= jobCount) {
+				finishNumberlinkGeneration(
+					request,
+					new Error(failuresByWorker.filter(Boolean).join("; ")),
+					null
+				);
+			}
+		}
+
+		function startWorker(workerIndex) {
+			var workerOptions = options;
+			if (jobCount > 1) {
+				var seed = seedForNumberlinkWorker(
+					options.seedHigh,
+					options.seedLow,
+					workerIndex
+				);
+				workerOptions = Object.assign({}, options, {
+					seedHigh: seed.high,
+					seedLow: seed.low
+				});
+			}
+			var worker = new Worker("./js/NumberlinkGeneratorWorker.js");
+			numberlinkGeneratorWorkers.push(worker);
+			worker.onmessage = function(e) {
+				if (
+					numberlinkGenerationRequest !== request ||
+					e.data.id !== request.id
+				) {
+					return;
 				}
-				return;
+				if (e.data.progress) {
+					attemptsByWorker[workerIndex] = e.data.attempts;
+					reportProgress();
+					return;
+				}
+				if (e.data.ok) {
+					finishNumberlinkGeneration(request, null, e.data.description);
+				} else {
+					failWorker(workerIndex, e.data.error);
+				}
+			};
+			worker.onerror = function(err) {
+				if (numberlinkGenerationRequest !== request) {
+					return;
+				}
+				failWorker(workerIndex, describeError(err));
+			};
+			try {
+				worker.postMessage({ id: request.id, options: workerOptions });
+			} catch (err) {
+				failWorker(workerIndex, describeError(err));
 			}
-			if (e.data.ok) {
-				finishNumberlinkGeneration(request, null, e.data.description);
-			} else {
-				finishNumberlinkGeneration(request, new Error(e.data.error), null);
-			}
-		};
-		worker.onerror = function(err) {
-			if (numberlinkGeneratorWorker !== worker) {
-				return;
-			}
-			finishNumberlinkGeneration(request, new Error(describeError(err)), null);
-		};
-		try {
-			worker.postMessage({ id: request.id, options: options });
-		} catch (err) {
-			finishNumberlinkGeneration(request, err, null);
+		}
+		for (var workerIndex = 0; workerIndex < jobCount; workerIndex++) {
+			startWorker(workerIndex);
 		}
 	});
 };
