@@ -827,13 +827,17 @@ if ('serviceWorker' in navigator) {
           <option value="1" selected>__numberlinkgenerator.rotate180__</option>
           <option value="2">__numberlinkgenerator.rotate90__</option>
           <option value="3">__numberlinkgenerator.leftRight__</option>
-          <option value="4">__numberlinkgenerator.topBottom__</option>
+          <option value="4">__numberlinkgenerator.both__</option>
           <option value="0">__numberlinkgenerator.none__</option>
         </select>
       </label>
-      <label class="numberlink-generator-row numberlink-generator-checkbox">
-        <input type="checkbox" name="noAdjacent">
-        <span>__numberlinkgenerator.noAdjacent__</span>
+      <label class="numberlink-generator-row">
+        <span>__numberlinkgenerator.adjacency__</span>
+        <select name="adjacency">
+          <option value="none" selected>__numberlinkgenerator.adjacency.none__</option>
+          <option value="forbid">__numberlinkgenerator.adjacency.forbid__</option>
+          <option value="domino">__numberlinkgenerator.adjacency.domino__</option>
+        </select>
       </label>
       <label class="numberlink-generator-row">
         <span>__numberlinkgenerator.margin__</span>

@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-26
+ * Date: 2026-08-27
  */
 // intro.js
 
@@ -22420,35 +22420,76 @@ solverTarget.generateNumberlink = function(options, onProgress) {
 // (as used for other puzzle types) would be misleading. Instead this lists
 // a handful of concrete solutions for the player to page through, and it is
 // only ever invoked by an explicit user action - never automatically when
-// the board is edited. Like generateNumberlink, it runs in its own
-// disposable worker so terminating that worker is a hard, immediate
-// cancellation.
+// the board is edited.
+//
+// Unlike generateNumberlink (a one-shot action per click), this is meant to
+// be re-run over and over as the player edits the board, so the worker - and
+// the Wasm module instance it loaded - is kept alive and reused across
+// requests instead of being torn down after every solve. Recreating the
+// worker on every click would re-run Wasm instantiation each time, which is
+// the dominant cost for a small/medium enumeration and was making this
+// panel feel far slower than it needs to be. The worker is only killed on
+// cancellation (terminate is the only way to interrupt synchronous Wasm
+// mid-solve) or after an error, both of which may leave it in a bad state.
 //---------------------------------------------------------------------------
 var numberlinkSolverWorker = null;
 var numberlinkSolverRequest = null;
 var nextNumberlinkSolverId = 1;
 
-function finishNumberlinkEnumeration(request, error, description) {
-	if (numberlinkSolverRequest !== request) {
-		return;
-	}
-	numberlinkSolverRequest = null;
+function terminateNumberlinkSolverWorker() {
 	if (numberlinkSolverWorker) {
-		numberlinkSolverWorker.terminate();
+		var worker = numberlinkSolverWorker;
 		numberlinkSolverWorker = null;
+		worker.terminate();
 	}
-	if (error) {
-		request.reject(error);
-	} else {
-		request.resolve(description);
+}
+
+function getNumberlinkSolverWorker() {
+	if (numberlinkSolverWorker) {
+		return numberlinkSolverWorker;
 	}
+	var worker = new Worker("./js/NumberlinkSolverWorker.js");
+	worker.onmessage = function(e) {
+		if (numberlinkSolverWorker !== worker || !numberlinkSolverRequest) {
+			return;
+		}
+		var request = numberlinkSolverRequest;
+		if (e.data.id !== request.id) {
+			return;
+		}
+		numberlinkSolverRequest = null;
+		if (e.data.ok) {
+			request.resolve(e.data.description);
+		} else {
+			// The worker may be left in a bad state after throwing - get a
+			// clean one next time rather than risk reusing it.
+			terminateNumberlinkSolverWorker();
+			request.reject(new Error(e.data.error));
+		}
+	};
+	worker.onerror = function(err) {
+		if (numberlinkSolverWorker !== worker) {
+			return;
+		}
+		terminateNumberlinkSolverWorker();
+		if (numberlinkSolverRequest) {
+			var request = numberlinkSolverRequest;
+			numberlinkSolverRequest = null;
+			request.reject(new Error(describeError(err)));
+		}
+	};
+	numberlinkSolverWorker = worker;
+	return worker;
 }
 
 solverTarget.cancelNumberlinkEnumeration = function() {
 	if (!numberlinkSolverRequest) {
 		return false;
 	}
-	finishNumberlinkEnumeration(numberlinkSolverRequest, makeAbortError(), null);
+	var request = numberlinkSolverRequest;
+	numberlinkSolverRequest = null;
+	terminateNumberlinkSolverWorker();
+	request.reject(makeAbortError());
 	return true;
 };
 
@@ -22469,36 +22510,16 @@ solverTarget.enumerateNumberlinkAsync = function(url, numMaxAnswers) {
 			reject: reject
 		};
 		numberlinkSolverRequest = request;
-		var worker = new Worker("./js/NumberlinkSolverWorker.js");
-		numberlinkSolverWorker = worker;
-		worker.onmessage = function(e) {
-			if (
-				numberlinkSolverWorker !== worker ||
-				numberlinkSolverRequest !== request ||
-				e.data.id !== request.id
-			) {
-				return;
-			}
-			if (e.data.ok) {
-				finishNumberlinkEnumeration(request, null, e.data.description);
-			} else {
-				finishNumberlinkEnumeration(request, new Error(e.data.error), null);
-			}
-		};
-		worker.onerror = function(err) {
-			if (numberlinkSolverWorker !== worker) {
-				return;
-			}
-			finishNumberlinkEnumeration(request, new Error(describeError(err)), null);
-		};
 		try {
-			worker.postMessage({
+			getNumberlinkSolverWorker().postMessage({
 				id: request.id,
 				url: url,
 				numMaxAnswers: numMaxAnswers
 			});
 		} catch (err) {
-			finishNumberlinkEnumeration(request, err, null);
+			terminateNumberlinkSolverWorker();
+			numberlinkSolverRequest = null;
+			reject(err);
 		}
 	});
 };
