@@ -3455,8 +3455,7 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 					")";
 			}
 			if (jobCount > 1) {
-				text +=
-					" (" + jobCount + ui.i18n("numberlinkgenerator.parallel") + ")";
+				text += " (" + jobCount + ui.i18n("numberlinkgenerator.parallel") + ")";
 			}
 			popup.statusLabel.textContent = text;
 		}

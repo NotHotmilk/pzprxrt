@@ -22355,7 +22355,8 @@ solverTarget.numberlinkParallelJobs = function(usingFixedPositions) {
 
 function seedForNumberlinkWorker(seedHigh, seedLow, workerIndex) {
 	var seed = (BigInt(seedHigh >>> 0) << 32n) | BigInt(seedLow >>> 0);
-	seed = (seed + BigInt(workerIndex) * WORKER_SEED_STRIDE) & 0xffffffffffffffffn;
+	seed =
+		(seed + BigInt(workerIndex) * WORKER_SEED_STRIDE) & 0xffffffffffffffffn;
 	return {
 		high: Number((seed >> 32n) & 0xffffffffn) >>> 0,
 		low: Number(seed & 0xffffffffn) >>> 0
