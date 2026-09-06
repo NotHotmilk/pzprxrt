@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-27
+ * Date: 2026-09-06
  */
 // intro.js
 
@@ -511,8 +511,8 @@ window.ui = {
 // langs.js
 
 ui.langs = {
-	en: {"editor":"editor","beforeunload":"The board is edited.","completed":"Complete!","cancel":"Cancel","close":"Close","delete":"Delete","menu_file":"File","newboard":"New board","urlinput":"Load from URL","urloutput":"Export URL","fileopen":"Open file","filesave":"Save file as …","duplicate":"Duplicate the board","imagesave":"Save as image file","menu_edit":"Edit","adjust":"Adjust the board","turnflip":"Flip/Turn the board","menu_display":"Display","cellsize":"Cell size","cellsize.xs":"Extra small","cellsize.s":"Small","cellsize.n":"Normal","cellsize.l":"Large","cellsize.xl":"Extra large","cellsize.custom":"Set by number …","font":"Font family","font.sans":"Sans-serif","font.serif":"Serif","dispqnumbg":"Paint background of clue circles","undefcell":"Paint uninputted cells","cursor":"Show cursor","trialmarker":"Show trial markers","adjsize":"Auto size adjust","fullwidth":"Expand canvas width","toolarea.show":"Show tool area","toolarea.hide":"Hide tool area","menu_setting":"Setting","lrinvert":"Invert mouse button","use_tri":"Input type","use_tri.1":"Corner-side","use_tri.2":"Pull-to-input","use_tri.3":"One button","bgcolor.menu":"Input background color","multierr":"Check multiple errors","forceallcell.menu":"Number in all cells","dirauxmark.menu":"Direction aux. mark","enline.menu":"Line between points","lattice.menu":"Check lattice point","singlenum.menu":"Single number in a region","discolor":"Disable color","mouseonly":"Enable mouse-only input","patchwork_leftaux":"Enable to input aux. lines with single click","autocheck":"Answer check","autocheck.off":"Manual","autocheck.guarded":"Automatic (guarded)","autocheck.simple":"Automatic (always)","autosave":"Autosave board state [beta]","menu_help":"Help","rules":"Rules","about":"About puzz.link","translate":"Help us translate","issues":"Bug reports and feature requests","mode":"Mode","mode.edit":"Edit mode","mode.play":"Answer mode","use":"Input Type","use.1":"L/R buttons","use.2":"One button","preset.pentominoes":"Pentominoes","preset.tetrominoes":"Tetrominoes","preset.double_tetrominoes":"Double tetrominoes","preset.copy_answer":"Copy answer to bank","preset.zero":"No pieces","preset.fleet3":"Battleships (size 3)","preset.fleet4":"Battleships (size 4)","preset.fleet5":"Battleships (size 5)","preset.nine":"1~9","preset.range":"1 ~","inputmode":"Input Mode","inputmode.auto":"Auto","inputmode.slide":"Slide","inputmode.shade":"Shaded cells","inputmode.unshade":"Unshaded cells","inputmode.number":"Number","inputmode.number-":"Number (rev)","inputmode.letter":"Alphabet","inputmode.letter-":"Alphabet (rev)","inputmode.quesmark":"Question marks","inputmode.quesmark-":"Question marks (rev)","inputmode.color":"Color","inputmode.color-":"Color (rev)","inputmode.border":"Border","inputmode.sub-border":"Sub-border","inputmode.subline":"Aux. conn. lines","inputmode.direc":"Direction","inputmode.arrow":"Arrows","inputmode.circle-unshade":"Unshaded circles","inputmode.circle-shade":"Shaded circles","inputmode.circle-gray":"Gray circles","inputmode.goat":"Goats","inputmode.sheep":"Sheep","inputmode.wolf":"Wolves","inputmode.boulder":"Boulders","inputmode.moon":"Marks of moon","inputmode.sun":"Marks of sun","inputmode.empty":"Invalid cells","inputmode.ice":"Icebarns","inputmode.water":"Water hazard","inputmode.fire":"Fire","inputmode.forest":"Forest","inputmode.sand":"Sand","inputmode.nabe":"Crocks","inputmode.box":"Boxes","inputmode.pin":"Pins","inputmode.diamond":"Diamonds","inputmode.crossdot":"Shaded dots","inputmode.ineq":"Inequality marks","inputmode.move-clue":"Move clue","inputmode.copy-answer":"Copy answer","inputmode.mark-circle":"Circles","inputmode.mark-triangle":"Triangles","inputmode.mark-rect":"Rectangles","inputmode.mark-tree":"Trees","inputmode.mark-tent":"Tents","inputmode.mark-cross":"Crosses","inputmode.mark-checkerboard":"Checkerboards","inputmode.undef":"Question marks","inputmode.line":"Lines","inputmode.peke":"Cross marks","inputmode.pekeborder":"Border marks","inputmode.diraux":"Aux. dir. marks","inputmode.bar":"Bars","inputmode.akari":"Bulbs","inputmode.star":"Stars","inputmode.dot":"Dots","inputmode.balloon":"Balloons","inputmode.ironball":"Iron balls","inputmode.futon":"Futons","inputmode.completion":"Completion","inputmode.copycircle":"Copy circles","inputmode.copynum":"Copy nums","inputmode.copyletter":"Copy letters","inputmode.copysymbol":"Copy symbols","inputmode.dragnum+":"Drag inc. nums","inputmode.dragnum-":"Drag dec. nums","inputmode.objblank":"Aux. dots","inputmode.numexist":"Aux. circles","inputmode.numblank":"Aux. crosses","inputmode.subcircle":"Aux. circles","inputmode.subcross":"Aux. crosses","inputmode.bgcolor":"Bgcolor 1/2","inputmode.bgcolor1":"Bgcolor 1","inputmode.bgcolor2":"Bgcolor 2","inputmode.bgpaint":"Draft sketch","inputmode.clear":"Erase data","inputmode.info-line":"Check line connection","inputmode.info-blk":"Check shaded cell connection","inputmode.info-ublk":"Check unshaded cell connection","inputmode.info-room":"Check room connection","inputmode.info-road":"Check route","disptype":"Display","context_marks":"Show direction indicators","disptype_yajilin.1":"Original style","disptype_yajilin.2":"Gray background","disptype_bosanowa.1":"Original style","disptype_bosanowa.2":"Sokoban style","disptype_bosanowa.3":"Waritai style","disptype_interbd.1":"Colors","disptype_interbd.2":"Shapes","disptype_interbd.3":"Both","dispmove":"Display as object moving","bgcolor.tool":"Allow inputting background color when cell center is clicked","autocmp.number":"Grey each correct number","autocmp.room":"Paint background of each completed block","autocmp.akari":"Paint background of each illuminated block","autocmp.kouchoku":"Grey each letter which links over two segments","autocmp.border":"Grey border between different areas","autocmp.recoil":"Paint background of path obstacles","autoerr.tool.hitori":"Show overlapped number as red","autoerr.tool.gokigen":"Draw loop line as red","autoerr.tool.ubahn":"Paint background of cell types","autoerr.tool.wagiri":"Draw loop line as bold","dirauxmark.tool":"Enable to input aux mark of direction","enline.tool":"Enable to draw line only between the points","lattice.tool":"Disable drawing segment passing over a lattice point","uramashu":"Change to Ura-Mashu","singlenum.tool":"Ensure that each region has one number","singleregion":"Ensure that only one tile is shaded in each region","forceallcell.tool":"Force each cell to have a number","snakebd":"Draw border around a snake","ensquare":"Enable to force drawing squares from a clue","keypopup.tool":"Input numbers by panel","irowake.tool":"Color each line","irowake.change":"Change the line colors","irowakeblk.tool":"Color each block","irowakeblk.change":"Change the block colors","dontpassallcell":"Lines need not pass all crossings","aquarium_regions":"Water in one region must have the same surface level","country_empty":"Areas don't have to be visited","voxas_tatami":"Tatami rules (no 4-way intersections)","tren_new":"All unused cells must be connected","nuriuzu_connect":"All shaded cells must be connected","balloon_adjacent":"Strings cannot loop back on themselves","bdwalk_height":"Maximum height is unknown","pentopia_transparent":"Transparent mode (clues may be shaded)","yajilin_out":"All shaded cells are outside the loop","koburin_minesweeper":"Minesweeper mode (numbers include diagonal cells)","akichi_maximum":"Maximum numbers may be reduced","magnets_anti":"Anti-Magnets (adjacent poles of different magnets must be equal)","heyapin_overlap":"Pins must overlap 2 or more regions","the_shortest":"Make it \"longest side disappears\" (given lines are the shortest side)","dbchoco_bitter":"Make it \"bitter\" (one area = 2 copies of the other area's shape)","aqre_borders":"Borders must touch exactly one shaded cell","fillomino_tri":"Maximum block size is 3","trizone_ghost":"Regions can have no clues","lapaz_liar":"Liar (clues can be erased by shading)","slither_full":"All points must be visited","loop_full":"All cells must be visited","variant":"This puzzle uses variant rules","time":"Time:","timer.menu":"Show timer","pause":"Pause","pause.header":"Game Paused","pause.desc":"Click 'Resume' or press F4","pause.desc.mobile":"Press 'Resume' to continue","resume":"Resume","check":"Check","check.variant":"Check base type","undo":"<-","redo":"->","ansclear":"Erase answer","ansclear.confirm":"Do you want to erase the answer?","subclear":"Erase aux. marks","subclear.confirm":"Do you want to erase the auxiliary marks?","auxdelete.confirm":"Do you want to delete this piece?","encolorall":"Color up","flushexcell":"Flush clues","wordbank":"Word bank","applypreset":"Replace bank","applypreset.title":"Replace bank","applypreset.submit":"Replace","dropblocks":"Drop blocks","outlineshaded":"Outline shaded cells","enterTrial":"Trial mode","acceptTrial":"Accept trial","rejectTrial":"Reject trial","enterFurtherTrial":"Enter further trial","newboard.title":"New Board","newboard.header":"Create New Board.","newboard.cols":"Cols","newboard.tawa.width":"Width (Yellows)","newboard.rows":"Rows","newboard.tawa.height":"Height","newboard.preset":"Preset","newboard.submit":"Create","urlinput.title":"Load from URL","urlinput.submit":"Load","urloutput.title":"Export URL","urloutput.kanpen":"Change to Kanpen URL","urloutput.heyaapp":"Change to Heyawake-Applet URL","urloutput.pzprv3e":"Change to PUZ-PRE v3 Re-Edit URL","fileopen.title":"Open File","fileopen.choose":"Choose file","filesave.title":"Save File","filesave.format":"File format","filesave.format.pzprv3":"Puz-Pre v3 format","filesave.format.penciltxt":"Pencilbox Text format","filesave.format.pencilxml":"Pencilbox XML format","filesave.filename":"Filename","filesave.submit":"Save","filesave.invalid":"The filename contains invalid characters.","imagesave.title":"Save Image","imagesave.filetype":"File format","imagesave.png":"PNG Format","imagesave.svg":"Vector Image (SVG)","imagesave.gif":"GIF Format","imagesave.jpeg":"jpeg Format","imagesave.webp":"webp Format","imagesave.filename":"Filename","imagesave.cellsize":"Image Size","imagesave.transparent":"Set background to transparent","imagesave.bank":"Include piece bank","imagesave.saveimage":"Download","imagesave.openimage":"Open in another window","imagesave.error":"Fail to Output the Image","adjust.title":"Board Dimension Resizer","adjust.header":"Adjust the board.","adjust.expand":"Expand","adjust.reduce":"Reduce","adjust.up":"Top","adjust.dn":"Bottom","adjust.lt":"Left","adjust.rt":"Right","turnflip.title":"Flip/Turn the board","turnflip.header":"Flip/Turn the board.","turnflip.turnl":"Turn left by 90 degree","turnflip.turnr":"Turn right by 90 degree","turnflip.flipy":"Flip upside down","turnflip.flipx":"Flip leftside right","turnflip.turnl.short":"↶","turnflip.turnr.short":"↷","turnflip.flipy.short":"⇅","turnflip.flipx.short":"⇄","dispsize.title":"Change size","dispsize.header":"Change the display size.","dispsize.cellsize":"Display size","dispsize.submit":"Change","about.title":"About puzz.link","about.pzv":"PUZ-PRE v3","about.author":"happa","network.title":"Network play","network.start":"Start","network.share":"Share this link to play with someone:","list.sort.date":"Sort by date","list.sort.alpha":"Sort alphabetically","numberlinkgenerator.checkbox":"Show generator window","numberlinkgenerator.title":"Numberlink Generator","numberlinkgenerator.size":"Size","numberlinkgenerator.useMarkedCells":"Use the board's ? cells as hint positions","numberlinkgenerator.useMarkedCellsNote":"When checked, the symmetry/adjacency/margin settings below are ignored, and only the positions of the ? cells are fixed while a hint pairing is searched for (the number of ? cells must be even).","numberlinkgenerator.symmetry":"Clue-position symmetry","numberlinkgenerator.rotate180":"180° rotational","numberlinkgenerator.rotate90":"90° rotational","numberlinkgenerator.leftRight":"Left-right symmetric","numberlinkgenerator.both":"Left-right and top-bottom symmetric","numberlinkgenerator.none":"None","numberlinkgenerator.adjacency":"Clue-adjacency constraint","numberlinkgenerator.adjacency.none":"No constraint","numberlinkgenerator.adjacency.forbid":"Forbid clues touching in 8 directions","numberlinkgenerator.adjacency.domino":"Only isolated dominoes allowed","numberlinkgenerator.margin":"Clue-free outer rows/columns","numberlinkgenerator.note":"Only puzzles with one solution under the normal rule (unused cells allowed), whose unique solution uses every cell, are accepted. No pair of answer lines (or a line and itself) may coincide when the board is rotated 90°, 180°, or 270° about its center (only 180° is checked on a non-square board). Two orthogonally adjacent hint cells are never given the same number either (except when the ? cell positions are fixed). You can stop the search at any time.","numberlinkgenerator.start":"Generate one","numberlinkgenerator.stop":"Stop search","numberlinkgenerator.searching":"Searching…","numberlinkgenerator.seconds":"s","numberlinkgenerator.attempts":" attempts","numberlinkgenerator.parallel":"-way parallel","numberlinkgenerator.found":"A puzzle was found.","numberlinkgenerator.stopped":"Search stopped.","numberlinkgenerator.failed":"Generation failed.","numberlinkgenerator.sizeerror":"The board must be at least 3 cells in both dimensions.","numberlinkgenerator.rotate90error":"90° rotational symmetry requires a square board.","numberlinkgenerator.marginerror":"The clue-free margin is too large.","numberlinkgenerator.nomarkedcells":"There are no ? cells on the board.","numberlinkgenerator.oddmarkedcells":"The number of ? cells is odd. It must be even.","numberlinkgenerator.unavailable":"Generation is unavailable in this build.","numberlinksolver.start":"Solve","numberlinksolver.stop":"Stop","numberlinksolver.searching":"Solving…","numberlinksolver.unique":"The solution is unique.","numberlinksolver.multiple":"Multiple solutions were found.","numberlinksolver.multipletruncated":"More than 10 solutions were found. Showing the first 10.","numberlinksolver.noanswer":"There is no solution.","numberlinksolver.stopped":"Search stopped.","numberlinksolver.failed":"Solving failed.","numberlinksolver.unavailable":"Solving is unavailable in this build."},
-	ja: {"editor":"エディタ","beforeunload":"盤面が更新されています。","completed":"正解です！","cancel":"キャンセル","close":"閉じる","delete":"削除","menu_file":"ファイル","newboard":"新規作成","urlinput":"URL入力","urloutput":"URL出力","fileopen":"ファイルを開く","filesave":"ファイル保存…","duplicate":"盤面の複製","imagesave":"画像を保存","menu_edit":"編集","adjust":"盤面の調整","turnflip":"反転・回転","menu_display":"表示","cellsize":"表示サイズ","cellsize.xs":"サイズ 極小","cellsize.s":"サイズ 小","cellsize.n":"サイズ 標準","cellsize.l":"サイズ 大","cellsize.xl":"サイズ 特大","cellsize.custom":"数値指定…","font":"フォント","font.sans":"ゴシック","font.serif":"明朝","dispqnumbg":"問題背景描画","undefcell":"未確定領域背景描画","cursor":"カーソルの表示","trialmarker":"仮置きマーカーの表示","adjsize":"自動横幅調節","fullwidth":"横幅最大拡張","toolarea.show":"ツールエリアを表示","toolarea.hide":"ツールエリアを隠す","menu_setting":"設定","lrinvert":"マウス左右反転","use_tri":"操作方法","use_tri.1":"クリックした位置","use_tri.2":"引っ張り入力","use_tri.3":"1ボタン","bgcolor.menu":"背景色入力","multierr":"複数エラー検出","forceallcell.menu":"全マス数字必須","dirauxmark.menu":"方向の補助記号","enline.menu":"点を結ぶ線","lattice.menu":"格子点チェック","singlenum.menu":"領域に数字1つ","discolor":"色分け無効化","mouseonly":"マウス入力モードにする","autocheck":"正答判定","autocheck.off":"正答を自動で判定しない","autocheck.guarded":"自動(guarded)","autocheck.simple":"自動(常に)","autosave":"Autosave board state [beta]","menu_help":"ヘルプ","rules":"ルール","about":"puzz.linkについて","translate":"翻訳支援(Weblate)","issues":"バグレポートと機能リクエスト","mode":"モード","mode.edit":"問題入力モード","mode.play":"解答モード","use":"操作方法","use.1":"左右ボタン","use.2":"1ボタン","preset.pentominoes":"ペントミノ","preset.tetrominoes":"テトロミノ","preset.double_tetrominoes":"テトロミノ2つずつ","preset.copy_answer":"回答にあるものすべて","preset.zero":"ブロックなし","inputmode":"入力モード","inputmode.auto":"自動","inputmode.slide":"平行移動","inputmode.shade":"黒マス","inputmode.unshade":"白マス","inputmode.number":"数字","inputmode.number-":"数字(逆順)","inputmode.letter":"アルファベット","inputmode.letter-":"アルファベット(逆順)","inputmode.quesmark":"盤面記号","inputmode.quesmark-":"盤面記号(逆順)","inputmode.color":"色","inputmode.color-":"色(逆順)","inputmode.border":"境界線","inputmode.sub-border":"境界線(細線)","inputmode.subline":"補助線","inputmode.direc":"向き","inputmode.arrow":"矢印","inputmode.circle-unshade":"白まる","inputmode.circle-shade":"黒まる","inputmode.circle-gray":"灰まる","inputmode.goat":"ヤギ","inputmode.sheep":"羊","inputmode.wolf":"オオカミ","inputmode.moon":"月","inputmode.sun":"太陽","inputmode.empty":"無効セル","inputmode.ice":"アイスバーン","inputmode.water":"ウォーターハザード","inputmode.nabe":"鍋","inputmode.box":"箱","inputmode.pin":"Pins","inputmode.crossdot":"黒点","inputmode.ineq":"不等号","inputmode.move-clue":"図形の移動","inputmode.copy-answer":"解答モードから記号作成","inputmode.mark-circle":"丸記号","inputmode.mark-triangle":"三角形","inputmode.mark-rect":"四角形","inputmode.mark-tree":"木","inputmode.mark-tent":"テント","inputmode.mark-cross":"バツ印","inputmode.undef":"？記号","inputmode.line":"線","inputmode.peke":"バツ印","inputmode.diraux":"線の向き補助記号","inputmode.bar":"線","inputmode.akari":"あかり","inputmode.star":"スター","inputmode.dot":"黒点","inputmode.balloon":"風船","inputmode.ironball":"鉄球","inputmode.futon":"ふとん","inputmode.completion":"確定数字","inputmode.copycircle":"コピー","inputmode.copynum":"コピー","inputmode.copyletter":"コピー","inputmode.dragnum+":"数字を増やしてコピー","inputmode.dragnum-":"数字を減らしてコピー","inputmode.objblank":"ドット","inputmode.numexist":"数字あり補助記号","inputmode.numblank":"数字なし補助記号","inputmode.subcircle":"補助丸記号","inputmode.subcross":"補助バツ記号","inputmode.bgcolor":"背景色1/2","inputmode.bgcolor1":"背景色1","inputmode.bgcolor2":"背景色2","inputmode.bgpaint":"下絵","inputmode.clear":"消去","inputmode.info-line":"線の繋がりチェック","inputmode.info-blk":"黒マス繋がりチェック","inputmode.info-ublk":"白マス繋がりチェック","inputmode.info-room":"へやの繋がりチェック","inputmode.info-road":"経路チェック","disptype":"表示形式","context_marks":"矢印を表示する","disptype_yajilin.1":"ニコリ紙面形式","disptype_yajilin.2":"背景色をグレーにする","disptype_bosanowa.1":"ニコリ紙面形式","disptype_bosanowa.2":"倉庫番形式","disptype_bosanowa.3":"ワリタイ形式","disptype_interbd.1":"色","disptype_interbd.2":"形","disptype_interbd.3":"色と形","dispmove":"動かしたように描画を行う","bgcolor.tool":"セルの中央をクリックした時に背景色の入力を有効にする","autocmp.number":"正しい数字をグレーにする","autocmp.room":"条件を満たした領域に背景色をつける","autocmp.akari":"光の照らす領域に背景色をつける","autocmp.kouchoku":"線が2本以上になったら点をグレーにする","autocmp.border":"異なる数字の間にグレーの境界線を引く","autoerr.tool.hitori":"重複している数字を赤くする","autoerr.tool.gokigen":"ループになっている斜線を赤くする","autoerr.tool.wagiri":"ループになっている斜線を太くする","dirauxmark.tool":"方向を表す補助記号を入力する","enline.tool":"点の間のみ線を引けるようにする","lattice.tool":"点を通過する線を引けないようにする","uramashu":"裏ましゅにする","singlenum.tool":"領域に一つだけ数字を入力できるようにする","singleregion":"各領域で黒く塗れるタイルを1つだけにする","forceallcell.tool":"全てのマスに数字が入った場合のみ正解とする","ensquare":"黒丸がある場所からだけ正方形を描けるようにする","snakebd":"へびの周りに境界線を表示する","keypopup.tool":"数字・記号をパネルで入力する","irowake.tool":"線の色分けをする","irowake.change":"色分けしなおす","irowakeblk.tool":"黒マスの色分けをする","irowakeblk.change":"色分けしなおす","dontpassallcell":"線が全ての交差点を通過していない場合も正解とする","aquarium_regions":"同一領域内の水面の高さがすべて等しい場合のみ正解とする","country_empty":"線が全く通らない国があっても正解とする","voxas_tatami":"タタミルール(境界の十字交差禁止)","tren_new":"白マスひとつながりルールを追加","nuriuzu_connect":"黒マスひとつながりルールを追加","bdwalk_height":"盤面にある数字より大きい階数があってもよい","pentopia_transparent":"Transparent (矢印のマスが黒マスになる場合もあります。)","koburin_minesweeper":"マインスイーパモード (数字は斜めのマスを含みます)","akichi_maximum":"最大値が数字より小さくても可","magnets_anti":"Anti-Magnets (磁石が必ず同じ極で隣り合う)","heyapin_overlap":"ピンは必ず複数の部屋にまたがる","the_shortest":"長辺消失にする","dbchoco_bitter":"ビターにする(一方のカタマリはもう一方を2つ繋げた形)","variant":"変種ルール","time":"経過時間：","timer.menu":"タイマーを表示","pause":"ポーズ","resume":"スタート","check":"チェック","check.variant":"本家ルールでチェック","undo":"戻","redo":"進","ansclear":"解答消去","ansclear.confirm":"解答を消去しますか？","subclear":"補助消去","subclear.confirm":"補助記号を消去しますか？","auxdelete.confirm":"このブロックを削除しますか？","encolorall":"色をつける","flushexcell":"ヒントを揃える","applypreset":"ブロックの変更","applypreset.title":"ブロックの変更","applypreset.submit":"交換する","dropblocks":"ブロックを落とす","enterTrial":"仮置きモード","acceptTrial":"仮置き確定","rejectTrial":"仮置き破棄","enterFurtherTrial":"多重仮置き","newboard.title":"盤面の新規作成","newboard.header":"盤面を新規作成します。","newboard.cols":"よこ","newboard.tawa.width":"横幅 (黄色の数)","newboard.rows":"たて","newboard.tawa.height":"高さ","newboard.preset":"ブロック","newboard.submit":"新規作成","urlinput.title":"URL入力","urlinput.submit":"読み込む","urloutput.title":"URL出力","urloutput.kanpen":"カンペンのURLを出力する","urloutput.heyaapp":"へやわけアプレットのURLを出力する","urloutput.pzprv3e":"ぱずぷれv3の再編集用URLを出力する","fileopen.title":"ファイルを開く","fileopen.choose":"ファイル選択","filesave.title":"ファイルを保存する","filesave.format":"ファイル形式","filesave.format.pzprv3":"ファイル形式","filesave.format.penciltxt":"pencilbox形式","filesave.format.pencilxml":"pencilbox XML形式","filesave.filename":"ファイル名","filesave.submit":"保存","filesave.invalid":"ファイル名として使用できない文字が含まれています。","imagesave.title":"画像を保存する","imagesave.filetype":"ファイル形式","imagesave.png":"PNG形式","imagesave.svg":"ベクター画像(SVG)","imagesave.gif":"GIF形式","imagesave.jpeg":"jpeg形式","imagesave.webp":"webp形式","imagesave.filename":"ファイル名","imagesave.cellsize":"画像のサイズ","imagesave.transparent":"背景色を透明にする","imagesave.bank":"ブロックを含める","imagesave.saveimage":"ダウンロード","imagesave.openimage":"別ウィンドウで開く","imagesave.error":"画像の出力に失敗しました","adjust.title":"盤面の調整","adjust.header":"盤面の調整を行います。","adjust.expand":"拡大","adjust.reduce":"縮小","adjust.up":"上","adjust.dn":"下","adjust.lt":"左","adjust.rt":"右","turnflip.title":"反転・回転","turnflip.header":"盤面の回転・反転を行います。","turnflip.turnl":"左90°回転","turnflip.turnr":"右90°回転","turnflip.flipy":"上下反転","turnflip.flipx":"左右反転","turnflip.turnl.short":"↶","turnflip.turnr.short":"↷","turnflip.flipy.short":"⇅","turnflip.flipx.short":"⇄","dispsize.title":"表示サイズの変更","dispsize.header":"表示サイズを変更します。","dispsize.cellsize":"表示サイズ","dispsize.submit":"変更する","about.title":"puzz.linkについて","about.pzv":"ぱずぷれv3","about.author":"はっぱ/連続発破","network.title":"ネットワークプレイ","network.start":"始める","network.share":"共有用URL:","inputmode.copysymbol":"コピー","preset.fleet3":"サイズ3","preset.fleet4":"サイズ4","preset.fleet5":"サイズ5","preset.range":"1 ~","patchwork_leftaux":"左クリックで補助線を入力する","list.sort.date":"日付順","list.sort.alpha":"アルファベット順","preset.nine":"1~9","inputmode.fire":"火","inputmode.mark-checkerboard":"市松模様","pause.header":"ポーズ中","pause.desc":"再開をクリックするか、F4キーを押してください","fillomino_tri":"すべての数字は3以下になります","inputmode.forest":"森","inputmode.sand":"砂","yajilin_out":"黒マスは線の外側にする","autocmp.recoil":"障害物が置かれるマスに背景色を付ける","inputmode.boulder":"岩","loop_full":"線の引かれないマスがあってはいけないとする","pause.desc.mobile":"「スタート」を押して再開","aqre_borders":"線が黒マスに触れるのは一度だけ","slither_full":"全ての点に線が通る","outlineshaded":"黒マスを線で囲む","inputmode.diamond":"","balloon_adjacent":"","numberlinkgenerator.checkbox":"自動生成ウィンドウを表示","numberlinkgenerator.title":"ナンバーリンク自動生成","numberlinkgenerator.size":"サイズ","numberlinkgenerator.useMarkedCells":"盤面の？マスをヒント位置として使う","numberlinkgenerator.useMarkedCellsNote":"チェックすると、下の対称性・隣接制約・外周マス数の指定は無視し、？マスの位置だけを固定してヒントの組み合わせを探します（？マスの数は偶数である必要があります）。","numberlinkgenerator.symmetry":"ヒント配置の対称性","numberlinkgenerator.rotate180":"180度点対称","numberlinkgenerator.rotate90":"90度点対称","numberlinkgenerator.leftRight":"左右対称","numberlinkgenerator.both":"上下左右対称","numberlinkgenerator.none":"なし","numberlinkgenerator.adjacency":"ヒント配置の隣接制約","numberlinkgenerator.adjacency.none":"制約なし","numberlinkgenerator.adjacency.forbid":"8方向隣接を禁止","numberlinkgenerator.adjacency.domino":"孤立したドミノ配置のみ許可","numberlinkgenerator.margin":"外周から空けるマス数","numberlinkgenerator.note":"通常ルール（未使用マス可）で唯一解かつ、その唯一解が全マスを通る問題だけを採用します。盤面を90度・180度・270度回転させたときに一致する正解路の組もありません（正方形以外の盤面では180度のみ判定）。隣り合うヒントマスが同じ数字になることもありません（？マスの位置を固定した場合を除く）。探索はいつでも中断できます。","numberlinkgenerator.start":"1問生成","numberlinkgenerator.stop":"探索を中断","numberlinkgenerator.searching":"探索中…","numberlinkgenerator.seconds":"秒","numberlinkgenerator.attempts":"回試行","numberlinkgenerator.parallel":"並列","numberlinkgenerator.found":"問題が見つかりました。","numberlinkgenerator.stopped":"探索を中断しました。","numberlinkgenerator.failed":"生成に失敗しました。","numberlinkgenerator.sizeerror":"縦横とも3マス以上の盤面が必要です。","numberlinkgenerator.rotate90error":"90度点対称は正方形の盤面でのみ使用できます。","numberlinkgenerator.marginerror":"外周から空けるマス数が大きすぎます。","numberlinkgenerator.nomarkedcells":"？マスが盤面にありません。","numberlinkgenerator.oddmarkedcells":"？マスの数が奇数です。偶数個にしてください。","numberlinkgenerator.unavailable":"このビルドでは自動生成を利用できません。","numberlinksolver.start":"解答","numberlinksolver.stop":"中断","numberlinksolver.searching":"解析中…","numberlinksolver.unique":"唯一解です。","numberlinksolver.multiple":"複数の解が見つかりました。","numberlinksolver.multipletruncated":"解が10件を超えて見つかりました。先頭の10件を表示しています。","numberlinksolver.noanswer":"解がありません。","numberlinksolver.stopped":"解析を中断しました。","numberlinksolver.failed":"解析に失敗しました。","numberlinksolver.unavailable":"このビルドでは解答機能を利用できません。"}
+	en: {"editor":"editor","beforeunload":"The board is edited.","completed":"Complete!","cancel":"Cancel","close":"Close","delete":"Delete","menu_file":"File","newboard":"New board","urlinput":"Load from URL","urloutput":"Export URL","fileopen":"Open file","filesave":"Save file as …","duplicate":"Duplicate the board","imagesave":"Save as image file","menu_edit":"Edit","adjust":"Adjust the board","turnflip":"Flip/Turn the board","menu_display":"Display","cellsize":"Cell size","cellsize.xs":"Extra small","cellsize.s":"Small","cellsize.n":"Normal","cellsize.l":"Large","cellsize.xl":"Extra large","cellsize.custom":"Set by number …","font":"Font family","font.sans":"Sans-serif","font.serif":"Serif","dispqnumbg":"Paint background of clue circles","undefcell":"Paint uninputted cells","cursor":"Show cursor","trialmarker":"Show trial markers","adjsize":"Auto size adjust","fullwidth":"Expand canvas width","toolarea.show":"Show tool area","toolarea.hide":"Hide tool area","menu_setting":"Setting","lrinvert":"Invert mouse button","use_tri":"Input type","use_tri.1":"Corner-side","use_tri.2":"Pull-to-input","use_tri.3":"One button","bgcolor.menu":"Input background color","multierr":"Check multiple errors","forceallcell.menu":"Number in all cells","dirauxmark.menu":"Direction aux. mark","enline.menu":"Line between points","lattice.menu":"Check lattice point","singlenum.menu":"Single number in a region","discolor":"Disable color","mouseonly":"Enable mouse-only input","patchwork_leftaux":"Enable to input aux. lines with single click","autocheck":"Answer check","autocheck.off":"Manual","autocheck.guarded":"Automatic (guarded)","autocheck.simple":"Automatic (always)","autosave":"Autosave board state [beta]","menu_help":"Help","rules":"Rules","about":"About puzz.link","translate":"Help us translate","issues":"Bug reports and feature requests","mode":"Mode","mode.edit":"Edit mode","mode.play":"Answer mode","use":"Input Type","use.1":"L/R buttons","use.2":"One button","preset.pentominoes":"Pentominoes","preset.tetrominoes":"Tetrominoes","preset.double_tetrominoes":"Double tetrominoes","preset.copy_answer":"Copy answer to bank","preset.zero":"No pieces","preset.fleet3":"Battleships (size 3)","preset.fleet4":"Battleships (size 4)","preset.fleet5":"Battleships (size 5)","preset.nine":"1~9","preset.range":"1 ~","inputmode":"Input Mode","inputmode.auto":"Auto","inputmode.slide":"Slide","inputmode.shade":"Shaded cells","inputmode.unshade":"Unshaded cells","inputmode.number":"Number","inputmode.number-":"Number (rev)","inputmode.letter":"Alphabet","inputmode.letter-":"Alphabet (rev)","inputmode.quesmark":"Question marks","inputmode.quesmark-":"Question marks (rev)","inputmode.color":"Color","inputmode.color-":"Color (rev)","inputmode.border":"Border","inputmode.sub-border":"Sub-border","inputmode.subline":"Aux. conn. lines","inputmode.direc":"Direction","inputmode.arrow":"Arrows","inputmode.circle-unshade":"Unshaded circles","inputmode.circle-shade":"Shaded circles","inputmode.circle-gray":"Gray circles","inputmode.goat":"Goats","inputmode.sheep":"Sheep","inputmode.wolf":"Wolves","inputmode.boulder":"Boulders","inputmode.moon":"Marks of moon","inputmode.sun":"Marks of sun","inputmode.empty":"Invalid cells","inputmode.ice":"Icebarns","inputmode.water":"Water hazard","inputmode.fire":"Fire","inputmode.forest":"Forest","inputmode.sand":"Sand","inputmode.nabe":"Crocks","inputmode.box":"Boxes","inputmode.pin":"Pins","inputmode.diamond":"Diamonds","inputmode.crossdot":"Shaded dots","inputmode.ineq":"Inequality marks","inputmode.move-clue":"Move clue","inputmode.copy-answer":"Copy answer","inputmode.mark-circle":"Circles","inputmode.mark-triangle":"Triangles","inputmode.mark-rect":"Rectangles","inputmode.mark-tree":"Trees","inputmode.mark-tent":"Tents","inputmode.mark-cross":"Crosses","inputmode.mark-checkerboard":"Checkerboards","inputmode.undef":"Question marks","inputmode.line":"Lines","inputmode.peke":"Cross marks","inputmode.pekeborder":"Border marks","inputmode.diraux":"Aux. dir. marks","inputmode.bar":"Bars","inputmode.akari":"Bulbs","inputmode.star":"Stars","inputmode.dot":"Dots","inputmode.balloon":"Balloons","inputmode.ironball":"Iron balls","inputmode.futon":"Futons","inputmode.completion":"Completion","inputmode.copycircle":"Copy circles","inputmode.copynum":"Copy nums","inputmode.copyletter":"Copy letters","inputmode.copysymbol":"Copy symbols","inputmode.dragnum+":"Drag inc. nums","inputmode.dragnum-":"Drag dec. nums","inputmode.objblank":"Aux. dots","inputmode.numexist":"Aux. circles","inputmode.numblank":"Aux. crosses","inputmode.subcircle":"Aux. circles","inputmode.subcross":"Aux. crosses","inputmode.bgcolor":"Bgcolor 1/2","inputmode.bgcolor1":"Bgcolor 1","inputmode.bgcolor2":"Bgcolor 2","inputmode.bgpaint":"Draft sketch","inputmode.clear":"Erase data","inputmode.info-line":"Check line connection","inputmode.info-blk":"Check shaded cell connection","inputmode.info-ublk":"Check unshaded cell connection","inputmode.info-room":"Check room connection","inputmode.info-road":"Check route","disptype":"Display","context_marks":"Show direction indicators","disptype_yajilin.1":"Original style","disptype_yajilin.2":"Gray background","disptype_bosanowa.1":"Original style","disptype_bosanowa.2":"Sokoban style","disptype_bosanowa.3":"Waritai style","disptype_interbd.1":"Colors","disptype_interbd.2":"Shapes","disptype_interbd.3":"Both","dispmove":"Display as object moving","bgcolor.tool":"Allow inputting background color when cell center is clicked","autocmp.number":"Grey each correct number","autocmp.room":"Paint background of each completed block","autocmp.akari":"Paint background of each illuminated block","autocmp.kouchoku":"Grey each letter which links over two segments","autocmp.border":"Grey border between different areas","autocmp.recoil":"Paint background of path obstacles","autoerr.tool.hitori":"Show overlapped number as red","autoerr.tool.gokigen":"Draw loop line as red","autoerr.tool.ubahn":"Paint background of cell types","autoerr.tool.wagiri":"Draw loop line as bold","dirauxmark.tool":"Enable to input aux mark of direction","enline.tool":"Enable to draw line only between the points","lattice.tool":"Disable drawing segment passing over a lattice point","uramashu":"Change to Ura-Mashu","singlenum.tool":"Ensure that each region has one number","singleregion":"Ensure that only one tile is shaded in each region","forceallcell.tool":"Force each cell to have a number","snakebd":"Draw border around a snake","ensquare":"Enable to force drawing squares from a clue","keypopup.tool":"Input numbers by panel","irowake.tool":"Color each line","irowake.change":"Change the line colors","irowakeblk.tool":"Color each block","irowakeblk.change":"Change the block colors","dontpassallcell":"Lines need not pass all crossings","aquarium_regions":"Water in one region must have the same surface level","country_empty":"Areas don't have to be visited","voxas_tatami":"Tatami rules (no 4-way intersections)","tren_new":"All unused cells must be connected","nuriuzu_connect":"All shaded cells must be connected","balloon_adjacent":"Strings cannot loop back on themselves","bdwalk_height":"Maximum height is unknown","pentopia_transparent":"Transparent mode (clues may be shaded)","yajilin_out":"All shaded cells are outside the loop","koburin_minesweeper":"Minesweeper mode (numbers include diagonal cells)","akichi_maximum":"Maximum numbers may be reduced","magnets_anti":"Anti-Magnets (adjacent poles of different magnets must be equal)","heyapin_overlap":"Pins must overlap 2 or more regions","the_shortest":"Make it \"longest side disappears\" (given lines are the shortest side)","dbchoco_bitter":"Make it \"bitter\" (one area = 2 copies of the other area's shape)","aqre_borders":"Borders must touch exactly one shaded cell","fillomino_tri":"Maximum block size is 3","trizone_ghost":"Regions can have no clues","lapaz_liar":"Liar (clues can be erased by shading)","slither_full":"All points must be visited","loop_full":"All cells must be visited","variant":"This puzzle uses variant rules","time":"Time:","timer.menu":"Show timer","pause":"Pause","pause.header":"Game Paused","pause.desc":"Click 'Resume' or press F4","pause.desc.mobile":"Press 'Resume' to continue","resume":"Resume","check":"Check","check.variant":"Check base type","undo":"<-","redo":"->","ansclear":"Erase answer","ansclear.confirm":"Do you want to erase the answer?","subclear":"Erase aux. marks","subclear.confirm":"Do you want to erase the auxiliary marks?","auxdelete.confirm":"Do you want to delete this piece?","encolorall":"Color up","flushexcell":"Flush clues","wordbank":"Word bank","applypreset":"Replace bank","applypreset.title":"Replace bank","applypreset.submit":"Replace","dropblocks":"Drop blocks","outlineshaded":"Outline shaded cells","enterTrial":"Trial mode","acceptTrial":"Accept trial","rejectTrial":"Reject trial","enterFurtherTrial":"Enter further trial","newboard.title":"New Board","newboard.header":"Create New Board.","newboard.cols":"Cols","newboard.tawa.width":"Width (Yellows)","newboard.rows":"Rows","newboard.tawa.height":"Height","newboard.preset":"Preset","newboard.submit":"Create","urlinput.title":"Load from URL","urlinput.submit":"Load","urloutput.title":"Export URL","urloutput.kanpen":"Change to Kanpen URL","urloutput.heyaapp":"Change to Heyawake-Applet URL","urloutput.pzprv3e":"Change to PUZ-PRE v3 Re-Edit URL","fileopen.title":"Open File","fileopen.choose":"Choose file","filesave.title":"Save File","filesave.format":"File format","filesave.format.pzprv3":"Puz-Pre v3 format","filesave.format.penciltxt":"Pencilbox Text format","filesave.format.pencilxml":"Pencilbox XML format","filesave.filename":"Filename","filesave.submit":"Save","filesave.invalid":"The filename contains invalid characters.","imagesave.title":"Save Image","imagesave.filetype":"File format","imagesave.png":"PNG Format","imagesave.svg":"Vector Image (SVG)","imagesave.gif":"GIF Format","imagesave.jpeg":"jpeg Format","imagesave.webp":"webp Format","imagesave.filename":"Filename","imagesave.cellsize":"Image Size","imagesave.transparent":"Set background to transparent","imagesave.bank":"Include piece bank","imagesave.saveimage":"Download","imagesave.openimage":"Open in another window","imagesave.error":"Fail to Output the Image","adjust.title":"Board Dimension Resizer","adjust.header":"Adjust the board.","adjust.expand":"Expand","adjust.reduce":"Reduce","adjust.up":"Top","adjust.dn":"Bottom","adjust.lt":"Left","adjust.rt":"Right","turnflip.title":"Flip/Turn the board","turnflip.header":"Flip/Turn the board.","turnflip.turnl":"Turn left by 90 degree","turnflip.turnr":"Turn right by 90 degree","turnflip.flipy":"Flip upside down","turnflip.flipx":"Flip leftside right","turnflip.turnl.short":"↶","turnflip.turnr.short":"↷","turnflip.flipy.short":"⇅","turnflip.flipx.short":"⇄","dispsize.title":"Change size","dispsize.header":"Change the display size.","dispsize.cellsize":"Display size","dispsize.submit":"Change","about.title":"About puzz.link","about.pzv":"PUZ-PRE v3","about.author":"happa","network.title":"Network play","network.start":"Start","network.share":"Share this link to play with someone:","list.sort.date":"Sort by date","list.sort.alpha":"Sort alphabetically","numberlinkgenerator.checkbox":"Show generator window","numberlinkgenerator.intro":"Generate a puzzle with these settings and open it in a new tab.","numberlinkgenerator.hints":"Hints","numberlinkgenerator.pairs":"Number of pairs","numberlinkgenerator.minimum":"Min","numberlinkgenerator.maximum":"Max","numberlinkgenerator.markedmode":"Use of ? cells","numberlinkgenerator.markednone":"Ignore","numberlinkgenerator.markedrequired":"Required hints (allow extras)","numberlinkgenerator.markedfixed":"Use exactly these positions","numberlinkgenerator.markedcount":"? cells on board:","numberlinkgenerator.hintcells":"Hint cells:","numberlinkgenerator.placement":"Hint placement","numberlinkgenerator.rules":"Puzzle requirements","numberlinkgenerator.openresult":"Open generated puzzle in a new tab","numberlinkgenerator.waitingtab":"Generating Numberlink. The puzzle will appear here when ready. Return to the original tab to stop the search.","numberlinkgenerator.checking":"Checking placement constraints…","numberlinkgenerator.counterror":"Pair counts must be positive integers, with minimum ≤ maximum ≤ half the board area.","numberlinkgenerator.markedcounterror":"The number of ? cells conflicts with the pair range.","numberlinkgenerator.markedmarginerror":"A required ? cell lies in the clue-free margin.","numberlinkgenerator.capacityerror":"Too few available cells for this hint range.","numberlinkgenerator.symmetrycounterror":"90° symmetry requires a multiple of four hint cells. Include an even pair count.","numberlinkgenerator.impossible":"No puzzle can satisfy these settings. Adjust the hint count, ? positions, or placement constraints.","numberlinkgenerator.unknownerror":"An error occurred during generation.","numberlinkgenerator.title":"Numberlink Generator","numberlinkgenerator.size":"Size","numberlinkgenerator.useMarkedCells":"Use the board's ? cells as hint positions","numberlinkgenerator.useMarkedCellsNote":"Required hints may include an odd number of ? cells; placement settings still apply. Exact positions require an even number and ignore placement settings. Existing numbers and answer lines are not used as constraints.","numberlinkgenerator.symmetry":"Clue-position symmetry","numberlinkgenerator.rotate180":"180° rotational","numberlinkgenerator.rotate90":"90° rotational","numberlinkgenerator.leftRight":"Left-right symmetric","numberlinkgenerator.both":"Left-right and top-bottom symmetric","numberlinkgenerator.none":"None","numberlinkgenerator.adjacency":"Clue-adjacency constraint","numberlinkgenerator.adjacency.none":"No constraint","numberlinkgenerator.adjacency.forbid":"Forbid clues touching in 8 directions","numberlinkgenerator.adjacency.domino":"Only isolated dominoes allowed","numberlinkgenerator.margin":"Clue-free outer rows/columns","numberlinkgenerator.note":"Only puzzles with one solution under the normal rule (unused cells allowed), whose unique solution uses every cell, are accepted. No pair of answer lines (or a line and itself) may coincide when the board is rotated 90°, 180°, or 270° about its center (only 180° is checked on a non-square board). Two orthogonally adjacent hint cells are never given the same number either (except when the ? cell positions are fixed). You can stop the search at any time.","numberlinkgenerator.start":"Generate one","numberlinkgenerator.stop":"Stop search","numberlinkgenerator.searching":"Searching…","numberlinkgenerator.seconds":"s","numberlinkgenerator.attempts":" attempts","numberlinkgenerator.parallel":"-way parallel","numberlinkgenerator.found":"Puzzle found. If the new tab did not open, use the link below.","numberlinkgenerator.stopped":"Search stopped.","numberlinkgenerator.failed":"Generation failed.","numberlinkgenerator.sizeerror":"The board must be at least 3 cells in both dimensions.","numberlinkgenerator.rotate90error":"90° rotational symmetry requires a square board.","numberlinkgenerator.marginerror":"The clue-free margin is too large.","numberlinkgenerator.nomarkedcells":"There are no ? cells on the board.","numberlinkgenerator.oddmarkedcells":"The number of ? cells is odd. It must be even.","numberlinkgenerator.unavailable":"Generation is unavailable in this build.","numberlinksolver.start":"Solve","numberlinksolver.stop":"Stop","numberlinksolver.searching":"Solving…","numberlinksolver.unique":"The solution is unique.","numberlinksolver.multiple":"Multiple solutions were found.","numberlinksolver.multipletruncated":"More than 10 solutions were found. Showing the first 10.","numberlinksolver.noanswer":"There is no solution.","numberlinksolver.stopped":"Search stopped.","numberlinksolver.failed":"Solving failed.","numberlinksolver.unavailable":"Solving is unavailable in this build."},
+	ja: {"editor":"エディタ","beforeunload":"盤面が更新されています。","completed":"正解です！","cancel":"キャンセル","close":"閉じる","delete":"削除","menu_file":"ファイル","newboard":"新規作成","urlinput":"URL入力","urloutput":"URL出力","fileopen":"ファイルを開く","filesave":"ファイル保存…","duplicate":"盤面の複製","imagesave":"画像を保存","menu_edit":"編集","adjust":"盤面の調整","turnflip":"反転・回転","menu_display":"表示","cellsize":"表示サイズ","cellsize.xs":"サイズ 極小","cellsize.s":"サイズ 小","cellsize.n":"サイズ 標準","cellsize.l":"サイズ 大","cellsize.xl":"サイズ 特大","cellsize.custom":"数値指定…","font":"フォント","font.sans":"ゴシック","font.serif":"明朝","dispqnumbg":"問題背景描画","undefcell":"未確定領域背景描画","cursor":"カーソルの表示","trialmarker":"仮置きマーカーの表示","adjsize":"自動横幅調節","fullwidth":"横幅最大拡張","toolarea.show":"ツールエリアを表示","toolarea.hide":"ツールエリアを隠す","menu_setting":"設定","lrinvert":"マウス左右反転","use_tri":"操作方法","use_tri.1":"クリックした位置","use_tri.2":"引っ張り入力","use_tri.3":"1ボタン","bgcolor.menu":"背景色入力","multierr":"複数エラー検出","forceallcell.menu":"全マス数字必須","dirauxmark.menu":"方向の補助記号","enline.menu":"点を結ぶ線","lattice.menu":"格子点チェック","singlenum.menu":"領域に数字1つ","discolor":"色分け無効化","mouseonly":"マウス入力モードにする","autocheck":"正答判定","autocheck.off":"正答を自動で判定しない","autocheck.guarded":"自動(guarded)","autocheck.simple":"自動(常に)","autosave":"Autosave board state [beta]","menu_help":"ヘルプ","rules":"ルール","about":"puzz.linkについて","translate":"翻訳支援(Weblate)","issues":"バグレポートと機能リクエスト","mode":"モード","mode.edit":"問題入力モード","mode.play":"解答モード","use":"操作方法","use.1":"左右ボタン","use.2":"1ボタン","preset.pentominoes":"ペントミノ","preset.tetrominoes":"テトロミノ","preset.double_tetrominoes":"テトロミノ2つずつ","preset.copy_answer":"回答にあるものすべて","preset.zero":"ブロックなし","inputmode":"入力モード","inputmode.auto":"自動","inputmode.slide":"平行移動","inputmode.shade":"黒マス","inputmode.unshade":"白マス","inputmode.number":"数字","inputmode.number-":"数字(逆順)","inputmode.letter":"アルファベット","inputmode.letter-":"アルファベット(逆順)","inputmode.quesmark":"盤面記号","inputmode.quesmark-":"盤面記号(逆順)","inputmode.color":"色","inputmode.color-":"色(逆順)","inputmode.border":"境界線","inputmode.sub-border":"境界線(細線)","inputmode.subline":"補助線","inputmode.direc":"向き","inputmode.arrow":"矢印","inputmode.circle-unshade":"白まる","inputmode.circle-shade":"黒まる","inputmode.circle-gray":"灰まる","inputmode.goat":"ヤギ","inputmode.sheep":"羊","inputmode.wolf":"オオカミ","inputmode.moon":"月","inputmode.sun":"太陽","inputmode.empty":"無効セル","inputmode.ice":"アイスバーン","inputmode.water":"ウォーターハザード","inputmode.nabe":"鍋","inputmode.box":"箱","inputmode.pin":"Pins","inputmode.crossdot":"黒点","inputmode.ineq":"不等号","inputmode.move-clue":"図形の移動","inputmode.copy-answer":"解答モードから記号作成","inputmode.mark-circle":"丸記号","inputmode.mark-triangle":"三角形","inputmode.mark-rect":"四角形","inputmode.mark-tree":"木","inputmode.mark-tent":"テント","inputmode.mark-cross":"バツ印","inputmode.undef":"？記号","inputmode.line":"線","inputmode.peke":"バツ印","inputmode.diraux":"線の向き補助記号","inputmode.bar":"線","inputmode.akari":"あかり","inputmode.star":"スター","inputmode.dot":"黒点","inputmode.balloon":"風船","inputmode.ironball":"鉄球","inputmode.futon":"ふとん","inputmode.completion":"確定数字","inputmode.copycircle":"コピー","inputmode.copynum":"コピー","inputmode.copyletter":"コピー","inputmode.dragnum+":"数字を増やしてコピー","inputmode.dragnum-":"数字を減らしてコピー","inputmode.objblank":"ドット","inputmode.numexist":"数字あり補助記号","inputmode.numblank":"数字なし補助記号","inputmode.subcircle":"補助丸記号","inputmode.subcross":"補助バツ記号","inputmode.bgcolor":"背景色1/2","inputmode.bgcolor1":"背景色1","inputmode.bgcolor2":"背景色2","inputmode.bgpaint":"下絵","inputmode.clear":"消去","inputmode.info-line":"線の繋がりチェック","inputmode.info-blk":"黒マス繋がりチェック","inputmode.info-ublk":"白マス繋がりチェック","inputmode.info-room":"へやの繋がりチェック","inputmode.info-road":"経路チェック","disptype":"表示形式","context_marks":"矢印を表示する","disptype_yajilin.1":"ニコリ紙面形式","disptype_yajilin.2":"背景色をグレーにする","disptype_bosanowa.1":"ニコリ紙面形式","disptype_bosanowa.2":"倉庫番形式","disptype_bosanowa.3":"ワリタイ形式","disptype_interbd.1":"色","disptype_interbd.2":"形","disptype_interbd.3":"色と形","dispmove":"動かしたように描画を行う","bgcolor.tool":"セルの中央をクリックした時に背景色の入力を有効にする","autocmp.number":"正しい数字をグレーにする","autocmp.room":"条件を満たした領域に背景色をつける","autocmp.akari":"光の照らす領域に背景色をつける","autocmp.kouchoku":"線が2本以上になったら点をグレーにする","autocmp.border":"異なる数字の間にグレーの境界線を引く","autoerr.tool.hitori":"重複している数字を赤くする","autoerr.tool.gokigen":"ループになっている斜線を赤くする","autoerr.tool.wagiri":"ループになっている斜線を太くする","dirauxmark.tool":"方向を表す補助記号を入力する","enline.tool":"点の間のみ線を引けるようにする","lattice.tool":"点を通過する線を引けないようにする","uramashu":"裏ましゅにする","singlenum.tool":"領域に一つだけ数字を入力できるようにする","singleregion":"各領域で黒く塗れるタイルを1つだけにする","forceallcell.tool":"全てのマスに数字が入った場合のみ正解とする","ensquare":"黒丸がある場所からだけ正方形を描けるようにする","snakebd":"へびの周りに境界線を表示する","keypopup.tool":"数字・記号をパネルで入力する","irowake.tool":"線の色分けをする","irowake.change":"色分けしなおす","irowakeblk.tool":"黒マスの色分けをする","irowakeblk.change":"色分けしなおす","dontpassallcell":"線が全ての交差点を通過していない場合も正解とする","aquarium_regions":"同一領域内の水面の高さがすべて等しい場合のみ正解とする","country_empty":"線が全く通らない国があっても正解とする","voxas_tatami":"タタミルール(境界の十字交差禁止)","tren_new":"白マスひとつながりルールを追加","nuriuzu_connect":"黒マスひとつながりルールを追加","bdwalk_height":"盤面にある数字より大きい階数があってもよい","pentopia_transparent":"Transparent (矢印のマスが黒マスになる場合もあります。)","koburin_minesweeper":"マインスイーパモード (数字は斜めのマスを含みます)","akichi_maximum":"最大値が数字より小さくても可","magnets_anti":"Anti-Magnets (磁石が必ず同じ極で隣り合う)","heyapin_overlap":"ピンは必ず複数の部屋にまたがる","the_shortest":"長辺消失にする","dbchoco_bitter":"ビターにする(一方のカタマリはもう一方を2つ繋げた形)","variant":"変種ルール","time":"経過時間：","timer.menu":"タイマーを表示","pause":"ポーズ","resume":"スタート","check":"チェック","check.variant":"本家ルールでチェック","undo":"戻","redo":"進","ansclear":"解答消去","ansclear.confirm":"解答を消去しますか？","subclear":"補助消去","subclear.confirm":"補助記号を消去しますか？","auxdelete.confirm":"このブロックを削除しますか？","encolorall":"色をつける","flushexcell":"ヒントを揃える","applypreset":"ブロックの変更","applypreset.title":"ブロックの変更","applypreset.submit":"交換する","dropblocks":"ブロックを落とす","enterTrial":"仮置きモード","acceptTrial":"仮置き確定","rejectTrial":"仮置き破棄","enterFurtherTrial":"多重仮置き","newboard.title":"盤面の新規作成","newboard.header":"盤面を新規作成します。","newboard.cols":"よこ","newboard.tawa.width":"横幅 (黄色の数)","newboard.rows":"たて","newboard.tawa.height":"高さ","newboard.preset":"ブロック","newboard.submit":"新規作成","urlinput.title":"URL入力","urlinput.submit":"読み込む","urloutput.title":"URL出力","urloutput.kanpen":"カンペンのURLを出力する","urloutput.heyaapp":"へやわけアプレットのURLを出力する","urloutput.pzprv3e":"ぱずぷれv3の再編集用URLを出力する","fileopen.title":"ファイルを開く","fileopen.choose":"ファイル選択","filesave.title":"ファイルを保存する","filesave.format":"ファイル形式","filesave.format.pzprv3":"ファイル形式","filesave.format.penciltxt":"pencilbox形式","filesave.format.pencilxml":"pencilbox XML形式","filesave.filename":"ファイル名","filesave.submit":"保存","filesave.invalid":"ファイル名として使用できない文字が含まれています。","imagesave.title":"画像を保存する","imagesave.filetype":"ファイル形式","imagesave.png":"PNG形式","imagesave.svg":"ベクター画像(SVG)","imagesave.gif":"GIF形式","imagesave.jpeg":"jpeg形式","imagesave.webp":"webp形式","imagesave.filename":"ファイル名","imagesave.cellsize":"画像のサイズ","imagesave.transparent":"背景色を透明にする","imagesave.bank":"ブロックを含める","imagesave.saveimage":"ダウンロード","imagesave.openimage":"別ウィンドウで開く","imagesave.error":"画像の出力に失敗しました","adjust.title":"盤面の調整","adjust.header":"盤面の調整を行います。","adjust.expand":"拡大","adjust.reduce":"縮小","adjust.up":"上","adjust.dn":"下","adjust.lt":"左","adjust.rt":"右","turnflip.title":"反転・回転","turnflip.header":"盤面の回転・反転を行います。","turnflip.turnl":"左90°回転","turnflip.turnr":"右90°回転","turnflip.flipy":"上下反転","turnflip.flipx":"左右反転","turnflip.turnl.short":"↶","turnflip.turnr.short":"↷","turnflip.flipy.short":"⇅","turnflip.flipx.short":"⇄","dispsize.title":"表示サイズの変更","dispsize.header":"表示サイズを変更します。","dispsize.cellsize":"表示サイズ","dispsize.submit":"変更する","about.title":"puzz.linkについて","about.pzv":"ぱずぷれv3","about.author":"はっぱ/連続発破","network.title":"ネットワークプレイ","network.start":"始める","network.share":"共有用URL:","inputmode.copysymbol":"コピー","preset.fleet3":"サイズ3","preset.fleet4":"サイズ4","preset.fleet5":"サイズ5","preset.range":"1 ~","patchwork_leftaux":"左クリックで補助線を入力する","list.sort.date":"日付順","list.sort.alpha":"アルファベット順","preset.nine":"1~9","inputmode.fire":"火","inputmode.mark-checkerboard":"市松模様","pause.header":"ポーズ中","pause.desc":"再開をクリックするか、F4キーを押してください","fillomino_tri":"すべての数字は3以下になります","inputmode.forest":"森","inputmode.sand":"砂","yajilin_out":"黒マスは線の外側にする","autocmp.recoil":"障害物が置かれるマスに背景色を付ける","inputmode.boulder":"岩","loop_full":"線の引かれないマスがあってはいけないとする","pause.desc.mobile":"「スタート」を押して再開","aqre_borders":"線が黒マスに触れるのは一度だけ","slither_full":"全ての点に線が通る","outlineshaded":"黒マスを線で囲む","inputmode.diamond":"","balloon_adjacent":"","numberlinkgenerator.checkbox":"自動生成ウィンドウを表示","numberlinkgenerator.intro":"条件を指定して1問生成し、新しいタブで開きます。","numberlinkgenerator.hints":"ヒント","numberlinkgenerator.pairs":"数字のペア数","numberlinkgenerator.minimum":"最小","numberlinkgenerator.maximum":"最大","numberlinkgenerator.markedmode":"？マスの使い方","numberlinkgenerator.markednone":"使わない","numberlinkgenerator.markedrequired":"必ずヒントにする（追加可）","numberlinkgenerator.markedfixed":"？の位置だけに配置する","numberlinkgenerator.markedcount":"盤面の？マス数：","numberlinkgenerator.hintcells":"ヒントマス数：","numberlinkgenerator.placement":"ヒントの配置条件","numberlinkgenerator.rules":"生成する問題の条件","numberlinkgenerator.openresult":"生成した問題を新しいタブで開く","numberlinkgenerator.waitingtab":"ナンバーリンクを生成中です。完了すると、このタブに問題を表示します。中断する場合は元のタブに戻ってください。","numberlinkgenerator.checking":"配置条件を確認中…","numberlinkgenerator.counterror":"ペア数は1以上の整数で、最小≦最大、最大≦盤面マス数の半分にしてください。","numberlinkgenerator.markedcounterror":"？マスの個数とペア数の範囲が一致しません。","numberlinkgenerator.markedmarginerror":"必須の？マスが、ヒントを置かない外周領域にあります。","numberlinkgenerator.capacityerror":"指定範囲のヒントを配置するためのマスが足りません。","numberlinkgenerator.symmetrycounterror":"90度点対称ではヒントが4マス単位になるため、範囲内に偶数のペア数が必要です。","numberlinkgenerator.impossible":"指定条件を満たす問題は生成できません。ヒント数・？の位置・配置条件を見直してください。","numberlinkgenerator.unknownerror":"生成処理でエラーが発生しました。","numberlinkgenerator.title":"ナンバーリンク自動生成","numberlinkgenerator.size":"サイズ","numberlinkgenerator.useMarkedCells":"盤面の？マスをヒント位置として使う","numberlinkgenerator.useMarkedCellsNote":"「必ずヒントにする」は奇数個の？も使え、配置条件も適用します。「？の位置だけ」は偶数個が必要で、配置条件は適用しません。既存の数字・解答線は生成条件に含めません。","numberlinkgenerator.symmetry":"ヒント配置の対称性","numberlinkgenerator.rotate180":"180度点対称","numberlinkgenerator.rotate90":"90度点対称","numberlinkgenerator.leftRight":"左右対称","numberlinkgenerator.both":"上下左右対称","numberlinkgenerator.none":"なし","numberlinkgenerator.adjacency":"ヒント配置の隣接制約","numberlinkgenerator.adjacency.none":"制約なし","numberlinkgenerator.adjacency.forbid":"8方向隣接を禁止","numberlinkgenerator.adjacency.domino":"孤立したドミノ配置のみ許可","numberlinkgenerator.margin":"外周から空けるマス数","numberlinkgenerator.note":"通常ルール（未使用マス可）で唯一解かつ、その唯一解が全マスを通る問題だけを採用します。盤面を90度・180度・270度回転させたときに一致する正解路の組もありません（正方形以外の盤面では180度のみ判定）。隣り合うヒントマスが同じ数字になることもありません（？マスの位置を固定した場合を除く）。探索はいつでも中断できます。","numberlinkgenerator.start":"1問生成","numberlinkgenerator.stop":"探索を中断","numberlinkgenerator.searching":"探索中…","numberlinkgenerator.seconds":"秒","numberlinkgenerator.attempts":"回試行","numberlinkgenerator.parallel":"並列","numberlinkgenerator.found":"問題が見つかりました。新しいタブで開かない場合は下のリンクを押してください。","numberlinkgenerator.stopped":"探索を中断しました。","numberlinkgenerator.failed":"生成に失敗しました。","numberlinkgenerator.sizeerror":"縦横とも3マス以上の盤面が必要です。","numberlinkgenerator.rotate90error":"90度点対称は正方形の盤面でのみ使用できます。","numberlinkgenerator.marginerror":"外周から空けるマス数が大きすぎます。","numberlinkgenerator.nomarkedcells":"？マスが盤面にありません。","numberlinkgenerator.oddmarkedcells":"？マスの数が奇数です。偶数個にしてください。","numberlinkgenerator.unavailable":"このビルドでは自動生成を利用できません。","numberlinksolver.start":"解答","numberlinksolver.stop":"中断","numberlinksolver.searching":"解析中…","numberlinksolver.unique":"唯一解です。","numberlinksolver.multiple":"複数の解が見つかりました。","numberlinksolver.multipletruncated":"解が10件を超えて見つかりました。先頭の10件を表示しています。","numberlinksolver.noanswer":"解がありません。","numberlinksolver.stopped":"解析を中断しました。","numberlinksolver.failed":"解析に失敗しました。","numberlinksolver.unavailable":"このビルドでは解答機能を利用できません。"}
 };
 
 // Event.js v3.4.0
@@ -3282,54 +3282,71 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 	generationToken: 0,
 	elapsedTimer: null,
 	lastAttempts: 0,
+	resultWindow: null,
 
 	init: function() {
 		ui.popupmgr.popups.template.init.call(this);
 		this.sizeLabel = getEL("numberlink_generator_size");
 		this.statusLabel = getEL("numberlink_generator_status");
+		this.validationLabel = getEL("numberlink_generator_validation");
+		this.countLabel = getEL("numberlink_generator_count");
+		this.resultLink = getEL("numberlink_generator_result");
 		this.generateButton = getEL("numberlink_generator_start");
 		this.stopButton = getEL("numberlink_generator_stop");
+		pzpr.util.addEvent(this.form, "input", this, this.updateOptions);
+		pzpr.util.addEvent(this.form, "change", this, this.updateOptions);
 		pzpr.util.addEvent(
-			this.form.useMarkedCells,
-			"change",
+			this.pop.querySelector("details"),
+			"toggle",
 			this,
-			this.updateMarkedCellsMode
+			this.fitToViewport
 		);
+		pzpr.util.addEvent(window, "resize", this, this.fitToViewport);
 	},
 
 	show: function(px, py) {
 		ui.popupmgr.popups.template.show.call(this, px, py);
 		var board = ui.puzzle.board;
 		this.sizeLabel.textContent = board.cols + " × " + board.rows;
+		if (!this.optionsInitialized) {
+			this.form.markedMode.value = this.getMarkedCellPositions().length
+				? "required"
+				: "none";
+			this.optionsInitialized = true;
+		}
 		this.form.margin.max = Math.floor(
 			(Math.min(board.cols, board.rows) - 1) / 2
 		);
-		if (
-			parseInt(this.form.margin.value, 10) > parseInt(this.form.margin.max, 10)
-		) {
-			this.form.margin.value = this.form.margin.max;
+		if (!this.form.maxPairs.value) {
+			this.form.maxPairs.value = Math.max(
+				2,
+				Math.min(board.cols, board.rows, 12)
+			);
 		}
-		var rotate90 = this.form.symmetry.querySelector('option[value="2"]');
-		rotate90.disabled = board.cols !== board.rows;
-		if (rotate90.disabled && this.form.symmetry.value === "2") {
-			this.form.symmetry.value = "1";
-		}
-		this.form.useMarkedCells.checked = false;
-		this.updateMarkedCellsMode();
+		this.form.minPairs.max = this.form.maxPairs.max = Math.floor(
+			(board.cols * board.rows) / 2
+		);
+		this.form.symmetry.querySelector('option[value="2"]').disabled =
+			board.cols !== board.rows;
 		this.statusLabel.textContent = "";
+		this.updateOptions();
+		this.fitToViewport();
 		ui.puzzle.key.enableKey = false;
 		ui.puzzle.mouse.enableMouse = false;
 	},
 
-	// The ? cells (fixed hint positions) take priority over symmetry,
-	// adjacency, and margin, which the generator ignores outright in that
-	// mode - disabling them here is just so the form doesn't suggest they
-	// still apply.
-	updateMarkedCellsMode: function() {
-		var useMarked = this.form.useMarkedCells.checked;
-		this.form.symmetry.disabled = useMarked;
-		this.form.adjacency.disabled = useMarked;
-		this.form.margin.disabled = useMarked;
+	fitToViewport: function() {
+		if (!this.pop || this.pop.style.display === "none") {
+			return;
+		}
+		this.pop.style.left =
+			window.pageXOffset +
+			Math.max(8, (window.innerWidth - this.pop.offsetWidth) / 2) +
+			"px";
+		this.pop.style.top =
+			window.pageYOffset +
+			Math.max(8, (window.innerHeight - this.pop.offsetHeight) / 2) +
+			"px";
 	},
 
 	getMarkedCellPositions: function() {
@@ -3345,6 +3362,119 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 		return positions;
 	},
 
+	getOptions: function() {
+		var board = ui.puzzle.board;
+		var mode = this.form.markedMode.value;
+		return {
+			height: board.rows,
+			width: board.cols,
+			symmetry: mode === "fixed" ? 0 : Number(this.form.symmetry.value),
+			forbidAdjacentHints:
+				mode !== "fixed" && this.form.adjacency.value === "forbid",
+			dominoAdjacentHints:
+				mode !== "fixed" && this.form.adjacency.value === "domino",
+			borderHintMargin: mode === "fixed" ? 0 : Number(this.form.margin.value),
+			minPairs: Number(this.form.minPairs.value),
+			maxPairs: Number(this.form.maxPairs.value),
+			fixedPositions: mode === "none" ? null : this.getMarkedCellPositions(),
+			allowExtraHints: mode === "required"
+		};
+	},
+
+	validationError: function(o) {
+		if (o.width < 3 || o.height < 3) {
+			return "sizeerror";
+		}
+		if (
+			!Number.isInteger(o.minPairs) ||
+			!Number.isInteger(o.maxPairs) ||
+			o.minPairs < 1 ||
+			o.maxPairs < o.minPairs ||
+			o.maxPairs > Math.floor((o.width * o.height) / 2)
+		) {
+			return "counterror";
+		}
+		if (o.symmetry === 2 && o.width !== o.height) {
+			return "rotate90error";
+		}
+		if (
+			this.form.markedMode.value !== "fixed" &&
+			this.form.margin.value.trim() === ""
+		) {
+			return "marginerror";
+		}
+		if (
+			!Number.isInteger(o.borderHintMargin) ||
+			o.borderHintMargin < 0 ||
+			o.borderHintMargin > Math.floor((Math.min(o.width, o.height) - 1) / 2)
+		) {
+			return "marginerror";
+		}
+		if (o.fixedPositions) {
+			if (!o.fixedPositions.length) {
+				return "nomarkedcells";
+			}
+			if (!o.allowExtraHints && o.fixedPositions.length % 2) {
+				return "oddmarkedcells";
+			}
+			if (
+				o.fixedPositions.length > o.maxPairs * 2 ||
+				(!o.allowExtraHints && o.fixedPositions.length < o.minPairs * 2)
+			) {
+				return "markedcounterror";
+			}
+			if (
+				o.allowExtraHints &&
+				o.fixedPositions.some(function(p) {
+					return (
+						p[0] < o.borderHintMargin ||
+						p[1] < o.borderHintMargin ||
+						p[0] >= o.height - o.borderHintMargin ||
+						p[1] >= o.width - o.borderHintMargin
+					);
+				})
+			) {
+				return "markedmarginerror";
+			}
+		}
+		var h = o.height - 2 * o.borderHintMargin;
+		var w = o.width - 2 * o.borderHintMargin;
+		var capacity = o.forbidAdjacentHints
+			? Math.ceil(h / 2) * Math.ceil(w / 2)
+			: h * w;
+		if (o.minPairs * 2 > capacity) {
+			return "capacityerror";
+		}
+		if (o.symmetry === 2 && Math.ceil(o.minPairs / 2) * 2 > o.maxPairs) {
+			return "symmetrycounterror";
+		}
+		return null;
+	},
+
+	updateOptions: function() {
+		var fixed = this.form.markedMode.value === "fixed";
+		this.form.markedMode.disabled = this.running;
+		this.form.minPairs.disabled = this.form.maxPairs.disabled = this.running;
+		this.form.symmetry.disabled = this.form.adjacency.disabled = this.form.margin.disabled =
+			this.running || fixed;
+		var options = this.getOptions();
+		var error = this.validationError(options);
+		this.validationLabel.textContent = error
+			? ui.i18n("numberlinkgenerator." + error)
+			: "";
+		this.generateButton.disabled = this.running || !!error;
+		this.countLabel.textContent =
+			ui.i18n("numberlinkgenerator.markedcount") +
+			" " +
+			this.getMarkedCellPositions().length +
+			" / " +
+			ui.i18n("numberlinkgenerator.hintcells") +
+			" " +
+			options.minPairs * 2 +
+			"–" +
+			options.maxPairs * 2;
+	},
+
 	randomSeed: function() {
 		var words = new Uint32Array(2);
 		if (typeof crypto !== "undefined" && crypto.getRandomValues) {
@@ -3358,19 +3488,23 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 
 	setRunning: function(running) {
 		this.running = running;
-		this.generateButton.disabled = running;
 		this.stopButton.disabled = !running;
-		this.form.useMarkedCells.disabled = running;
-		if (!running) {
-			this.updateMarkedCellsMode();
-		} else {
-			this.form.symmetry.disabled = true;
-			this.form.adjacency.disabled = true;
-			this.form.margin.disabled = true;
-		}
+		this.updateOptions();
 		if (!running && this.elapsedTimer !== null) {
 			clearInterval(this.elapsedTimer);
 			this.elapsedTimer = null;
+		}
+	},
+
+	closePendingTab: function() {
+		var tab = this.resultWindow;
+		this.resultWindow = null;
+		try {
+			if (tab && !tab.closed && tab.location.href === "about:blank") {
+				tab.close();
+			}
+		} catch (e) {
+			/* The user navigated this tab elsewhere. */
 		}
 	},
 
@@ -3378,138 +3512,107 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 		if (this.running) {
 			return;
 		}
-		var board = ui.puzzle.board;
-		if (board.cols < 3 || board.rows < 3) {
-			this.statusLabel.textContent = ui.i18n("numberlinkgenerator.sizeerror");
+		var options = this.getOptions();
+		var error = this.validationError(options);
+		if (error) {
+			this.validationLabel.textContent = ui.i18n(
+				"numberlinkgenerator." + error
+			);
 			return;
-		}
-
-		var useMarkedCells = this.form.useMarkedCells.checked;
-		var fixedPositions = null;
-		var symmetry = parseInt(this.form.symmetry.value, 10);
-		var margin = parseInt(this.form.margin.value, 10);
-		var adjacencyMode = this.form.adjacency.value;
-		var forbidAdjacentHints = adjacencyMode === "forbid";
-		var dominoAdjacentHints = adjacencyMode === "domino";
-
-		if (useMarkedCells) {
-			fixedPositions = this.getMarkedCellPositions();
-			if (fixedPositions.length === 0) {
-				this.statusLabel.textContent = ui.i18n(
-					"numberlinkgenerator.nomarkedcells"
-				);
-				return;
-			}
-			if (fixedPositions.length % 2 !== 0) {
-				this.statusLabel.textContent = ui.i18n(
-					"numberlinkgenerator.oddmarkedcells"
-				);
-				return;
-			}
-		} else {
-			if (symmetry === 2 && board.cols !== board.rows) {
-				this.statusLabel.textContent = ui.i18n(
-					"numberlinkgenerator.rotate90error"
-				);
-				return;
-			}
-			var maxMargin = parseInt(this.form.margin.max, 10);
-			if (!isFinite(margin) || margin < 0 || margin > maxMargin) {
-				this.statusLabel.textContent = ui.i18n(
-					"numberlinkgenerator.marginerror"
-				);
-				return;
-			}
 		}
 		if (typeof window.generateNumberlink !== "function") {
 			this.statusLabel.textContent = ui.i18n("numberlinkgenerator.unavailable");
 			return;
 		}
-
+		// Reserve the result tab during the click's user activation. Opening it
+		// after an asynchronous search would be blocked by many browsers.
+		this.resultWindow = window.open("about:blank", "_blank");
+		if (this.resultWindow) {
+			this.resultWindow.opener = null;
+			this.resultWindow.document.title = ui.i18n("numberlinkgenerator.title");
+			this.resultWindow.document.body.textContent = ui.i18n(
+				"numberlinkgenerator.waitingtab"
+			);
+		}
+		this.resultLink.hidden = true;
 		var seed = this.randomSeed();
+		options.seedHigh = seed.high;
+		options.seedLow = seed.low;
 		var startTime = Date.now();
 		var token = ++this.generationToken;
 		var popup = this;
 		this.lastAttempts = 0;
 		this.setRunning(true);
-		// Free (non fixed-position) generation races several independent
-		// workers across CPU cores instead of just one; fixed positions make
-		// the search deterministic, so racing seeds against them cannot help
-		// (see SolverBridge.js) and only a single worker runs there.
-		var jobCount =
-			typeof window.numberlinkParallelJobs === "function"
-				? window.numberlinkParallelJobs(!!fixedPositions)
-				: 1;
+		var checking = true;
 		function updateStatus() {
-			var seconds = Math.floor((Date.now() - startTime) / 1000);
-			var text =
+			if (checking) {
+				popup.statusLabel.textContent = ui.i18n("numberlinkgenerator.checking");
+				return;
+			}
+			popup.statusLabel.textContent =
 				ui.i18n("numberlinkgenerator.searching") +
 				" " +
-				seconds +
-				ui.i18n("numberlinkgenerator.seconds");
-			if (popup.lastAttempts > 0) {
-				text +=
-					" (" +
-					popup.lastAttempts +
-					ui.i18n("numberlinkgenerator.attempts") +
-					")";
-			}
-			if (jobCount > 1) {
-				text += " (" + jobCount + ui.i18n("numberlinkgenerator.parallel") + ")";
-			}
-			popup.statusLabel.textContent = text;
+				Math.floor((Date.now() - startTime) / 1000) +
+				ui.i18n("numberlinkgenerator.seconds") +
+				" · " +
+				popup.lastAttempts +
+				ui.i18n("numberlinkgenerator.attempts");
 		}
-		updateStatus();
+		this.statusLabel.textContent = ui.i18n("numberlinkgenerator.checking");
 		this.elapsedTimer = setInterval(updateStatus, 1000);
-
-		window
-			.generateNumberlink(
-				{
-					height: board.rows,
-					width: board.cols,
-					symmetry: symmetry,
-					forbidAdjacentHints: forbidAdjacentHints,
-					dominoAdjacentHints: dominoAdjacentHints,
-					borderHintMargin: isFinite(margin) ? margin : 0,
-					fixedPositions: fixedPositions,
-					seedHigh: seed.high,
-					seedLow: seed.low
-				},
-				function(attempts) {
+		Promise.resolve()
+			.then(function() {
+				if (token !== popup.generationToken) {
+					return null;
+				}
+				return window.generateNumberlink(options, function(attempts) {
 					if (token !== popup.generationToken) {
 						return;
 					}
+					checking = false;
 					popup.lastAttempts = attempts;
 					updateStatus();
+				});
+			})
+			.then(function(result) {
+				if (token !== popup.generationToken) {
+					return;
 				}
-			)
-			.then(
-				function(result) {
-					if (token !== popup.generationToken) {
-						return;
-					}
-					popup.setRunning(false);
-					popup.statusLabel.textContent = ui.i18n("numberlinkgenerator.found");
-					popup.close();
-					ui.puzzle.open(result.url);
-				},
-				function(error) {
-					if (token !== popup.generationToken) {
-						return;
-					}
-					popup.setRunning(false);
-					if (error && error.name === "AbortError") {
-						popup.statusLabel.textContent = ui.i18n(
-							"numberlinkgenerator.stopped"
-						);
-					} else {
-						popup.statusLabel.textContent =
-							ui.i18n("numberlinkgenerator.failed") +
-							" " +
-							String((error && error.message) || error);
-					}
+				popup.setRunning(false);
+				var query = result.url.split("?")[1];
+				if (!query || query.indexOf("numlin/") !== 0) {
+					throw new Error("Invalid generated puzzle URL");
 				}
-			);
+				var url = window.location.href.split(/[?#]/)[0] + "?" + query;
+				popup.resultLink.href = url;
+				popup.resultLink.hidden = false;
+				popup.statusLabel.textContent = ui.i18n("numberlinkgenerator.found");
+				if (popup.resultWindow && !popup.resultWindow.closed) {
+					popup.resultWindow.location.replace(url);
+				}
+				popup.resultWindow = null;
+			})
+			.catch(function(error) {
+				if (token !== popup.generationToken) {
+					return;
+				}
+				popup.setRunning(false);
+				popup.closePendingTab();
+				var message = String((error && error.message) || error);
+				var translated = ui.i18n(
+					"numberlinkgenerator." + message.split("; ")[0]
+				);
+				if (error && error.name === "AbortError") {
+					popup.statusLabel.textContent = ui.i18n(
+						"numberlinkgenerator.stopped"
+					);
+				} else {
+					popup.statusLabel.textContent =
+						ui.i18n("numberlinkgenerator.failed") +
+						" " +
+						(translated || message);
+				}
+			});
 	},
 
 	stop: function() {
@@ -3521,6 +3624,7 @@ ui.popupmgr.addpopup("numberlinkgenerator", {
 			window.cancelNumberlinkGeneration();
 		}
 		this.setRunning(false);
+		this.closePendingTab();
 		this.statusLabel.textContent = ui.i18n("numberlinkgenerator.stopped");
 	},
 

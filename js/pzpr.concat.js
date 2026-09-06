@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-08-27
+ * Date: 2026-09-06
  */
 // intro.js
 
@@ -22322,10 +22322,9 @@ solverTarget.solveProblemAsync = function(url) {
 // the same N seeds sequentially. This is plain multi-Worker fan-out, not
 // shared-memory Wasm threading: no SharedArrayBuffer or cross-origin
 // isolation headers are needed, since each worker just loads its own
-// ordinary single-threaded copy of the wasm module. Fixed hint positions
-// make the search deterministic (see NumberlinkGeneratorWorker.js), so
-// racing different seeds against them cannot help - that mode always runs
-// exactly one worker.
+// ordinary single-threaded copy of the wasm module. Exact fixed positions
+// use one worker to limit memory consumption in the SAT pairing search.
+// That worker still retries with shuffled endpoint orderings.
 //---------------------------------------------------------------------------
 var numberlinkGeneratorWorkers = [];
 var numberlinkGenerationRequest = null;
@@ -22401,12 +22400,8 @@ solverTarget.cancelNumberlinkGeneration = function() {
 	return true;
 };
 
-// onProgress(attempts), if given, is called every time any worker's
-// bounded-attempt chunk comes back empty-handed and the search keeps
-// going; attempts is the sum across every parallel worker so far. Fixed
-// hint positions make the search deterministic, so the single worker used
-// then skips this and reports failure immediately instead of looping (see
-// NumberlinkGeneratorWorker.js) - onProgress may simply never fire then.
+// onProgress(attempts) aggregates completed chunks. Fixed positions use one
+// worker to limit SAT memory use; their shuffled candidate search also retries.
 solverTarget.generateNumberlink = function(options, onProgress) {
 	if (!canUseWorker()) {
 		return Promise.reject(
@@ -22418,7 +22413,9 @@ solverTarget.generateNumberlink = function(options, onProgress) {
 	}
 
 	var usingFixedPositions = !!(
-		options.fixedPositions && options.fixedPositions.length > 0
+		options.fixedPositions &&
+		options.fixedPositions.length > 0 &&
+		!options.allowExtraHints
 	);
 	var jobCount = solverTarget.numberlinkParallelJobs(usingFixedPositions);
 

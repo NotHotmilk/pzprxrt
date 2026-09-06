@@ -816,11 +816,30 @@ if ('serviceWorker' in navigator) {
         <span>__numberlinkgenerator.size__</span>
         <strong id="numberlink_generator_size"></strong>
       </div>
-      <label class="numberlink-generator-row numberlink-generator-checkbox">
-        <input type="checkbox" name="useMarkedCells">
-        <span>__numberlinkgenerator.useMarkedCells__</span>
-      </label>
-      <p class="numberlink-generator-note">__numberlinkgenerator.useMarkedCellsNote__</p>
+      <p class="numberlink-generator-note">__numberlinkgenerator.intro__</p>
+      <fieldset>
+        <legend>__numberlinkgenerator.hints__</legend>
+        <div class="numberlink-generator-row">
+          <span>__numberlinkgenerator.pairs__</span>
+          <div class="numberlink-generator-range">
+            <label><span>__numberlinkgenerator.minimum__</span><input type="number" name="minPairs" value="1" min="1" step="1"></label>
+            <span aria-hidden="true">〜</span>
+            <label><span>__numberlinkgenerator.maximum__</span><input type="number" name="maxPairs" min="1" step="1"></label>
+          </div>
+        </div>
+        <label class="numberlink-generator-row">
+          <span>__numberlinkgenerator.markedmode__</span>
+          <select name="markedMode">
+            <option value="none">__numberlinkgenerator.markednone__</option>
+            <option value="required">__numberlinkgenerator.markedrequired__</option>
+            <option value="fixed">__numberlinkgenerator.markedfixed__</option>
+          </select>
+        </label>
+        <p id="numberlink_generator_count" class="numberlink-generator-note"></p>
+        <p class="numberlink-generator-note">__numberlinkgenerator.useMarkedCellsNote__</p>
+      </fieldset>
+      <fieldset>
+        <legend>__numberlinkgenerator.placement__</legend>
       <label class="numberlink-generator-row">
         <span>__numberlinkgenerator.symmetry__</span>
         <select name="symmetry">
@@ -843,12 +862,15 @@ if ('serviceWorker' in navigator) {
         <span>__numberlinkgenerator.margin__</span>
         <input type="number" name="margin" value="0" min="0" step="1">
       </label>
-      <p class="numberlink-generator-note">__numberlinkgenerator.note__</p>
+      </fieldset>
+      <details class="numberlink-generator-note"><summary>__numberlinkgenerator.rules__</summary><p>__numberlinkgenerator.note__</p></details>
+      <div id="numberlink_generator_validation" class="numberlink-generator-validation" role="status" aria-live="polite"></div>
       <div class="buttons">
         <button type="button" class="btn btn-ok" id="numberlink_generator_start" data-button-exec="generate">__numberlinkgenerator.start__</button>
         <button type="button" class="btn btn-danger" id="numberlink_generator_stop" data-button-exec="stop" disabled>__numberlinkgenerator.stop__</button>
         <button type="button" class="btn" data-button-exec="close">__close__</button>
       </div>
+      <a id="numberlink_generator_result" class="numberlink-generator-result" target="_blank" rel="noopener" hidden>__numberlinkgenerator.openresult__</a>
       <div id="numberlink_generator_status" class="numberlink-generator-status" role="status" aria-live="polite"></div>
     </form>
   </div>

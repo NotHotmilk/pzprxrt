@@ -312,29 +312,73 @@ div.popup form {
 }
 
 div.numberlink-generator-popup form {
-  min-width: 22em;
-  padding: 4pt;
+  width: 32em;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 85px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 8pt;
+}
+.numberlink-generator-popup fieldset {
+  min-width: 0;
+  margin: 10pt 0;
+  padding: 8pt;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+.numberlink-generator-popup legend {
+  font-weight: bold;
+  padding: 0 4pt;
 }
 .numberlink-generator-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 8pt;
-  margin-bottom: 5pt;
+  margin-bottom: 8pt;
 }
-.numberlink-generator-checkbox {
-  justify-content: flex-start;
+.numberlink-generator-row select {
+  max-width: 100%;
+  padding: 4pt;
 }
 .numberlink-generator-row input[type="number"] {
   width: 4em;
+  padding: 4pt;
+}
+.numberlink-generator-range {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+}
+.numberlink-generator-range label {
+  display: flex;
+  align-items: center;
+  gap: 4pt;
 }
 .numberlink-generator-note {
-  max-width: 28em;
   margin: 6pt 0;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+.numberlink-generator-note summary {
+  cursor: pointer;
+}
+.numberlink-generator-validation {
+  color: #b32222;
+  line-height: 1.5;
 }
 .numberlink-generator-status {
   min-height: 1.6em;
-  margin-top: 5pt;
+  margin-top: 8pt;
+}
+.numberlink-generator-result:not([hidden]) {
+  display: inline-block;
+  margin-top: 8pt;
+  font-weight: bold;
+}
+.numberlink-generator-popup :disabled {
+  opacity: 0.55;
 }
 
 .numlin-solver-panel {
