@@ -1,0 +1,1 @@
+{"version":3,"file":"kaisumaze.js","sources":["kaisumaze.js"],"names":["ui","debug","addRules","rules","history","addDebugData","url","failcheck","inputs"],"mappings":";;AAgBAA,GAAGC,MAAMC,SAAS,YAAa,CAAC,CAACC,MAAQ,0RAA0RC,QAAU,EAAE,EAAE,CAACD,MAAQ,mJAAmJC,QAAU,EAAE,EAAE,EAG3fJ,GAAGC,MAAMI,aAAa,YAAa,CAClCC,IAAK,mBACLC,UAAW,CACV,CAAC,gBAAiB,uDAClB,CAAC,KAAM,wDAERC,OAAQ,EACT,CAAC"}
