@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-09-21
+ * Date: 2026-09-22
  */
 // intro.js
 
@@ -4411,6 +4411,7 @@ ui.keypopup = {
 		usotatami: [10, 0],
 		heyawake: [10, 0],
 		ayeheya: [10, 0],
+		kaisumaze: [10, 0],
 		kurodoko: [10, 0],
 		nagenawa: [10, 0],
 		numlin: [10, 0],
