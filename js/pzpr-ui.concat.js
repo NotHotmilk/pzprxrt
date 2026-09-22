@@ -1,7 +1,7 @@
 /*!
  * @license
  *
- * pzpr.js v1375cc80
+ * pzpr.js vf02d24d9
  *  https://github.com/sabo2/pzprv3
  *
  * This script includes candle.js, see below
@@ -254,7 +254,7 @@ function createEL(tagName) {
 //---------------------------------------------------------------------------
 /* extern */
 window.ui = {
-	version: "1375cc80",
+	version: "f02d24d9",
 
 	/* このサイトで使用するパズルのオブジェクト */
 	puzzle: null,

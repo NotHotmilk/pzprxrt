@@ -1,3 +1,3 @@
-/*! @license pzpr.js v1375cc80 (c) 2009-2026 sabo2, MIT license
+/*! @license pzpr.js vf02d24d9 (c) 2009-2026 sabo2, MIT license
  *   https://github.com/sabo2/pzprv3 */
 ui.debug.addRules("kaisumaze",[{rules:"Draw one orthogonal path through cell centers from IN to OUT.\n1. The path cannot cross itself, branch, or end before OUT.\n2. For every number N that appears on the board, the path must visit exactly N cells marked N. Numbers that do not appear on the board impose no condition.",history:""},{rules:"1. INからOUTまで、マスの中央をタテヨコに通る一本の道を引きましょう。\n2. 道は交差したり、枝分かれしたり、途中で途切れたりしてはいけません。\n3. 盤面に現れる数字Nごとに、Nが書かれたマスのうち道が通るマスをちょうどN個にします。盤面に現れない数字については判定しません。",history:""}]),ui.debug.addDebugData("kaisumaze",{url:"6/1/155555/12/13",failcheck:[["kmNumberCount","pzprv3/kaisumaze/1/6/17/18/2 5 5 5 5 5 /1 1 1 1 1 1 1 /0 0 0 0 0 0 /0 0 0 0 0 0 /"],[null,"pzprv3/kaisumaze/1/6/17/18/1 5 5 5 5 5 /1 1 1 1 1 1 1 /0 0 0 0 0 0 /0 0 0 0 0 0 /"]],inputs:[]});
