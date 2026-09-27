@@ -1,7 +1,7 @@
 /*!
  * @license
  *
- * pzpr.js vf02d24d9
+ * pzpr.js v1375cc80
  *  https://github.com/sabo2/pzprv3
  *
  * This script includes candle.js, see below
@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-09-22
+ * Date: 2026-09-27
  */
 // intro.js
 
@@ -254,7 +254,7 @@ function createEL(tagName) {
 //---------------------------------------------------------------------------
 /* extern */
 window.ui = {
-	version: "f02d24d9",
+	version: "1375cc80",
 
 	/* このサイトで使用するパズルのオブジェクト */
 	puzzle: null,
@@ -3750,7 +3750,7 @@ ui.numlinsolver = {
 
 		if (this.answers.length === 0) {
 			this.statusLabel.textContent = ui.i18n("numberlinksolver.noanswer");
-		} else if (this.answers.length === 1) {
+		} else if (description.isUnique === true) {
 			this.statusLabel.textContent = ui.i18n("numberlinksolver.unique");
 		} else if (this.truncated) {
 			this.statusLabel.textContent = ui.i18n(

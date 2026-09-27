@@ -1,7 +1,7 @@
 /*!
  * @license
  *
- * pzpr.js vf02d24d9
+ * pzpr.js v1375cc80
  *  https://github.com/sabo2/pzprv3
  *
  * This script includes candle.js, see below
@@ -12,7 +12,7 @@
  * This script is released under the MIT license. Please see below.
  *  http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2026-09-22
+ * Date: 2026-09-27
  */
 // intro.js
 
@@ -25,7 +25,7 @@
 //---------------------------------------------------------------------------
 /* extern */
 var pzpr = {
-	version: "f02d24d9"
+	version: "1375cc80"
 };
 
 if (typeof module === "object" && module.exports) {
@@ -5869,10 +5869,12 @@ pzpr.classmgr.makeCommon({
 				if (
 					border.qansBySolver !== 0 ||
 					border.lineBySolver !== 0 ||
-					border.qsubBySolver !== 0
+					border.qsubBySolver !== 0 ||
+					border.detourBySolver
 				) {
 					border.qansBySolver = 0;
 					border.lineBySolver = 0;
+					border.detourBySolver = false;
 					border.qsubBySolver = 0;
 					needUpdateField = true;
 				}
@@ -5913,6 +5915,17 @@ pzpr.classmgr.makeCommon({
 			var dataRaw = result.data;
 			for (var i = 0; i < dataRaw.length; ++i) {
 				var elem = dataRaw[i];
+				if (
+					this.pid === "numlin" &&
+					elem.color === "red" &&
+					elem.item === "dottedLine"
+				) {
+					var detourBorder = this.getb(elem.x, elem.y);
+					if (!detourBorder.isnull) {
+						detourBorder.detourBySolver = true;
+					}
+					continue;
+				}
 				if (elem.color !== "green") {
 					// TODO
 					continue;
@@ -6082,6 +6095,7 @@ pzpr.classmgr.makeCommon({
 				element.qansBySolver = 0;
 				element.qsubBySolver = 0;
 				element.lineBySolver = 0;
+				element.detourBySolver = false;
 				element.qcandBySolver = null;
 			}
 
